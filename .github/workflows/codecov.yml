@@ -1,0 +1,61 @@
+name: Test and Publish codecov
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16 and Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - run: yarn
+      - run: yarn build
+      - run: yarn codecov
+
+      - name: Publish monorepo (runtime)
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/runtime/coverage/lcov.info
+          flags: runtime
+          verbose: true
+
+      - name: Publish monorepo (shared)
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/shared/coverage/lcov.info
+          flags: shared
+          verbose: true
+
+      - name: Publish monorepo (reactivity)
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/reactivity/coverage/lcov.info
+          flags: reactivity
+          verbose: true
+
+      - name: Publish monorepo (dom-client)
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/dom-client/coverage/lcov.info
+          flags: dom-client
+          verbose: true
+
+      - name: Publish monorepo (dom-server)
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/dom-server/coverage/lcov.info
+          flags: dom-server
+          verbose: true

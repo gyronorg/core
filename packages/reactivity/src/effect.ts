@@ -1,0 +1,224 @@
+import { isArray, isIntegerKey, isMap } from '@gyron/shared'
+import { ReactiveFlags } from './reactive'
+
+let activeEffect: ReactiveEffect | undefined
+
+export const effectTracks = new WeakMap<any, Map<any, Dep>>()
+
+export type Dep = Set<ReactiveEffect>
+export type EffectScheduler = (...args: any[]) => any
+
+export interface ReactiveEffectRunner<T = any> {
+  (): T
+  effect: ReactiveEffect
+}
+
+export type Dependency = () => any
+
+export type EffectFunction<T> = (...args: any) => T
+
+export const enum TrackTypes {
+  GET = 'get',
+  HAS = 'has',
+  ITERATE = 'iterate',
+}
+
+export const enum TriggerTypes {
+  SET = 'set',
+  ADD = 'add',
+  DELETE = 'delete',
+  CLEAR = 'clear',
+}
+
+export const ITERATE_KEY = Symbol('iterate')
+export const MAP_KEY_ITERATE_KEY = Symbol('Map key iterate')
+
+let shouldTrack = true
+
+export function pauseTrack() {
+  shouldTrack = false
+}
+
+export function enableTrack() {
+  shouldTrack = true
+}
+
+export function asyncTrackEffect(useEffect: ReactiveEffect) {
+  activeEffect = useEffect
+}
+
+export function clearTrackEffect() {
+  activeEffect = undefined
+}
+
+export class ReactiveEffect<T = any> {
+  public deps: Dep[] = []
+  public allowEffect: boolean
+  private prevActiveEffect: ReactiveEffect
+
+  constructor(
+    public fn: () => T,
+    public scheduler: EffectScheduler | null = null,
+    public dependency: Dependency[] = []
+  ) {}
+
+  run() {
+    try {
+      // Fix the first layer useEffect losing reaction when nested effects
+      this.prevActiveEffect = activeEffect
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      activeEffect = this
+
+      this.wrapper()
+
+      return this.fn()
+    } finally {
+      activeEffect = this.prevActiveEffect
+      this.prevActiveEffect = null
+    }
+  }
+
+  stop() {
+    cleanupEffect(this)
+  }
+
+  wrapper() {
+    for (let i = 0; i < this.dependency.length; i++) {
+      const dependency = this.dependency[i]
+      dependency()
+    }
+  }
+}
+
+function cleanupEffect(effect: ReactiveEffect) {
+  const { deps } = effect
+  if (deps.length) {
+    for (let i = 0; i < deps.length; i++) {
+      deps[i].delete(effect)
+    }
+    deps.length = 0
+  }
+}
+
+export function useEffect<T = any>(
+  fn: EffectFunction<T>,
+  dependency?: Dependency[]
+) {
+  const effect = new ReactiveEffect(fn, null, dependency)
+  effect.run()
+  const runner = effect.run.bind(effect) as ReactiveEffectRunner<T>
+  runner.effect = effect
+  return runner
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function track(target: object, key: unknown, type: TrackTypes) {
+  if (shouldTrack && activeEffect) {
+    let targetTracks = effectTracks.get(target)
+    if (!targetTracks) {
+      effectTracks.set(target, (targetTracks = new Map()))
+    }
+    let targetDep = targetTracks.get(key)
+    if (!targetDep) {
+      targetTracks.set(key, (targetDep = new Set()))
+    }
+
+    trackEffect(targetDep)
+  }
+}
+
+export function trackEffect(dep: Dep) {
+  if (activeEffect && !dep.has(activeEffect)) {
+    dep.add(activeEffect)
+    activeEffect.deps.push(dep)
+  }
+}
+
+export function cleanupTrackEffect(target: object, key: string | symbol) {
+  const depsMap = effectTracks.get(
+    target[ReactiveFlags.IS_PRIMITIVE]
+      ? target[ReactiveFlags.RAW_VALUE]
+      : target[ReactiveFlags.RAW]
+  )
+  if (depsMap) {
+    const deps = depsMap.get(key)
+    if (deps) {
+      deps.clear()
+    }
+  }
+}
+
+export function trigger(
+  target: object,
+  key: unknown,
+  type: TriggerTypes,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  value?: unknown
+) {
+  const targetTracks = effectTracks.get(target)
+  if (targetTracks) {
+    const deps: Dep[] = []
+    if (key === 'length' && isArray(target)) {
+      targetTracks.forEach((dep, key) => {
+        if (key === 'length') {
+          deps.push(dep)
+        }
+      })
+    } else {
+      deps.push(targetTracks.get(key))
+
+      switch (type) {
+        case TriggerTypes.ADD:
+          if (!isArray(target)) {
+            deps.push(targetTracks.get(ITERATE_KEY))
+            if (isMap(target)) {
+              deps.push(targetTracks.get(MAP_KEY_ITERATE_KEY))
+            }
+          } else if (isIntegerKey(key)) {
+            // new index added to array -> length changes
+            deps.push(targetTracks.get('length'))
+          }
+          break
+        case TriggerTypes.DELETE:
+          if (!isArray(target)) {
+            deps.push(targetTracks.get(ITERATE_KEY))
+            if (isMap(target)) {
+              deps.push(targetTracks.get(MAP_KEY_ITERATE_KEY))
+            }
+          }
+          break
+        case TriggerTypes.SET:
+          if (isMap(target)) {
+            deps.push(targetTracks.get(ITERATE_KEY))
+          }
+          break
+      }
+    }
+    if (deps.length === 1) {
+      if (deps[0]) {
+        triggerEffect(deps[0])
+      }
+    } else {
+      const effects: ReactiveEffect[] = []
+      for (const dep of deps) {
+        if (dep) {
+          effects.push(...dep)
+        }
+      }
+      triggerEffect(new Set(effects))
+    }
+  }
+}
+
+export function triggerEffect(dep: Dep | ReactiveEffect[]) {
+  const deps = isArray(dep) ? dep : [...dep]
+  for (const useEffect of deps) {
+    if (useEffect !== activeEffect || useEffect.allowEffect) {
+      if (useEffect.scheduler) {
+        useEffect.scheduler()
+      } else {
+        useEffect.run()
+      }
+    }
+  }
+}

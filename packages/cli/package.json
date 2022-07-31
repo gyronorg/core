@@ -1,0 +1,31 @@
+{
+  "name": "@gyron/cli",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "gyron": "dist/index.js"
+  },
+  "version": "0.0.9",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 16"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "yarn build:cjs",
+    "build:cjs": "esbuild src/index.ts --bundle --sourcemap --outdir=dist --format=cjs --platform=node --external:download-git-repo --banner:js=\"#!/usr/bin/env node\""
+  },
+  "devDependencies": {
+    "commander": "^9.2.0",
+    "ora": "^6.1.0"
+  },
+  "dependencies": {
+    "download-git-repo": "^3.0.2"
+  }
+}

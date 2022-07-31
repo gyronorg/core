@@ -1,0 +1,37 @@
+{
+  "name": "@gyron/babel-plugin-jsx",
+  "main": "dist/cjs/index.js",
+  "types": "dist/index.d.ts",
+  "version": "0.0.10-alpha.2",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "yarn build:dts && yarn build:cjs",
+    "build:cjs": "esbuild src/index.ts --bundle --sourcemap --outfile=dist/cjs/index.js --format=cjs --platform=node --external:@gyron/* --external:@babel/*",
+    "build:dts": "rollup -c",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/hash-sum": "^1.0.0",
+    "@types/lodash-es": "^4.17.6",
+    "babel-jest": "^28.1.1",
+    "esbuild": "^0.14.38",
+    "hash-sum": "^2.0.0",
+    "html-tags": "^3.1.0",
+    "lodash-es": "^4.17.21",
+    "vite": "^2.9.5"
+  },
+  "dependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/plugin-syntax-jsx": "^7.16.7",
+    "@babel/plugin-transform-typescript": "^7.17.12",
+    "@gyron/runtime": "^0.0.10-alpha.2",
+    "@gyron/shared": "^0.0.10-alpha.2"
+  }
+}

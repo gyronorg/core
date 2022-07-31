@@ -1,0 +1,25 @@
+<div id="root"></div>
+
+<script type="module">
+  import {
+    createInstance,
+    h,
+    useValue,
+  } from 'https://cdn.skypack.dev/@gyron/runtime'
+  const Child = () => {
+    const content = useValue(0)
+    return () =>
+      h(
+        'button',
+        {
+          on: {
+            click() {
+              content.value++
+            },
+          },
+        },
+        content.value
+      )
+  }
+  createInstance(h(Child)).render('#root')
+</script>

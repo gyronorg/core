@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "preserve",
+    "target": "ESNext",
+    "module": "ESNext",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "paths": {
+      "@gyron/*": ["packages/*/src/index.ts"]
+    },
+    "types": ["jest", "node"]
+  },
+  "include": ["packages/**/*.ts", "packages/**/*.tsx"],
+  "files": ["global.d.ts"]
+}

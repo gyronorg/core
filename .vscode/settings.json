@@ -1,0 +1,8 @@
+{
+  "jestrunner.debugOptions": {
+    "args": ["--no-cache"],
+    "sourcemaps": "inline",
+    "disableOptimisticBPs": true
+  },
+  "jestrunner.runOptions": ["--no-cache"]
+}
