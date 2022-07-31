@@ -6,7 +6,8 @@
     "test": "lerna run test --",
     "codecov": "rimraf packages/**/coverage && yarn test --coverage",
     "build": "rimraf packages/**/dist && lerna run build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prepublish": "yarn build"
   },
   "engines": {
     "node": ">= 16"
