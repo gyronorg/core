@@ -3,7 +3,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.10-alpha.2",
+  "version": "0.0.10",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -20,7 +20,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@gyron/shared": "^0.0.10-alpha.2"
+    "@gyron/shared": "^0.0.10"
   },
   "peerDependencies": {
     "@gyron/runtime": "^0.0.5-alpha.1"
