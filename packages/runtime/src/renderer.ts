@@ -11,7 +11,7 @@ import {
 import {
   asyncTrackEffect,
   clearTrackEffect,
-  ReactiveEffect,
+  createEffect,
 } from '@gyron/reactivity'
 import {
   extend,
@@ -405,7 +405,7 @@ function renderComponentEffect(component: Component) {
     }
   }
 
-  const useEffect = (component.effect = new ReactiveEffect(
+  const useEffect = (component.effect = createEffect(
     updateComponentEffect,
     () => pushQueueJob(component.update)
   ))

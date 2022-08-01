@@ -2,16 +2,17 @@ import { isArray, isFunction, isUndefined, noop } from '@gyron/shared'
 import {
   Dep,
   Dependency,
+  Effect,
   enableTrack,
   pauseTrack,
-  ReactiveEffect,
+  createEffect,
   trackEffect,
   triggerEffect,
 } from './effect'
 import { ReactiveFlags } from './reactive'
 
 export class Computed<T = any> {
-  private _effect: ReactiveEffect<T>
+  private _effect: Effect
   private _value!: T
   private _lazy = true
   public dep: Dep | undefined
@@ -24,7 +25,7 @@ export class Computed<T = any> {
     private dependency: Dependency[] = [],
     private memo = false
   ) {
-    this._effect = new ReactiveEffect(
+    this._effect = createEffect(
       this.getter,
       () => {
         if (this.memo) {

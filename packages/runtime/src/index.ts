@@ -87,7 +87,7 @@ export {
 } from './boundaries'
 export { useRef } from './ref'
 
-export type { Primitive, Computed, ReactiveEffect } from '@gyron/reactivity'
+export type { Primitive, Computed, Effect } from '@gyron/reactivity'
 export type {
   Component,
   ComponentFunction,

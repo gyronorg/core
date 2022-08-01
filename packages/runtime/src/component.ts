@@ -1,8 +1,8 @@
 import {
   useReactive,
-  ReactiveEffect,
   useEffect,
   Dependency,
+  Effect,
   EffectFunction,
 } from '@gyron/reactivity'
 import { extend, isFunction, isPromise } from '@gyron/shared'
@@ -95,7 +95,7 @@ export interface Component<T extends object = object> {
   subTree: VNode
   vnode: VNode<ComponentSetupFunction>
   type: ComponentSetupFunction
-  effect: ReactiveEffect
+  effect: Effect
   update: SchedulerJob
   render: ComponentFunction<T>
   setup: ComponentSetupFunction

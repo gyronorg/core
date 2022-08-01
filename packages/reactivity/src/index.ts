@@ -9,10 +9,10 @@ export {
   cleanupTrackEffect,
   asyncTrackEffect,
   clearTrackEffect,
-  ReactiveEffect,
+  createEffect,
 } from './effect'
 
 export type { RawValue, ReactValue } from './reactive'
 export type { Computed } from './computed'
 export type { Primitive } from './primitive'
-export type { Dependency, EffectFunction } from './effect'
+export type { Dependency, EffectFunction, Effect } from './effect'

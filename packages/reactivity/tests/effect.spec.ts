@@ -8,7 +8,7 @@ import {
   cleanupTrackEffect,
   asyncTrackEffect,
   clearTrackEffect,
-  ReactiveEffect,
+  createEffect,
 } from '../src'
 
 describe('useEffect', () => {
@@ -118,7 +118,7 @@ describe('useEffect', () => {
   test('async track useEffect', async () => {
     const count = useValue(0)
     let dummy: number
-    const useEffect = new ReactiveEffect(
+    const useEffect = createEffect(
       () => {
         Promise.resolve().then(() => {
           asyncTrackEffect(useEffect)

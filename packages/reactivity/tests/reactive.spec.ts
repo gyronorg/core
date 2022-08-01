@@ -5,7 +5,7 @@ import {
   useComputed,
   toRaw,
   useValue,
-  ReactiveEffect,
+  createEffect,
   isResponsive,
 } from '../src'
 
@@ -136,7 +136,7 @@ describe('useReactive', () => {
   test('useReactive useEffect', () => {
     const count = useValue(0)
     let dummy: number
-    const useEffect = new ReactiveEffect(
+    const useEffect = createEffect(
       () => {
         count.value
       },
@@ -153,7 +153,7 @@ describe('useReactive', () => {
   test('useEffect nesting', async () => {
     const scheduler = jest.fn()
     const effectMock = jest.fn()
-    const update = new ReactiveEffect(() => {
+    const update = createEffect(() => {
       const count = useValue(0)
       useEffect(effectMock, [() => count.value])
       sleep(0).then(() => {

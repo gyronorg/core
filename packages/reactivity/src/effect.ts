@@ -1,16 +1,16 @@
 import { isArray, isIntegerKey, isMap } from '@gyron/shared'
 import { ReactiveFlags } from './reactive'
 
-let activeEffect: ReactiveEffect | undefined
+let activeEffect: Effect | undefined
 
 export const effectTracks = new WeakMap<any, Map<any, Dep>>()
 
-export type Dep = Set<ReactiveEffect>
+export type Dep = Set<Effect>
 export type EffectScheduler = (...args: any[]) => any
 
-export interface ReactiveEffectRunner<T = any> {
+export interface EffectRunner<T = any> {
   (): T
-  effect: ReactiveEffect
+  effect: Effect
 }
 
 export type Dependency = () => any
@@ -43,7 +43,7 @@ export function enableTrack() {
   shouldTrack = true
 }
 
-export function asyncTrackEffect(useEffect: ReactiveEffect) {
+export function asyncTrackEffect(useEffect: Effect) {
   activeEffect = useEffect
 }
 
@@ -51,62 +51,66 @@ export function clearTrackEffect() {
   activeEffect = undefined
 }
 
-export class ReactiveEffect<T = any> {
-  public deps: Dep[] = []
-  public allowEffect: boolean
-  private prevActiveEffect: ReactiveEffect
-
-  constructor(
-    public fn: () => T,
-    public scheduler: EffectScheduler | null = null,
-    public dependency: Dependency[] = []
-  ) {}
-
-  run() {
-    try {
-      // Fix the first layer useEffect losing reaction when nested effects
-      this.prevActiveEffect = activeEffect
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      activeEffect = this
-
-      this.wrapper()
-
-      return this.fn()
-    } finally {
-      activeEffect = this.prevActiveEffect
-      this.prevActiveEffect = null
-    }
-  }
-
-  stop() {
-    cleanupEffect(this)
-  }
-
-  wrapper() {
-    for (let i = 0; i < this.dependency.length; i++) {
-      const dependency = this.dependency[i]
-      dependency()
-    }
-  }
+export interface Effect {
+  deps: Dep[]
+  allowEffect: boolean
+  scheduler: EffectScheduler | null
+  wrapper: () => void
+  run: () => any
+  stop: () => void
 }
 
-function cleanupEffect(effect: ReactiveEffect) {
-  const { deps } = effect
-  if (deps.length) {
-    for (let i = 0; i < deps.length; i++) {
-      deps[i].delete(effect)
-    }
-    deps.length = 0
+export function createEffect(
+  fn: () => void,
+  scheduler: EffectScheduler | null = null,
+  dependency: Dependency[] = []
+) {
+  let prevActiveEffect: Effect = null
+
+  const effect: Effect = {
+    deps: [],
+    allowEffect: null,
+    scheduler,
+    run: () => {
+      try {
+        prevActiveEffect = activeEffect
+        activeEffect = effect
+
+        effect.wrapper()
+
+        return fn()
+      } finally {
+        activeEffect = prevActiveEffect
+        prevActiveEffect = null
+      }
+    },
+    stop: () => {
+      const { deps } = effect
+      if (deps.length) {
+        for (let i = 0; i < deps.length; i++) {
+          deps[i].delete(effect)
+        }
+        deps.length = 0
+      }
+    },
+    wrapper: () => {
+      for (let i = 0; i < dependency.length; i++) {
+        const fn = dependency[i]
+        fn()
+      }
+    },
   }
+
+  return effect
 }
 
 export function useEffect<T = any>(
   fn: EffectFunction<T>,
   dependency?: Dependency[]
 ) {
-  const effect = new ReactiveEffect(fn, null, dependency)
+  const effect = createEffect(fn, null, dependency)
   effect.run()
-  const runner = effect.run.bind(effect) as ReactiveEffectRunner<T>
+  const runner = effect.run.bind(effect) as EffectRunner<T>
   runner.effect = effect
   return runner
 }
@@ -199,7 +203,7 @@ export function trigger(
         triggerEffect(deps[0])
       }
     } else {
-      const effects: ReactiveEffect[] = []
+      const effects: Effect[] = []
       for (const dep of deps) {
         if (dep) {
           effects.push(...dep)
@@ -210,7 +214,7 @@ export function trigger(
   }
 }
 
-export function triggerEffect(dep: Dep | ReactiveEffect[]) {
+export function triggerEffect(dep: Dep | Effect[]) {
   const deps = isArray(dep) ? dep : [...dep]
   for (const useEffect of deps) {
     if (useEffect !== activeEffect || useEffect.allowEffect) {
