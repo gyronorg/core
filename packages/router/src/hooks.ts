@@ -6,11 +6,11 @@ import { RouteRecord, RouteRecordConfig } from './route'
 import { RouterBase } from './router'
 import { Routes } from './routes'
 
-export const TypeRouter = Symbol('Router')
-export const TypeRoute = Symbol('Route')
-export const TypeOutlet = Symbol('Outlet')
-export const TypeParams = Symbol('Params')
-export const TypeQuery = Symbol('Query')
+export const TypeRouter = Symbol.for('gyron.router')
+export const TypeRoute = Symbol.for('gyron.route')
+export const TypeOutlet = Symbol.for('gyron.outlet')
+export const TypeParams = Symbol.for('gyron.params')
+export const TypeQuery = Symbol.for('gyron.query')
 
 export interface TypeOutletRaw {
   matches: RouteRecord[]

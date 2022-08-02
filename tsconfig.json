@@ -13,6 +13,5 @@
     },
     "types": ["jest", "node"]
   },
-  "include": ["packages/**/*.ts", "packages/**/*.tsx"],
-  "files": ["global.d.ts"]
+  "include": ["packages/**/*.ts", "packages/**/*.tsx", "global.d.ts"]
 }

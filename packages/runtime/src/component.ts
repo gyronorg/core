@@ -58,7 +58,7 @@ export type ComponentFunction<Props> = (
 export type ComponentFunctionReturn = VNodeChildren | Promise<VNodeChildren>
 
 export interface ComponentSetupFunction<Props extends object = object> {
-  (props?: Props & Partial<ComponentDefaultProps>):
+  (props: Props & Partial<ComponentDefaultProps>, component: Component<Props>):
     | ComponentFunctionReturn
     | ComponentFunction<Props>
   __cache?: boolean
@@ -81,8 +81,11 @@ export type AsyncComponentFunctionReturn<Props extends object = object> = {
   ) => Promise<VNode<VNodeType>>
 }
 
-export type WrapperFunction<T> = {
-  (props: Omit<UtilFunctionProps<T>, keyof ComponentDefaultProps>): VNode
+export type WrapperFunction<T, Props extends object> = {
+  (
+    props: Omit<UtilFunctionProps<T>, keyof ComponentDefaultProps>,
+    component: Component<Props>
+  ): VNode
 }
 
 export type Exposed = Record<string | number, any>
@@ -339,14 +342,14 @@ export function FCA<
 
   ret.__loader = load
 
-  return ret as unknown as WrapperFunction<T>
+  return ret as unknown as WrapperFunction<T, Props>
 }
 
 export function FC<
   Props extends object = object,
   T extends ComponentSetupFunction<Props> = ComponentSetupFunction<Props>
 >(componentFunction: T) {
-  return componentFunction as WrapperFunction<T>
+  return componentFunction as WrapperFunction<T, Props>
 }
 
 /**
@@ -371,5 +374,5 @@ export function memo<
   T extends ComponentSetupFunction<Props> = ComponentSetupFunction<Props>
 >(componentFunction: T) {
   componentFunction.__cache = true
-  return componentFunction as WrapperFunction<T>
+  return componentFunction as WrapperFunction<T, Props>
 }

@@ -10,8 +10,8 @@ export type BoundariesHandlerParams = Partial<{
 }>
 export type BoundariesHandler = (params: BoundariesHandlerParams) => void
 
-export const ErrorType = Symbol('error_handler')
-export const WarnType = Symbol('warn_handler')
+export const ErrorType = Symbol.for('gyron.error-handler')
+export const WarnType = Symbol.for('gyron.warn-handler')
 
 export function registerErrorHandler(handler: BoundariesHandler) {
   const component = getCurrentComponent()

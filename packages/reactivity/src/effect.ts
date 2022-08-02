@@ -30,8 +30,8 @@ export const enum TriggerTypes {
   CLEAR = 'clear',
 }
 
-export const ITERATE_KEY = Symbol('iterate')
-export const MAP_KEY_ITERATE_KEY = Symbol('Map key iterate')
+export const ITERATE_KEY = Symbol.for('gyron.iterate')
+export const MAP_KEY_ITERATE_KEY = Symbol.for('gyron.map-iterate')
 
 let shouldTrack = true
 

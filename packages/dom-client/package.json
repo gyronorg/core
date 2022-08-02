@@ -22,7 +22,7 @@
   "devDependencies": {
     "@gyron/shared": "^0.0.11"
   },
-  "peerDependencies": {
-    "@gyron/runtime": "^0.0.5-alpha.1"
+  "dependencies": {
+    "@gyron/runtime": "^0.0.11"
   }
 }

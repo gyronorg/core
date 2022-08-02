@@ -14,7 +14,7 @@ export function getErrorBoundaryCtx(component: Component) {
   return inject(component, ErrorBoundaryType, false)
 }
 
-export const ErrorBoundaryType = Symbol('ErrorBoundary')
+export const ErrorBoundaryType = Symbol.for('gyron.error-boundary')
 
 export const ErrorBoundary = FC<ErrorBoundaryProps>(function ErrorBoundary() {
   const state = useReactive<{

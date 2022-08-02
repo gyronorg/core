@@ -1655,7 +1655,7 @@ export interface IntrinsicElementAttributes {
 type DefaultProps = {
   key?: string | number | symbol
   ref?: UserRef
-  children?: VNodeChildren | VNodeChildren[]
+  children?: VNodeChildren | VNodeChildren[] | ((props: any) => JSX.Element)
 }
 
 type ElementAttrs<T> = T & DefaultProps

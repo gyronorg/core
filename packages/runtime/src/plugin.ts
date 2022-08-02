@@ -1,7 +1,7 @@
 import { isFunction, isObject } from '@gyron/shared'
 import { Instance } from './instance'
 
-export const TypePlugin = Symbol('Plugin')
+export const TypePlugin = Symbol.for('gyron.plugin')
 
 function isPlugin(plugin: Plugin) {
   return isObject(plugin) && plugin.type === TypePlugin

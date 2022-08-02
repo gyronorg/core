@@ -26,6 +26,7 @@ import {
   memo,
 } from '../src'
 import { effectTracks } from '@gyron/reactivity'
+import { Gyron } from '../src/vnode'
 
 describe('Component', () => {
   const container = document.createElement('div')
@@ -40,7 +41,8 @@ describe('Component', () => {
     }>((props) => {
       return createVNode('span', null, props.count)
     })
-    App({ count: 0 })
+    const app = App({ count: 0 }, null)
+    expect(app.flag).toBe(Gyron)
   })
 
   test('useReactive props', async () => {

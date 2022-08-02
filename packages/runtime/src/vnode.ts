@@ -9,11 +9,11 @@ import {
 import { UserRef } from './ref'
 import { VNodeEvent } from './interface'
 
-export const Gyron = Symbol('Gyron')
-export const Text = Symbol('Text')
-export const Element = Symbol('Element')
-export const Comment = Symbol('Comment')
-export const Fragment = Symbol('Fragment')
+export const Gyron = Symbol.for('gyron')
+export const Text = Symbol.for('gyron.text')
+export const Element = Symbol.for('gyron.element')
+export const Comment = Symbol.for('gyron.comment')
+export const Fragment = Symbol.for('gyron.fragment')
 
 export enum NodeType {
   Fragment = -2,

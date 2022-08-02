@@ -27,7 +27,7 @@ export interface StorePlugin<S = any> {
   getState: () => S
 }
 
-const TypeStore = Symbol('store')
+const TypeStore = Symbol.for('gyron.store')
 
 function getStoreWithContext() {
   const context = useRootContext()
