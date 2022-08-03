@@ -9,8 +9,8 @@ import {
   FC,
   ComponentSetupFunction,
   VNode,
+  WrapperFunction,
 } from '@gyron/runtime'
-import { WrapperFunction } from 'packages/runtime/src/component'
 
 export function useState<S>(
   initialState: S | (() => S)
@@ -98,6 +98,5 @@ export function createContext<T>(defaultValue: T): Context<T> {
 }
 
 export function useContext<T>(context: Context<T>): T {
-  // @ts-ignore
   return context.value
 }

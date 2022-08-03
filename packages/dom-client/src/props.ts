@@ -1,5 +1,4 @@
-import { VNode, VNodeProps, warn } from '@gyron/runtime'
-import { removeBuiltInProps } from '@gyron/runtime'
+import { VNode, VNodeProps, warn, removeBuiltInProps } from '@gyron/runtime'
 import {
   diffWord,
   isBoolean,

@@ -7,7 +7,7 @@ import {
   ComponentSetupFunction,
 } from './component'
 import { UserRef } from './ref'
-import { VNodeEvent } from './interface'
+import { VNodeEvent } from './eventType'
 
 export const Gyron = Symbol.for('gyron')
 export const Text = Symbol.for('gyron.text')

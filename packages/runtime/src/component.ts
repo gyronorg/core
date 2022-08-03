@@ -48,14 +48,9 @@ export type ComponentParentProps = {
   readonly ref: UserRef
 }
 
-export type AsyncProps<Props> = Props &
-  Partial<ComponentDefaultProps & { fallback: VNode }>
-
 export type ComponentFunction<Props> = (
   props?: Props & Partial<ComponentDefaultProps>
 ) => VNodeChildren
-
-export type ComponentFunctionReturn = VNodeChildren | Promise<VNodeChildren>
 
 export interface ComponentSetupFunction<Props extends object = object> {
   (props: Props & Partial<ComponentDefaultProps>, component: Component<Props>):
@@ -65,15 +60,16 @@ export interface ComponentSetupFunction<Props extends object = object> {
   [k: string]: any
 }
 
-export type ComponentSetupFunctionReturn<Props extends object> = ReturnType<
-  ComponentSetupFunction<Props>
->
-
 export type AsyncComponentFunction<Props extends object = object> = (
   props?: AsyncProps<Props> & Partial<ComponentDefaultProps>
 ) => Promise<ComponentSetupFunction<Props> | VNode>
 
-export type AsyncComponentFunctionReturn<Props extends object = object> = {
+type ComponentFunctionReturn = VNodeChildren | Promise<VNodeChildren>
+
+type AsyncProps<Props> = Props &
+  Partial<ComponentDefaultProps & { fallback: VNode }>
+
+type AsyncComponentFunctionReturn<Props extends object = object> = {
   (): Promise<VNode>
   readonly __loader: (
     props: AsyncProps<Props>,
@@ -160,7 +156,7 @@ export function forceUpdate(component: Component) {
 function renderComponentSubTree(
   component: Component,
   props: VNodeProps,
-  renderTree: ComponentSetupFunctionReturn<VNodeProps>
+  renderTree: ReturnType<ComponentSetupFunction<VNodeProps>>
 ) {
   if (isFunction(renderTree)) {
     component.render = renderTree
@@ -194,7 +190,7 @@ export function renderComponent(component: Component, isSSR = false) {
   // getCurrentComponent fn return current
   _component = component
   const props = normalizeComponentProps(component, isSSR)
-  const renderTree: ComponentSetupFunctionReturn<VNodeProps> =
+  const renderTree: ReturnType<ComponentSetupFunction<VNodeProps>> =
     callWithErrorHandling(
       renderFunction,
       component,

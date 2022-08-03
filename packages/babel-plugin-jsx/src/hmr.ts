@@ -4,7 +4,7 @@ import { State } from './transformJsx'
 import { isBodyContainJSX } from './utils'
 import hash from 'hash-sum'
 
-const hashIds = []
+export const hashIds = []
 
 function insertHMRCode(
   path: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,

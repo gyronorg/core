@@ -42,11 +42,23 @@ export function babelESBuildJsx(options: Partial<Options> = {}): Plugin {
 export function babelViteJsx(options: Partial<Options> = {}): VitePlugin {
   return {
     name: 'vite:gyron-jsx',
-    config() {
+    config(config) {
       return {
+        define: {
+          __DEV__: config.mode === 'development',
+          __WARN__: config.mode === 'development',
+        },
         esbuild: {
           include: /\.ts$/,
           exclude: /node_modules/,
+        },
+        resolve: {
+          alias: [
+            {
+              find: /@\/(.*)/,
+              replacement: path.join(process.cwd(), './src/$1'),
+            },
+          ],
         },
       }
     },

@@ -96,6 +96,7 @@ export type {
   ComponentDefaultProps,
   UtilComponentProps,
   UtilFunctionProps,
+  WrapperFunction,
 } from './component'
 export type {
   VNode,
