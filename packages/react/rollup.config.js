@@ -4,7 +4,11 @@ import del from 'rollup-plugin-delete'
 
 export default {
   input: 'src/index.ts',
-  output: { file: packageJson.types, format: 'esm' },
+  output: {
+    file: packageJson.types,
+    format: 'esm',
+    banner: '/// <reference path="../index.d.ts" />',
+  },
   plugins: [
     dts(),
     del({

@@ -10,6 +10,8 @@
   },
   "files": [
     "dist",
+    "index.d.ts",
+    "global.d.ts",
     "README.md"
   ],
   "scripts": {
