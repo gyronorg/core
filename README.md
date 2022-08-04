@@ -14,10 +14,9 @@
   <a href="https://codecov.io/gh/Linkontoask/gyron">
     <img src="https://codecov.io/gh/Linkontoask/gyron/branch/master/graph/badge.svg?token=M8YC2QSBFY"/>
   </a>
-  <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@gyron/runtime?style=flat-square">
 </p>
 
-`Gyron` 是一款简单零依赖的响应式框架。核心代码 `< 10kb(gzip)`。
+`Gyron` 是一款简单零依赖的响应式框架。核心代码大小: <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@gyron/runtime?style=flat-square">。
 
 ## 功能
 
