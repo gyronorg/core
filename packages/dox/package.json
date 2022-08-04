@@ -4,7 +4,7 @@
   "module": "dist/esm/index.js",
   "browser": "dist/umd/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.11",
+  "version": "0.0.12-alpha.2",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -21,7 +21,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@gyron/runtime": "^0.0.11",
+    "@gyron/runtime": "^0.0.12-alpha.2",
     "@gyron/shared": "^0.0.11",
     "@gyron/sync": "^0.0.11",
     "@reduxjs/toolkit": "^1.8.1"

@@ -1,6 +1,6 @@
 {
   "name": "@gyron/reactivity",
-  "version": "0.0.11",
+  "version": "0.0.12-alpha.2",
   "description": "mini reactivity",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
