@@ -19,7 +19,7 @@ test('use', async () => {
     const state = store.getState()
     return () => h(Child, { count: state.count })
   })
-  createInstance(App).use(store).render(container)
+  createInstance(App).render(container)
   expect(container.innerHTML).toBe('<span>0</span>')
   store.extra.dispatch(increment())
   await nextRender()

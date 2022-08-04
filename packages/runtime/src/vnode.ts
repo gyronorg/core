@@ -58,8 +58,6 @@ export interface VNode<T extends VNodeType = VNodeType> {
   tag?: string
   is?: any
   component?: Component
-  context?: VNodeContext
-  root?: VNode
   children?: VNodeChildren
 }
 
@@ -67,11 +65,12 @@ export interface VNodeProps extends VNodeEvent, Partial<ComponentDefaultProps> {
   [k: string]: any
 }
 
-export interface VNodeContext {
+export interface Context {
   set: (k: string | symbol, v: any) => any
   get: (k: string | symbol) => any
   keys: () => IterableIterator<any>
   values: () => IterableIterator<any>
+  clear: () => void
 }
 
 export function cloneVNode<T extends VNode | VNode[]>(vnode: T): T {
@@ -198,9 +197,7 @@ export function normalizeVNode(child: VNodeChildren): VNode {
 }
 
 export function normalizeChildrenVNode(vnode: VNode) {
-  const parent: VNode = isArray(vnode)
-    ? vnode[0]?.parent
-    : vnode.parent || vnode.root
+  const parent: VNode = vnode
 
   if (!parent) {
     console.warn(
@@ -216,6 +213,5 @@ export function normalizeChildrenVNode(vnode: VNode) {
 export function normalizeVNodeWithLink(children: Children, parent: VNode) {
   const node = normalizeVNode(children)
   node.parent = parent
-  node.root = parent.root
   return node
 }

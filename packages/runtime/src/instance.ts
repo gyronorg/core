@@ -2,28 +2,18 @@ import { isString } from '@gyron/shared'
 import { querySelector } from '@gyron/dom-client'
 import { patch, unmount } from './renderer'
 import { hydrate } from './hydrate'
-import { installPlugin } from './plugin'
 import { checkVersion } from './version'
-import type { VNode, VNodeContext } from './vnode'
-import type { Plugin } from './plugin'
+import type { VNode, Context } from './vnode'
 
 export interface Instance {
   container: Element | null
-  use: (plugin: Plugin) => Instance
   render: (containerOrSelector: string | HTMLElement) => Instance
   destroy: () => Instance
-  readonly plugins: Set<Plugin>
-  get root(): VNode
-}
-
-export function normalizeRootVNode(vnode: VNode) {
-  vnode.root = vnode
-  vnode.context = createContext()
 }
 
 export function createContext() {
   const _context = new Map()
-  const context: VNodeContext = {
+  const context: Context = {
     set(k, v) {
       return _context.set(k, v)
     },
@@ -36,6 +26,9 @@ export function createContext() {
     values() {
       return _context.values()
     },
+    clear() {
+      return _context.clear()
+    },
   }
   return context
 }
@@ -47,15 +40,8 @@ export function render(vnode: VNode, container: Element) {
 export function createInstance(root: VNode, isHydrate?: boolean) {
   checkVersion()
 
-  normalizeRootVNode(root)
-
   const instance: Instance = {
     container: null,
-    plugins: new Set(),
-    use(plugin) {
-      installPlugin(plugin, instance, isHydrate)
-      return instance
-    },
     render(containerOrSelector) {
       if (containerOrSelector) {
         if (isString(containerOrSelector)) {
@@ -81,9 +67,6 @@ export function createInstance(root: VNode, isHydrate?: boolean) {
         instance.container.innerHTML = ''
       }
       return instance
-    },
-    get root() {
-      return root
     },
   }
 

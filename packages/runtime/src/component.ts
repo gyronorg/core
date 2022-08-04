@@ -171,14 +171,12 @@ function renderComponentSubTree(
     return renderTree.then((subTree: VNodeChildren) => {
       subTree = normalizeVNode(subTree)
       subTree.parent = component.vnode
-      subTree.root = component.vnode.root
       return subTree
     })
   }
 
   const subTree = normalizeVNode(renderTree)
   subTree.parent = component.vnode
-  subTree.root = component.vnode.root
   return subTree
 }
 

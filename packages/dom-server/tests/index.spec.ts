@@ -5,9 +5,6 @@ import {
   createFragment,
   createComponent,
   useValue,
-  createSSRInstance,
-  getCurrentComponent,
-  VNode,
 } from '@gyron/runtime'
 import { renderToString } from '../src'
 
@@ -78,19 +75,5 @@ describe('RenderToString', () => {
       })
     )
     expect(html).toBe('<div><div>child</div></div>')
-  })
-
-  test('[RenderToString] deep root', async () => {
-    let foo: VNode
-    const Child = createComponent(() => {
-      foo = getCurrentComponent().vnode.root
-      return createVNode('div', null, 'child')
-    })
-    const App = createComponent(() => {
-      return createVNode('div', null, Child)
-    })
-    const { root } = createSSRInstance(App)
-    await renderToString(root)
-    expect(foo === root).toBe(true)
   })
 })

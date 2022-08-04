@@ -7,7 +7,5 @@ export function appEnv(s: any, f: Noop) {
       f()
       return createComment()
     })
-  )
-    .use(s)
-    .render(document.createElement('div'))
+  ).render(document.createElement('div'))
 }

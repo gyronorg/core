@@ -7,7 +7,7 @@ export function checkVersion() {
     (version.includes('alpha') || version.includes('beta'))
   ) {
     console.warn(
-      `The current(${version}) version is not available for production environments. Please use the command "npm install @gyron/runtime@latest" to upgrade`
+      `The current(${version}) version is not available for production environments. Please use the command "npm install gyron@latest" to upgrade`
     )
   }
 }

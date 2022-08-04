@@ -1,17 +1,9 @@
 import { warn } from './assert'
 import { Component, getCurrentComponent } from './component'
+import { plugins } from './plugin'
 
-export function useRootContext() {
-  const component = getCurrentComponent()
-  if (!component.vnode.root) {
-    warn(
-      'useRootContext Exception occurred, no root node information was obtained, please report to https://github.com/Linkontoask/gyron/issues',
-      null,
-      'useRootContext'
-    )
-    return null
-  }
-  return component.vnode.root.context
+export function usePlugin() {
+  return plugins
 }
 
 export function provide(

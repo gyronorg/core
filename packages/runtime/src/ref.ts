@@ -6,9 +6,9 @@ export interface UserRef<T = Ref> {
   current: T
 }
 
-export function useRef<T = any>(): UserRef<T> {
+export function useRef<T = any>(initialValue?: T): UserRef<T> {
   return {
-    current: null,
+    current: initialValue,
   }
 }
 

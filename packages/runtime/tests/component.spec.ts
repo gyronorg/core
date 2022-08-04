@@ -494,9 +494,9 @@ describe('Component', () => {
 
   test('before props with after props', async () => {
     const count = useValue(0)
-    const update = jest.fn((component, props) => {
-      expect(props.count).toBe(component.props.count - 1)
-      return component.props.count > 1
+    const update = jest.fn((oldProps, props) => {
+      expect(props.count).toBe(oldProps.count + 1)
+      return props.count > 1
     })
     const Child = () => {
       onBeforeUpdate(update)

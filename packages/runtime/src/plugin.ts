@@ -1,48 +1,28 @@
-import { isFunction, isObject } from '@gyron/shared'
-import { Instance } from './instance'
+import { isFunction, isUndefined } from '@gyron/shared'
+import { createContext } from './instance'
+import { Context } from './vnode'
 
-export const TypePlugin = Symbol.for('gyron.plugin')
+export const plugins = createContext()
 
-function isPlugin(plugin: Plugin) {
-  return isObject(plugin) && plugin.type === TypePlugin
-}
-
-export interface Plugin<E = any> {
-  type: typeof TypePlugin
-  install: (instance: Instance, isSSR: boolean) => void
+export interface Plugin<D extends object, E = any> {
+  data?: D
+  install?: (plugins: Context) => void
+  type?: symbol
   extra?: E
-  name?: string | symbol
+  name?: string
 }
 
-export type PluginOption<E> = Omit<Plugin<E>, 'type'>
-
-export function createPlugin<E>(option: PluginOption<E>): Plugin<E> {
-  if (!isFunction(option.install)) {
-    console.warn('invalid plugin install', option.install)
-    return null
-  }
-  return {
-    install: option.install,
-    extra: option.extra,
-    type: TypePlugin,
-  }
-}
-
-export function installPlugin(
-  plugin: Plugin,
-  instance: Instance,
-  isSSR: boolean
-) {
-  if (!isPlugin(plugin)) {
-    console.warn('invalid plugin error, please use createPlugin function.')
+export function createPlugin<D extends object, E = any>(option: Plugin<D, E>) {
+  if (isUndefined(option.data) && !isFunction(option.install)) {
+    console.warn('invalid plugin data', option.data)
     return null
   }
 
-  if (instance.plugins.has(plugin)) {
-    return null
+  if (isFunction(option.install)) {
+    option.install(plugins)
+  } else {
+    plugins.set(option.type, option.data)
   }
 
-  plugin.install(instance, isSSR)
-
-  instance.plugins.add(plugin)
+  return option
 }

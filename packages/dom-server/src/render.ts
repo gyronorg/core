@@ -25,7 +25,6 @@ import { renderBuffer, SSRBuffer } from './buffer'
 import { renderProps } from './props'
 
 export function renderToString(vnode: VNode) {
-  vnode.root = vnode
   const buffer = renderComponentSubBuffer(vnode)
   return renderBuffer(buffer.buffer)
 }

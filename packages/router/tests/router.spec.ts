@@ -47,9 +47,7 @@ describe('Router', () => {
           h(Route, { path: 'foo', element: createText('foo') }),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     await router.extra.push('/foo')
     await nextRender()
     expect(container.innerHTML).toBe('foo')

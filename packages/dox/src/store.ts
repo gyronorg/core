@@ -3,7 +3,7 @@ import {
   enableTrack,
   pauseTrack,
   useReactive,
-  useRootContext,
+  usePlugin,
 } from '@gyron/runtime'
 import { extend, isFunction, readonly, readwrite } from '@gyron/shared'
 import { sync } from '@gyron/sync'
@@ -30,7 +30,7 @@ export interface StorePlugin<S = any> {
 const TypeStore = Symbol.for('gyron.store')
 
 function getStoreWithContext() {
-  const context = useRootContext()
+  const context = usePlugin()
   const store = context.get(TypeStore) as StorePlugin
   if (!store) {
     throw new Error(
@@ -97,12 +97,9 @@ export function createStore<
   }
 
   return createPlugin({
+    type: TypeStore,
     name: 'dox',
     extra: store,
-    install: (instance) => {
-      const context = instance.root.context
-      const plugin: StorePlugin = { store, state, getStore, getState }
-      context.set(TypeStore, plugin)
-    },
+    data: { store, state, getStore, getState },
   })
 }

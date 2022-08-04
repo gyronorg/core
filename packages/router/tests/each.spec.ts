@@ -81,9 +81,7 @@ describe('Each', () => {
           h(Route, { path: '/baz', element: createText('baz') }),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     expect(container.innerHTML).toBe('foo')
     await router.extra.replace('/bar')
     expect(after).toHaveBeenCalledTimes(1)

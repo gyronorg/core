@@ -539,7 +539,6 @@ function enterComment(
     insert(comment, container, anchor)
   } else {
     n2.el = n1.el
-    n2.root = n1.root
   }
 }
 

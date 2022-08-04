@@ -1,28 +1,29 @@
 import { noop } from '@gyron/shared'
-import { createInstance, createPlugin, h, useRootContext } from '../src'
+import { createInstance, createPlugin, h, usePlugin } from '../src'
+import { plugins } from '../src/plugin'
 
 describe('plugin', () => {
   const container = document.createElement('div')
 
   beforeEach(() => {
     container.innerHTML = ''
+    plugins.clear()
   })
 
-  test('plugin', () => {
+  test('create state plugin', () => {
     const state = {
       a: 0,
     }
     const plugin = createPlugin({
       extra: state,
-      install(instance) {
-        const context = instance.root.context
-        context.set('state', state)
+      install(plugins) {
+        plugins.set('state', state)
       },
     })
     expect(plugin.extra).toBe(state)
     createInstance(
       h(() => {
-        const context = useRootContext()
+        const context = usePlugin()
         return () =>
           h('div', {
             onClick() {
@@ -31,28 +32,22 @@ describe('plugin', () => {
             },
           })
       })
-    )
-      .use(plugin)
-      .render(container)
+    ).render(container)
 
     container.querySelector('div').click()
     expect(state.a).toBe(1)
   })
 
-  test('invalidate', () => {
+  test('invalidate plugin', () => {
     console.warn = noop
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const plugin = createPlugin({})
     expect(plugin).toBe(null)
     createInstance(
       h(() => {
-        const context = useRootContext()
+        const context = usePlugin()
         expect([...context.keys()].length).toBe(0)
         return h('div')
       })
-    )
-      .use(plugin)
-      .render(container)
+    ).render(container)
   })
 })

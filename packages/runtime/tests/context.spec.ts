@@ -29,7 +29,7 @@ describe('Context', () => {
       return () => h(Child)
     })
     createInstance(App).render(container)
-    expect(childVNode.root === App).toBe(true)
+    expect(childVNode.parent === App).toBe(true)
   })
 
   test('component', async () => {

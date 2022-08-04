@@ -6,7 +6,6 @@ import {
   nextRender,
 } from '@gyron/runtime'
 import {
-  createBrowserRouter,
   createMemoryRouter,
   generateQuery,
   onBeforeRouteUpdate,
@@ -28,7 +27,7 @@ describe('next', () => {
   let app: Instance
 
   beforeEach(() => {
-    router.extra.replace('/')
+    return router.extra.replace('/')
   })
 
   afterEach(() => {
@@ -43,9 +42,7 @@ describe('next', () => {
           h(Route, { path: 'foo', element: createText('foo') }),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     expect(container.innerHTML).toBe('')
     await router.extra.push('/foo')
     await nextRender()
@@ -53,7 +50,6 @@ describe('next', () => {
   })
 
   test('redirect', async () => {
-    const router = createBrowserRouter()
     app = createInstance(
       h(() => {
         return h(Routes, null, [
@@ -64,9 +60,7 @@ describe('next', () => {
           ]),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     expect(container.innerHTML).toBe('foo')
     expect(router.extra.path).toBe('/foo')
     await router.extra.push('')
@@ -103,9 +97,8 @@ describe('next', () => {
           ),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
+    await router.extra.push('/')
     expect(container.innerHTML).toBe('<div></div>')
     await router.extra.push('/foo')
     await nextRender()
@@ -140,9 +133,7 @@ describe('next', () => {
           }),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     expect(container.innerHTML).toBe('')
     await router.extra.push('/bar')
     await nextRender()
@@ -173,9 +164,7 @@ describe('next', () => {
           ),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     expect(container.innerHTML).toBe('')
     await router.extra.push('/foo')
     await nextRender()
@@ -201,9 +190,7 @@ describe('next', () => {
           ),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     await router.extra.replace('/foo')
     await nextRender()
     expect(container.innerHTML).toBe('foo')
@@ -219,9 +206,7 @@ describe('next', () => {
           },
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     expect(container.innerHTML).toBe('foo')
   })
 
@@ -233,9 +218,7 @@ describe('next', () => {
           h(Route, { path: 'foo', element: h(() => String(useMatch('/foo'))) }),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     await router.extra.push('/foo')
     await nextRender()
     expect(container.innerHTML).toBe('true')
@@ -265,9 +248,7 @@ describe('next', () => {
           }),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     expect(title).toBe('foo')
   })
 
@@ -288,9 +269,7 @@ describe('next', () => {
           }),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     await router.extra.push('/foo')
     await nextRender()
     expect(beforeUpdate).toHaveBeenCalledTimes(0)
@@ -321,9 +300,7 @@ describe('next', () => {
           }),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     await router.extra.push('/foo?id=admin')
     expect(container.innerHTML).toBe('<span>admin</span>')
     await router.extra.push('/foo?id=visitor')

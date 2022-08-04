@@ -3,7 +3,7 @@ import {
   FC,
   Primitive,
   useValue,
-  useRootContext,
+  usePlugin,
 } from '@gyron/runtime'
 import { isEqual, isFunction, noop } from '@gyron/shared'
 import {
@@ -176,11 +176,10 @@ export function createRouter(option: Partial<RouterOption>) {
   return createPlugin({
     name: 'router',
     extra: router,
-    install: (instance) => {
+    install: (plugins) => {
       const route = useValue({})
-      const rootContent = instance.root.context
-      rootContent.set(TypeRouter, router)
-      rootContent.set(TypeRoute, route)
+      plugins.set(TypeRouter, router)
+      plugins.set(TypeRoute, route)
     },
   })
 }
@@ -190,7 +189,7 @@ export const Router = FC<RouterProps>(function Router({
   base,
   isSSR,
 }) {
-  const rootContent = useRootContext()
+  const rootContent = usePlugin()
   const route = useValue({})
 
   let router: RouterBase = rootContent.get(TypeRouter)

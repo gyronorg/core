@@ -27,12 +27,7 @@ export {
   FC,
 } from './component'
 export { removeBuiltInProps } from './renderComponent'
-export {
-  createInstance,
-  render,
-  createContext,
-  normalizeRootVNode,
-} from './instance'
+export { createInstance, render, createContext } from './instance'
 export {
   createVNode,
   createComponent,
@@ -71,7 +66,7 @@ export { warn, error } from './assert'
 export { createPlugin } from './plugin'
 export { rerender } from './hmr'
 export {
-  useRootContext,
+  usePlugin,
   useComponentContext,
   useProvide,
   useInject,

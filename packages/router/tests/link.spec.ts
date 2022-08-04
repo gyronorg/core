@@ -38,9 +38,7 @@ describe('Link', () => {
           activeStyle: 'color: red',
         }),
       ])
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     router.extra.nestedRoutes = generate(['/', '/foo', '/bar'])
     expect(container.innerHTML).toBe('<a href="/foo"></a><a href="/bar"></a>')
     await router.extra.push('/foo')
@@ -81,9 +79,7 @@ describe('Link', () => {
           h(Route, { path: '/foo', element: createText('foo') }),
         ])
       })
-    )
-      .use(router)
-      .render(container)
+    ).render(container)
     router.extra.nestedRoutes = generate(['/', '/foo', '/bar'])
     expect(container.innerHTML).toBe('<a href="/foo"></a><a href="/bar"></a>')
     LinkRef.current.dispatchEvent(new Event('click'))
