@@ -44,7 +44,7 @@ export interface Target {
   [ReactiveFlags.RAW]?: any
 }
 
-export function isResponsive(n: any) {
+export function isResponsive(n: any): n is { value: any } {
   // reactivity/src/useReactive ReactiveFlags
   return (
     isObject(n) &&

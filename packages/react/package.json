@@ -18,9 +18,11 @@
     "build:cjs": "esbuild src/index.ts --bundle --sourcemap --outfile=dist/cjs/index.js --format=cjs --platform=node --external:@gyron/* --define:__DEV__=false --define:__WARN__=true",
     "build:dts": "rollup -c"
   },
+  "devDependencies": {
+    "@gyron/babel-plugin-jsx": "^0.0.11"
+  },
   "dependencies": {
     "@gyron/runtime": "^0.0.11",
-    "@gyron/shared": "^0.0.11",
-    "@gyron/babel-plugin-jsx": "^0.0.11"
+    "@gyron/shared": "^0.0.11"
   }
 }

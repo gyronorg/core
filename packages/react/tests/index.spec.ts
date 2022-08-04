@@ -33,6 +33,26 @@ describe('base', () => {
     expect(destroyed).toHaveBeenCalledTimes(1)
   })
 
+  test('effect deps', async () => {
+    const noop = jest.fn()
+    const effect = jest.fn(noop)
+    const [count1, setCount1] = useState(0)
+    const [count2, setCount2] = useState(0)
+    createInstance(
+      h(() => {
+        useEffect(effect, [count2])
+        return () => h('div', null, count1.value)
+      })
+    ).render(container)
+    expect(effect).toHaveBeenCalledTimes(1)
+    setCount1(1)
+    await nextRender()
+    expect(effect).toHaveBeenCalledTimes(1)
+    setCount2(1)
+    await nextRender()
+    expect(effect).toHaveBeenCalledTimes(2)
+  })
+
   test('create context', () => {
     const Context = createContext(0)
     createInstance(

@@ -2,31 +2,37 @@ import { isBoolean } from '@gyron/shared'
 import { Component, getCurrentComponent } from './component'
 import { callWithErrorHandling, ErrorHandlingType } from './renderComponent'
 
-type LifecycleCallback<T = void> = (component: Component, props?: any) => T
+type LifecycleCallback = (component: Component) => any
+type LifecycleUpdateCallback = (
+  oldProps: object,
+  props?: object
+) => any | boolean
 
 export interface Lifecycle {
-  beforeMounts: Set<LifecycleCallback | LifecycleCallback<Promise<any>>>
-  afterMounts: Set<LifecycleCallback | LifecycleCallback<Promise<any>>>
-  destroyed: Set<LifecycleCallback | LifecycleCallback<Promise<any>>>
-  beforeUpdates: Set<LifecycleCallback<boolean | void>>
-  afterUpdates: Set<LifecycleCallback | LifecycleCallback<Promise<any>>>
-}
-
-function createSet(n?: LifecycleCallback[]) {
-  return new Set(n)
+  beforeMounts: Set<LifecycleCallback>
+  afterMounts: Set<LifecycleCallback>
+  destroyed: Set<LifecycleCallback>
+  beforeUpdates: Set<LifecycleUpdateCallback>
+  afterUpdates: Set<LifecycleUpdateCallback>
 }
 
 function wrapLifecycle(component: Component, type: keyof Lifecycle) {
-  const lifecycle = Array.from(component.lifecycle[type])
+  const lifecycle = [...component.lifecycle[type]]
   const wrapResult = []
 
   for (let i = 0; i < lifecycle.length; i++) {
     const listener = lifecycle[i]
+    const params = []
+    if (type === 'beforeUpdates' || type === 'afterUpdates') {
+      params.push(component.oldProps, component.props)
+    } else {
+      params.push(component)
+    }
     const result = callWithErrorHandling(
       listener,
       component,
       ErrorHandlingType.Lifecycle,
-      [component, component.oldProps]
+      params
     )
 
     if (type === 'beforeUpdates' && isBoolean(result) && !result) {
@@ -46,11 +52,11 @@ function useComponent() {
 
 export function initialLifecycle(): Lifecycle {
   return {
-    beforeMounts: createSet(),
-    afterMounts: createSet(),
-    destroyed: createSet(),
-    beforeUpdates: createSet(),
-    afterUpdates: createSet(),
+    beforeMounts: new Set(),
+    afterMounts: new Set(),
+    destroyed: new Set(),
+    beforeUpdates: new Set(),
+    afterUpdates: new Set(),
   }
 }
 
@@ -66,11 +72,11 @@ export function onDestroyed(callback: LifecycleCallback) {
   const component = useComponent()
   component.lifecycle.destroyed.add(callback)
 }
-export function onBeforeUpdate(callback: LifecycleCallback<boolean | void>) {
+export function onBeforeUpdate(callback: LifecycleUpdateCallback) {
   const component = useComponent()
   component.lifecycle.beforeUpdates.add(callback)
 }
-export function onAfterUpdate(callback: LifecycleCallback) {
+export function onAfterUpdate(callback: LifecycleUpdateCallback) {
   const component = useComponent()
   component.lifecycle.afterUpdates.add(callback)
 }

@@ -10,6 +10,8 @@ import {
   ComponentSetupFunction,
   VNode,
   WrapperFunction,
+  useWatch,
+  isResponsive,
 } from '@gyron/runtime'
 
 export function useState<S>(
@@ -50,17 +52,19 @@ export function useEffect(
       return ret
     },
   })
-  onAfterMount(effectProxy)
+
   if (deps) {
-    onAfterUpdate((component, props) => {
-      const diffLength = deps.filter((dep) => {
-        return component.oldProps[dep as any] !== props[dep as any]
-      }).length
-      if (diffLength > 0) {
-        effectProxy()
-      }
-    })
+    useWatch(
+      effectProxy,
+      deps.map((dep) => {
+        if (isResponsive(dep)) {
+          return () => dep.value
+        }
+        return () => dep
+      })
+    )
   } else {
+    onAfterMount(effectProxy)
     onAfterUpdate(effectProxy)
   }
 }
