@@ -6,7 +6,7 @@ import {
   Instance,
   nextRender,
 } from '@gyron/runtime'
-import { createMemoryRouter, Link, Route, Routes } from '../src'
+import { createMemoryRouter, Link, Route, Router, Routes } from '../src'
 import { generate } from './each.spec'
 
 describe('Link', () => {
@@ -26,18 +26,20 @@ describe('Link', () => {
   test('active class and style', async () => {
     const router = createMemoryRouter()
     app = createInstance(
-      h(() => [
-        h(Link, {
-          to: '/foo',
-          activeClassName: 'active',
-          activeStyle: 'color: red',
-        }),
-        h(Link, {
-          to: '/bar',
-          activeClassName: 'active',
-          activeStyle: 'color: red',
-        }),
-      ])
+      h(() =>
+        h(Router, { router: router }, [
+          h(Link, {
+            to: '/foo',
+            activeClassName: 'active',
+            activeStyle: 'color: red',
+          }),
+          h(Link, {
+            to: '/bar',
+            activeClassName: 'active',
+            activeStyle: 'color: red',
+          }),
+        ])
+      )
     ).render(container)
     router.extra.nestedRoutes = generate(['/', '/foo', '/bar'])
     expect(container.innerHTML).toBe('<a href="/foo"></a><a href="/bar"></a>')
@@ -58,26 +60,30 @@ describe('Link', () => {
     const LinkRef = useRef()
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(Route, {
-            path: '/',
-            strict: true,
-            element: h(() => {
-              return [
-                h(Link, {
-                  ref: LinkRef,
-                  to: '/foo',
-                }),
-                h(Link, {
-                  to: {
-                    pathname: '/bar',
-                  },
-                }),
-              ]
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Route, {
+              path: '/',
+              strict: true,
+              element: h(() => {
+                return [
+                  h(Link, {
+                    ref: LinkRef,
+                    to: '/foo',
+                  }),
+                  h(Link, {
+                    to: {
+                      pathname: '/bar',
+                    },
+                  }),
+                ]
+              }),
             }),
-          }),
-          h(Route, { path: '/foo', element: createText('foo') }),
-        ])
+            h(Route, { path: '/foo', element: createText('foo') }),
+          ])
+        )
       })
     ).render(container)
     router.extra.nestedRoutes = generate(['/', '/foo', '/bar'])

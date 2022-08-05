@@ -16,10 +16,10 @@ describe('plugin', () => {
     }
     const plugin = createPlugin({
       extra: state,
-      install(plugins) {
-        plugins.set('state', state)
-      },
+      data: state,
     })
+    const plugins = usePlugin()
+    plugins.set('state', state)
     expect(plugin.extra).toBe(state)
     createInstance(
       h(() => {
@@ -40,6 +40,8 @@ describe('plugin', () => {
 
   test('invalidate plugin', () => {
     console.warn = noop
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const plugin = createPlugin({})
     expect(plugin).toBe(null)
     createInstance(

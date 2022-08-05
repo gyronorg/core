@@ -5,10 +5,15 @@ import {
   Instance,
   nextRender,
 } from '@gyron/runtime'
-import { createMemoryHistory } from 'history'
-import { createHashRouter, Route, Router, Routes } from '../src'
+import {
+  createHashRouter,
+  createMemoryRouter,
+  Route,
+  Router,
+  Routes,
+} from '../src'
 
-describe('Router', () => {
+describe('router', () => {
   const container = document.createElement('div')
   let app: Instance
 
@@ -17,13 +22,13 @@ describe('Router', () => {
   })
 
   test('router component', async () => {
-    const history = createMemoryHistory()
+    const router = createMemoryRouter()
     app = createInstance(
       h(() => {
         return h(
           Router,
           {
-            history: history,
+            router: router,
           },
           h(Routes, null, [
             h(Route, { path: '', strict: true, element: createText('') }),
@@ -33,7 +38,7 @@ describe('Router', () => {
       })
     ).render(container)
     expect(container.innerHTML).toBe('')
-    history.push('/foo')
+    await router.extra.push('/foo')
     await nextRender()
     expect(container.innerHTML).toBe('foo')
   })
@@ -42,10 +47,14 @@ describe('Router', () => {
     const router = createHashRouter()
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(Route, { path: '', strict: true, element: createText('') }),
-          h(Route, { path: 'foo', element: createText('foo') }),
-        ])
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Route, { path: '', strict: true, element: createText('') }),
+            h(Route, { path: 'foo', element: createText('foo') }),
+          ])
+        )
       })
     ).render(container)
     await router.extra.push('/foo')

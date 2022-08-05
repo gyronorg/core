@@ -27,10 +27,11 @@ import { invokeLifecycle, Lifecycle, onDestroyed } from './lifecycle'
 import { error, warn } from './assert'
 import { UserRef } from './ref'
 
-export type UtilComponentProps<
-  T extends VNodeType,
-  D = never
-> = T extends ComponentFunction<infer Props> ? Props : D
+export type UtilComponentProps<T extends VNodeType, D = never> = T extends
+  | ComponentFunction<infer Props>
+  | ComponentSetupFunction<infer Props>
+  ? Props
+  : D
 
 export type UtilFunctionProps<T> = T extends (props: infer A) => infer C
   ? C extends (props: infer B) => any

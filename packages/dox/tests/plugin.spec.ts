@@ -1,7 +1,13 @@
 import { createInstance, createVNode, FC, h, nextRender } from '@gyron/runtime'
-import { createAction, createReducer, createStore, useStore } from '../src'
+import {
+  createAction,
+  createReducer,
+  createStore,
+  Provider,
+  useStore,
+} from '../src'
 
-test('use', async () => {
+test('plugin', async () => {
   const container = document.createElement('div')
   const increment = createAction('counter/increment')
   const store = createStore({
@@ -19,7 +25,7 @@ test('use', async () => {
     const state = store.getState()
     return () => h(Child, { count: state.count })
   })
-  createInstance(App).render(container)
+  createInstance(h(() => h(Provider, { store: store }, App))).render(container)
   expect(container.innerHTML).toBe('<span>0</span>')
   store.extra.dispatch(increment())
   await nextRender()

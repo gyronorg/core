@@ -1,26 +1,49 @@
-import { isVNodeComponent, onDestroyed } from '@gyron/runtime'
+import {
+  isVNodeComponent,
+  onAfterMount,
+  onDestroyed,
+  usePlugin,
+} from '@gyron/runtime'
 import {
   RouterHookBeforeEach,
   RouterHookAfterEach,
   RouterHookBeforeUpdate,
   RouterHookAfterUpdate,
 } from './event'
-import { useRouter } from './hooks'
+import { TypeRouter } from './hooks'
+import { RouterBase } from './router'
+
+function getRouter() {
+  const context = usePlugin()
+  return context.get<RouterBase>(TypeRouter)
+}
 
 export function onBeforeRouteEach(listener: RouterHookBeforeEach) {
-  const router = useRouter()
+  const router = getRouter()
+  if (!router) {
+    onAfterMount(() => {
+      getRouter().addHook('beforeEach', listener)
+    })
+  } else {
+    router.addHook('beforeEach', listener)
+  }
   onDestroyed(() => {
     router.removeHook('beforeEach', [listener])
   })
-  router.addHook('beforeEach', listener)
 }
 
 export function onAfterRouteEach(listener: RouterHookAfterEach) {
-  const router = useRouter()
+  const router = getRouter()
+  if (!router) {
+    onAfterMount(() => {
+      getRouter().addHook('afterEach', listener)
+    })
+  } else {
+    router.addHook('afterEach', listener)
+  }
   onDestroyed(() => {
     router.removeHook('afterEach', [listener])
   })
-  router.addHook('afterEach', listener)
 }
 
 export function onBeforeRouteUpdate(listener: RouterHookBeforeUpdate) {

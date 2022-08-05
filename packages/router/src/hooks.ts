@@ -68,10 +68,7 @@ export function useMatchesBranch() {
  */
 export function useRouter() {
   const context = usePlugin()
-  let router: RouterBase = context.get(TypeRouter)
-  if (!router) {
-    router = useInject()(TypeRouter)
-  }
+  const router: RouterBase = context.get(TypeRouter)
   if (!router) {
     throw new Error(
       'Please use(router) or <Router></Router> to register the router, and then use the hook function provided by dox'

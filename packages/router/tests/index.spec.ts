@@ -13,6 +13,7 @@ import {
   Redirect,
   Route,
   Routes,
+  Router,
   useMatch,
   useParams,
   useQuery,
@@ -37,10 +38,14 @@ describe('next', () => {
   test('route', async () => {
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(Route, { path: '', strict: true, element: createText('') }),
-          h(Route, { path: 'foo', element: createText('foo') }),
-        ])
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Route, { path: '', strict: true, element: createText('') }),
+            h(Route, { path: 'foo', element: createText('foo') }),
+          ])
+        )
       })
     ).render(container)
     expect(container.innerHTML).toBe('')
@@ -52,13 +57,17 @@ describe('next', () => {
   test('redirect', async () => {
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(Redirect, { path: '', redirect: 'foo' }),
-          h(Route, { path: 'foo', element: createText('foo') }, [
-            h(Redirect, { path: 'baz', redirect: 'bar' }),
-            h(Route, { path: 'bar', element: createText('bar') }),
-          ]),
-        ])
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Redirect, { path: '', redirect: 'foo' }),
+            h(Route, { path: 'foo', element: createText('foo') }, [
+              h(Redirect, { path: 'baz', redirect: 'bar' }),
+              h(Route, { path: 'bar', element: createText('bar') }),
+            ]),
+          ])
+        )
       })
     ).render(container)
     expect(container.innerHTML).toBe('foo')
@@ -72,30 +81,34 @@ describe('next', () => {
   test('nested route', async () => {
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(
-            Route,
-            {
-              path: '',
-              element: h(() => {
-                return h('div', null, h(Outlet))
-              }),
-            },
-            [
-              h(
-                Route,
-                {
-                  path: 'foo',
-                  element: h(() => {
-                    return h('span', null, h(Outlet))
-                  }),
-                },
-                h(Route, { path: 'baz', element: createText('baz') })
-              ),
-              h(Route, { path: 'bar', element: createText('bar') }),
-            ]
-          ),
-        ])
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(
+              Route,
+              {
+                path: '',
+                element: h(() => {
+                  return h('div', null, h(Outlet))
+                }),
+              },
+              [
+                h(
+                  Route,
+                  {
+                    path: 'foo',
+                    element: h(() => {
+                      return h('span', null, h(Outlet))
+                    }),
+                  },
+                  h(Route, { path: 'baz', element: createText('baz') })
+                ),
+                h(Route, { path: 'bar', element: createText('bar') }),
+              ]
+            ),
+          ])
+        )
       })
     ).render(container)
     await router.extra.push('/')
@@ -114,24 +127,28 @@ describe('next', () => {
   test('404 route', async () => {
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(Route, { path: '*', element: createText('404') }),
-          h(
-            Route,
-            {
-              path: 'foo',
-              element: h(() => {
-                return h('span', null, h(Outlet))
-              }),
-            },
-            h(Route, { path: '*', element: createText('in foo 404') })
-          ),
-          h(Route, {
-            path: '',
-            strict: true,
-            element: createText(''),
-          }),
-        ])
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Route, { path: '*', element: createText('404') }),
+            h(
+              Route,
+              {
+                path: 'foo',
+                element: h(() => {
+                  return h('span', null, h(Outlet))
+                }),
+              },
+              h(Route, { path: '*', element: createText('in foo 404') })
+            ),
+            h(Route, {
+              path: '',
+              strict: true,
+              element: createText(''),
+            }),
+          ])
+        )
       })
     ).render(container)
     expect(container.innerHTML).toBe('')
@@ -147,22 +164,26 @@ describe('next', () => {
     const executeOnce = jest.fn()
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(
-            Route,
-            { path: '', element: h(Outlet) },
-            h(Route, {
-              path: ':id',
-              element: h(() => {
-                const params = useParams()
-                executeOnce()
-                return () => {
-                  return h('span', null, params.id)
-                }
-              }),
-            })
-          ),
-        ])
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(
+              Route,
+              { path: '', element: h(Outlet) },
+              h(Route, {
+                path: ':id',
+                element: h(() => {
+                  const params = useParams()
+                  executeOnce()
+                  return () => {
+                    return h('span', null, params.id)
+                  }
+                }),
+              })
+            ),
+          ])
+        )
       })
     ).render(container)
     expect(container.innerHTML).toBe('')
@@ -179,16 +200,20 @@ describe('next', () => {
   test('no element layout', async () => {
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(
-            Route,
-            { path: '' },
-            h(Route, {
-              path: 'foo',
-              element: createText('foo'),
-            })
-          ),
-        ])
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(
+              Route,
+              { path: '' },
+              h(Route, {
+                path: 'foo',
+                element: createText('foo'),
+              })
+            ),
+          ])
+        )
       })
     ).render(container)
     await router.extra.replace('/foo')
@@ -199,12 +224,16 @@ describe('next', () => {
   test('useRoutes hook', async () => {
     app = createInstance(
       h(() => {
-        return useRoutes([
-          {
-            path: '',
-            element: createText('foo'),
-          },
-        ])
+        return h(
+          Router,
+          { router: router },
+          useRoutes([
+            {
+              path: '',
+              element: createText('foo'),
+            },
+          ])
+        )
       })
     ).render(container)
     expect(container.innerHTML).toBe('foo')
@@ -213,10 +242,17 @@ describe('next', () => {
   test('useMatch', async () => {
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(Route, { path: '', strict: true, element: createText('') }),
-          h(Route, { path: 'foo', element: h(() => String(useMatch('/foo'))) }),
-        ])
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Route, { path: '', strict: true, element: createText('') }),
+            h(Route, {
+              path: 'foo',
+              element: h(() => String(useMatch('/foo'))),
+            }),
+          ])
+        )
       })
     ).render(container)
     await router.extra.push('/foo')
@@ -235,18 +271,22 @@ describe('next', () => {
     let title: string
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(Route, {
-            path: '',
-            strict: true,
-            element: h(() => {
-              const route = useRoute()
-              title = route.value.meta.title
-              return createText('')
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Route, {
+              path: '',
+              strict: true,
+              element: h(() => {
+                const route = useRoute()
+                title = route.value.meta.title
+                return createText('')
+              }),
+              meta: { title: 'foo' },
             }),
-            meta: { title: 'foo' },
-          }),
-        ])
+          ])
+        )
       })
     ).render(container)
     expect(title).toBe('foo')
@@ -256,18 +296,22 @@ describe('next', () => {
     const beforeUpdate = jest.fn()
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(Route, {
-            path: ':id',
-            element: h(() => {
-              onBeforeRouteUpdate(beforeUpdate)
-              return () => createText('')
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Route, {
+              path: ':id',
+              element: h(() => {
+                onBeforeRouteUpdate(beforeUpdate)
+                return () => createText('')
+              }),
             }),
-          }),
-          h(Route, {
-            path: '/baz',
-          }),
-        ])
+            h(Route, {
+              path: '/baz',
+            }),
+          ])
+        )
       })
     ).render(container)
     await router.extra.push('/foo')
@@ -288,17 +332,21 @@ describe('next', () => {
   test('query in component', async () => {
     app = createInstance(
       h(() => {
-        return h(Routes, null, [
-          h(Route, {
-            path: '',
-            element: h(() => {
-              const query = useQuery()
-              return () => {
-                return h('span', null, query.id)
-              }
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Route, {
+              path: '',
+              element: h(() => {
+                const query = useQuery()
+                return () => {
+                  return h('span', null, query.id)
+                }
+              }),
             }),
-          }),
-        ])
+          ])
+        )
       })
     ).render(container)
     await router.extra.push('/foo?id=admin')

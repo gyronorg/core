@@ -4,6 +4,7 @@ import {
   pauseTrack,
   useReactive,
   usePlugin,
+  FC,
 } from '@gyron/runtime'
 import { extend, isFunction, readonly, readwrite } from '@gyron/shared'
 import { sync } from '@gyron/sync'
@@ -19,6 +20,10 @@ import { ThunkMiddlewareFor } from '@reduxjs/toolkit/src/getDefaultMiddleware'
 import { default as clone } from 'clone'
 
 export type Middlewares<S> = ReadonlyArray<Middleware<object, S>>
+
+export interface ProviderProps {
+  store: ReturnType<typeof createStore>
+}
 
 export interface StorePlugin<S = any> {
   store: EnhancedStore
@@ -97,9 +102,17 @@ export function createStore<
   }
 
   return createPlugin({
-    type: TypeStore,
     name: 'dox',
     extra: store,
     data: { store, state, getStore, getState },
   })
 }
+
+export const Provider = FC<ProviderProps>(function Provider(props) {
+  const plugins = usePlugin()
+  plugins.set(TypeStore, props.store.data)
+
+  return function Provider({ children }) {
+    return children
+  }
+})

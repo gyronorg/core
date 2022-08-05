@@ -37,14 +37,15 @@ export interface Location extends HLocation {
 }
 
 export interface RouterProps {
-  history: History
-  base?: string
-  isSSR?: boolean
+  router: ReturnType<typeof createRouter>
 }
 
-export interface RouterOption extends RouterProps {
+export interface RouterOption {
+  history: History
   beforeEach: RouterHookBeforeEach
   afterEach: RouterHookAfterEach
+  base?: string
+  isSSR?: boolean
 }
 
 export let pending = Promise.resolve()
@@ -176,35 +177,16 @@ export function createRouter(option: Partial<RouterOption>) {
   return createPlugin({
     name: 'router',
     extra: router,
-    install: (plugins) => {
-      const route = useValue({})
-      plugins.set(TypeRouter, router)
-      plugins.set(TypeRoute, route)
-    },
+    data: router,
   })
 }
 
-export const Router = FC<RouterProps>(function Router({
-  history,
-  base,
-  isSSR,
-}) {
-  const rootContent = usePlugin()
+export const Router = FC<RouterProps>(function Router({ router }) {
+  const plugins = usePlugin()
+
   const route = useValue({})
-
-  let router: RouterBase = rootContent.get(TypeRouter)
-
-  if (!router) {
-    router = new RouterBase(history || createBrowserHistory(), base, isSSR)
-  } else {
-    console.warn(
-      'Router is already in use, check the app use method. In case of conflict, use router has the highest priority',
-      router
-    )
-  }
-
-  rootContent.set(TypeRouter, router)
-  rootContent.set(TypeRoute, route)
+  plugins.set(TypeRouter, router.data)
+  plugins.set(TypeRoute, route)
 
   return ({ children }) => {
     return children

@@ -1,4 +1,10 @@
-export { createStore, useSelector, useStore, useDispatch } from './store'
+export {
+  createStore,
+  useSelector,
+  useStore,
+  useDispatch,
+  Provider,
+} from './store'
 
 export {
   createAction,

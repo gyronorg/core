@@ -6,6 +6,7 @@ import {
   Route,
   Routes,
   RouteRecord,
+  Router,
 } from '../src'
 import {
   HookNext,
@@ -28,7 +29,7 @@ export function generate(paths?: string[]) {
   })
 }
 
-describe('Each', () => {
+describe('each', () => {
   const container = document.createElement('div')
 
   beforeEach(() => {
@@ -75,11 +76,15 @@ describe('Each', () => {
           }
         })
         onAfterRouteEach(after)
-        return h(Routes, null, [
-          h(Route, { path: '/', strict: true, element: createText('foo') }),
-          h(Route, { path: '/bar', element: createText('bar') }),
-          h(Route, { path: '/baz', element: createText('baz') }),
-        ])
+        return h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Route, { path: '/', strict: true, element: createText('foo') }),
+            h(Route, { path: '/bar', element: createText('bar') }),
+            h(Route, { path: '/baz', element: createText('baz') }),
+          ])
+        )
       })
     ).render(container)
     expect(container.innerHTML).toBe('foo')

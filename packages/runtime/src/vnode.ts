@@ -67,7 +67,7 @@ export interface VNodeProps extends VNodeEvent, Partial<ComponentDefaultProps> {
 
 export interface Context {
   set: (k: string | symbol, v: any) => any
-  get: (k: string | symbol) => any
+  get: <T = any>(k: string | symbol) => T
   keys: () => IterableIterator<any>
   values: () => IterableIterator<any>
   clear: () => void
