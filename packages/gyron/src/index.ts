@@ -1,4 +1,4 @@
-import './jsx.d'
+export * from './jsx.d'
 
 export * from '@gyron/runtime'
 

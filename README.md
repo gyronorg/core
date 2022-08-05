@@ -83,7 +83,7 @@ const App = () => {
 | [cli](./packages/cli/)                           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/cli?style=flat-square)              | 可定制项目的脚手架                                                  |
 | [dom-client](./packages/dom-client/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/dom-client?style=flat-square)       | 对接浏览器 `document` 工具，可自定义接入支持 `ecma` 标准的应用程序  |
 | [dom-server](./packages/dom-server/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/dom-server?style=flat-square)       | 对接服务端 `node` 工具，用于服务端渲染                              |
-| [dox](./packages/dox/)                           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/dox?style=flat-square)              | 全局状态管理器                                                      |
+| [dox](./packages/dox/)                           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/redux?style=flat-square)              | 全局状态管理器                                                      |
 | [jsx-runtime](./packages/jsx-runtime/)           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/jsx-runtime?style=flat-square)      | 支持 `jsx` 语法的运行时，比如 `babel` 的 `transform-react-jsx` 插件 |
 | [reactivity](./packages/reactivity/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/reactivity?style=flat-square)       | 响应式核心                                                          |
 | [router](./packages/router/)                     | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/router?style=flat-square)           | 路由管理器                                                          |

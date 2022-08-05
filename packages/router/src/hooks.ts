@@ -68,7 +68,7 @@ export function useMatchesBranch() {
  */
 export function useRouter() {
   const context = usePlugin()
-  const router: RouterBase = context.get(TypeRouter)
+  const router = context.get<RouterBase>(TypeRouter)
   if (!router) {
     throw new Error(
       'Please use(router) or <Router></Router> to register the router, and then use the hook function provided by dox'
@@ -82,7 +82,7 @@ export function useRouter() {
  */
 export function useRoute() {
   const context = usePlugin()
-  const route: Primitive<RouteRecord> = context.get(TypeRoute)
+  const route = context.get<Primitive<RouteRecord>>(TypeRoute)
   if (!route.value) {
     console.warn(
       "No matching route is found, and it could also be the cause of useRoute's scope."

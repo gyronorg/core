@@ -1,5 +1,5 @@
 {
-  "name": "@gyron/dox",
+  "name": "@gyron/redux",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "browser": "dist/umd/index.js",

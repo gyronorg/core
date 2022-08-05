@@ -57,14 +57,13 @@ export function createInstance(root: VNode, isHydrate?: boolean) {
         hydrate(instance.container.firstChild, root)
         return instance
       }
-      instance.container.innerHTML = ''
+
       render(root, instance.container)
       return instance
     },
     destroy() {
       if (instance.container) {
         unmount(root)
-        instance.container.innerHTML = ''
       }
       return instance
     },

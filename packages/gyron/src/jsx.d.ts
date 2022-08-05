@@ -39,7 +39,7 @@
 import * as CSS from 'csstype'
 import { VNode, UserRef, VNodeChildren } from '@gyron/runtime'
 
-type Booleanish = boolean | 'true' | 'false'
+export type Booleanish = boolean | 'true' | 'false'
 
 export interface CSSProperties
   extends CSS.Properties<string | number>,
@@ -55,7 +55,7 @@ export interface CSSProperties
   [v: `--${string}`]: string | number | undefined
 }
 
-type EventHandlers<E> = {
+export type EventHandlers<E> = {
   [K in keyof E]?: E[K] extends Function ? E[K] : (payload: E[K]) => void
 }
 
@@ -1652,15 +1652,15 @@ export interface IntrinsicElementAttributes {
   view: SVGAttributes
 }
 
-type DefaultProps = {
+export type DefaultProps = {
   key?: string | number | symbol
   ref?: UserRef
   children?: VNodeChildren | VNodeChildren[] | ((props: any) => JSX.Element)
 }
 
-type ElementAttrs<T> = T & DefaultProps
+export type ElementAttrs<T> = T & DefaultProps
 
-type NativeElements = {
+export type NativeElements = {
   [K in keyof IntrinsicElementAttributes]: ElementAttrs<
     IntrinsicElementAttributes[K]
   >

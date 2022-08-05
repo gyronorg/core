@@ -36,7 +36,7 @@ const TypeStore = Symbol.for('gyron.store')
 
 function getStoreWithContext() {
   const context = usePlugin()
-  const store = context.get(TypeStore) as StorePlugin
+  const store = context.get<StorePlugin>(TypeStore)
   if (!store) {
     throw new Error(
       'Please use(store) to register the store, and then use the hook function provided by dox'
