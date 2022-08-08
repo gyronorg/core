@@ -13,9 +13,9 @@ import {
 import { TypeRouter } from './hooks'
 import { RouterBase } from './router'
 
-function getRouter() {
+function getRouter(): RouterBase {
   const context = usePlugin()
-  return context.get<RouterBase>(TypeRouter)
+  return context.get(TypeRouter)
 }
 
 export function onBeforeRouteEach(listener: RouterHookBeforeEach) {

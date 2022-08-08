@@ -5,6 +5,7 @@ import {
   useReactive,
   usePlugin,
   FC,
+  warn,
 } from '@gyron/runtime'
 import { extend, isFunction, readonly, readwrite } from '@gyron/shared'
 import { sync } from '@gyron/sync'
@@ -36,7 +37,7 @@ const TypeStore = Symbol.for('gyron.store')
 
 function getStoreWithContext() {
   const context = usePlugin()
-  const store = context.get<StorePlugin>(TypeStore)
+  const store: StorePlugin = context.get(TypeStore)
   if (!store) {
     throw new Error(
       'Please use(store) to register the store, and then use the hook function provided by dox'
@@ -108,8 +109,17 @@ export function createStore<
   })
 }
 
-export const Provider = FC<ProviderProps>(function Provider(props) {
+export const Provider = FC<ProviderProps>(function Provider(props, component) {
   const plugins = usePlugin()
+
+  if (plugins.has(TypeStore)) {
+    warn(
+      'The plug-in is already loaded and repeated loading will overwrite the previous behavior.',
+      component,
+      '@gyron/redux'
+    )
+  }
+
   plugins.set(TypeStore, props.store.data)
 
   return function Provider({ children }) {

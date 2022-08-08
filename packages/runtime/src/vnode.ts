@@ -65,14 +65,6 @@ export interface VNodeProps extends VNodeEvent, Partial<ComponentDefaultProps> {
   [k: string]: any
 }
 
-export interface Context {
-  set: (k: string | symbol, v: any) => any
-  get: <T = any>(k: string | symbol) => T
-  keys: () => IterableIterator<any>
-  values: () => IterableIterator<any>
-  clear: () => void
-}
-
 export function cloneVNode<T extends VNode | VNode[]>(vnode: T): T {
   if (isArray(vnode)) {
     return vnode.map(cloneVNode) as T

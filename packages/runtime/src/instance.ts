@@ -3,7 +3,7 @@ import { querySelector } from '@gyron/dom-client'
 import { patch, unmount } from './renderer'
 import { hydrate } from './hydrate'
 import { checkVersion } from './version'
-import type { VNode, Context } from './vnode'
+import type { RenderElement, VNode } from './vnode'
 
 export interface Instance {
   container: Element | null
@@ -12,25 +12,7 @@ export interface Instance {
 }
 
 export function createContext() {
-  const _context = new Map()
-  const context: Context = {
-    set(k, v) {
-      return _context.set(k, v)
-    },
-    get(k) {
-      return _context.get(k)
-    },
-    keys() {
-      return _context.keys()
-    },
-    values() {
-      return _context.values()
-    },
-    clear() {
-      return _context.clear()
-    },
-  }
-  return context
+  return new Map()
 }
 
 export function render(vnode: VNode, container: Element) {
@@ -53,8 +35,14 @@ export function createInstance(root: VNode, isHydrate?: boolean) {
 
       if (!instance.container) return null
 
+      const firstChild = instance.container.firstChild
       if (isHydrate) {
-        hydrate(instance.container.firstChild, root)
+        hydrate(firstChild, root)
+        return instance
+      }
+
+      if (firstChild && (firstChild as RenderElement).__vnode__) {
+        hydrate(firstChild, root)
         return instance
       }
 

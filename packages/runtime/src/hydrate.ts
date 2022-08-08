@@ -8,18 +8,17 @@ import {
 } from '@gyron/dom-client'
 import { Component, ComponentSetupFunction } from './component'
 import {
-  VNode,
-  RenderElement,
   Text,
   Comment,
   Fragment,
   Element,
-  normalizeChildrenVNode,
   NodeType,
+  normalizeChildrenVNode,
   normalizeVNodeWithLink,
 } from './vnode'
 import { mountComponent, patch } from './renderer'
 import { setRef } from './ref'
+import type { VNode, RenderElement } from './vnode'
 
 function locateClosingAsyncAnchor(node: Node | null): Node | null {
   let match = 0

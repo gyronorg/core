@@ -69,7 +69,6 @@ describe('Runtime', () => {
   })
 
   test('selector element', () => {
-    const container = document.createElement('div')
     container.id = 'root'
     document.body.appendChild(container)
     createInstance(createText('Gyron')).render('#root')
@@ -78,5 +77,16 @@ describe('Runtime', () => {
 
     const app = createInstance(createText('Gyron')).render('#app')
     expect(app).toBe(null)
+  })
+
+  test('rendering the same vnode repeatedly should use an existing DOM node', () => {
+    createInstance(
+      createVNode('div', null, createVNode('div', null, 'Gyron.js'))
+    ).render(container)
+    const node = container.querySelector('div')
+    createInstance(
+      createVNode('div', null, createVNode('div', null, 'Gyron.js'))
+    ).render(container)
+    expect(node).toBe(container.querySelector('div'))
   })
 })

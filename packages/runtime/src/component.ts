@@ -58,6 +58,7 @@ export interface ComponentSetupFunction<Props extends object = object> {
     | ComponentFunctionReturn
     | ComponentFunction<Props>
   __cache?: boolean
+  __cacheIndex?: number
   [k: string]: any
 }
 
@@ -350,7 +351,19 @@ export function FC<
 /**
  * Create a cache component, and memo will automatically call the FC method to ensure that the component type can be correctly inferred
  */
-export const cacheMemoComponent = new Map<ComponentSetupFunction, Component>()
+const cacheMemoComponent = new Map<ComponentSetupFunction, Component>()
+let cacheIndex = 0
+
+export function getCacheComponent(componentFunction: ComponentSetupFunction) {
+  return cacheMemoComponent.get(componentFunction)
+}
+
+export function collectCacheComponent(
+  componentFunction: ComponentSetupFunction,
+  component: Component
+) {
+  cacheMemoComponent.set(componentFunction, component)
+}
 
 export function isCacheComponent(componentFunction: ComponentSetupFunction) {
   return cacheMemoComponent.has(componentFunction)
@@ -368,6 +381,16 @@ export function memo<
   Props extends object = object,
   T extends ComponentSetupFunction<Props> = ComponentSetupFunction<Props>
 >(componentFunction: T) {
+  // TODO LRU
+  // if (cacheMemoComponent.size > 0x20) {
+  //   const f = cacheMemoComponent.keys()
+  //   for (const fc of f) {
+  //     if (cacheMemoComponent.size - 0x20 > fc.__cacheIndex) {
+  //       clearCacheComponent(fc)
+  //     }
+  //   }
+  // }
   componentFunction.__cache = true
+  componentFunction.__cacheIndex = cacheIndex++
   return componentFunction as WrapperFunction<T, Props>
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { isFunction } from '@gyron/shared'
 import {
   useValue,

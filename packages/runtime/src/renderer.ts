@@ -26,10 +26,10 @@ import {
 } from '@gyron/shared'
 import { warn } from './assert'
 import {
-  cacheMemoComponent,
   Component,
   ComponentSetupFunction,
   createComponentInstance,
+  getCacheComponent,
   isAsyncComponent,
   isCacheComponent,
   renderComponent,
@@ -83,8 +83,9 @@ function mountText(
   container: RenderElement,
   anchor: RenderElement
 ) {
-  const textNode = createText(vnode.children as string)
+  const textNode = createText(vnode.children as string) as RenderElement
 
+  textNode.__vnode__ = vnode
   vnode.el = textNode
 
   insert(textNode, container, anchor)
@@ -286,7 +287,8 @@ function mountElement(
   isSvg: boolean
 ) {
   const { tag, is } = vnode
-  const el = createElement(tag, isSvg, is)
+  const el = createElement(tag, isSvg, is) as RenderElement
+  el.__vnode__ = vnode
 
   vnode.el = el
 
@@ -294,7 +296,7 @@ function mountElement(
     setRef(el, vnode.props.ref)
   }
 
-  mountProps(el, vnode)
+  mountProps(el as HTMLElement, vnode)
 
   if (shouldValue(vnode.children)) {
     vnode.children = normalizeChildrenVNode(vnode)
@@ -312,7 +314,7 @@ function patchElement(
   parentComponent: Component,
   isSvg: boolean
 ) {
-  const el = (n2.el = n1.el) as HTMLElement | SVGElement
+  const el = (n2.el = n1.el) as HTMLElement
   patchProps(el, n1, n2)
   patchChildren(n1, n2, container, anchor, parentComponent, isSvg)
 }
@@ -472,7 +474,7 @@ function enterComponent(
     n2.el = null
     if (isCacheComponent(n2.type)) {
       // update the DOM with the locally cached component state when a local component cache is found
-      const component = cacheMemoComponent.get(n2.type)
+      const component = getCacheComponent(n2.type)
       component.destroyed = false
       component.mounted = true
       patch(null, component.subTree, container, anchor, parentComponent)
@@ -493,6 +495,7 @@ function enterElement(
   isSvg: boolean
 ) {
   isSvg = isSvg || n2.tag === 'svg'
+
   if (n1 === null) {
     mountElement(n2, container, anchor, parentComponent, isSvg)
   } else if (n1.el) {
@@ -534,11 +537,16 @@ function enterComment(
   anchor: RenderElement
 ) {
   if (n1 === null) {
-    const comment = createComment((n2.children as string) || '')
+    const comment = createComment(
+      (n2.children as string) || ''
+    ) as RenderElement
+    comment.__vnode__ = n2
+
     n2.el = comment as RenderElement
     insert(comment, container, anchor)
   } else {
     n2.el = n1.el
+    n2.el.__vnode__ = n2
   }
 }
 

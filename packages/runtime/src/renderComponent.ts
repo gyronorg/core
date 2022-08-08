@@ -1,10 +1,11 @@
 import { isFunction, extend, omit } from '@gyron/shared'
 import {
-  cacheMemoComponent,
+  collectCacheComponent,
   Component,
   ComponentDefaultProps,
   ComponentParentProps,
   ComponentSetupFunction,
+  isCacheComponent,
 } from './component'
 import { VNode, VNodeProps } from './vnode'
 import { error } from './assert'
@@ -59,8 +60,8 @@ export function normalizeComponent(
   component.setup = setup || component.setup
   component.type = type
 
-  if (type.__cache && !cacheMemoComponent.has(type)) {
-    cacheMemoComponent.set(type, component)
+  if (type.__cache && !isCacheComponent(type)) {
+    collectCacheComponent(type, component)
   }
 }
 
