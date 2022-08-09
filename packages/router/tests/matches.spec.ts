@@ -1,4 +1,4 @@
-import { createText, h } from '@gyron/runtime'
+import { createText, h } from 'gyron'
 import {
   normalizeRoutes,
   generateNestedRoutes,

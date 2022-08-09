@@ -1,4 +1,4 @@
-import { createInstance, createVNode, h, useValue } from '@gyron/runtime'
+import { createInstance, createVNode, h, useValue } from 'gyron'
 
 test('VNode root', () => {
   const container = document.createElement('div')

@@ -6,7 +6,7 @@ import {
   usePlugin,
   FC,
   warn,
-} from '@gyron/runtime'
+} from 'gyron'
 import { extend, isFunction, readonly, readwrite } from '@gyron/shared'
 import { sync } from '@gyron/sync'
 import {

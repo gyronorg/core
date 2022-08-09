@@ -37,7 +37,7 @@
 // for reference and documentation on how exactly to do it.
 
 import * as CSS from 'csstype'
-import { VNode, UserRef, VNodeChildren } from '@gyron/runtime'
+import { VNode, UserRef, VNodeChildren } from 'gyron'
 
 export type Booleanish = boolean | 'true' | 'false'
 

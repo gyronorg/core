@@ -1,4 +1,4 @@
-import { createInstance, createText, h, nextRender } from '@gyron/runtime'
+import { createInstance, createText, h, nextRender } from 'gyron'
 import {
   createMemoryRouter,
   onAfterRouteEach,

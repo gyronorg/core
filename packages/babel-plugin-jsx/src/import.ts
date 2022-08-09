@@ -33,7 +33,7 @@ export default {
         })
         path.unshiftContainer(
           'body',
-          t.importDeclaration(specifiers, t.stringLiteral('@gyron/runtime'))
+          t.importDeclaration(specifiers, t.stringLiteral('gyron'))
         )
       }
     },

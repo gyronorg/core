@@ -1,4 +1,4 @@
-import { createComponent, createVNode } from '@gyron/runtime'
+import { createComponent, createVNode } from 'gyron'
 import { renderToString } from '../src'
 
 describe('Props', () => {

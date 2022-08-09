@@ -6,10 +6,10 @@ import {
   VNodeType,
   Fragment,
   h as H,
-} from '@gyron/runtime'
+} from 'gyron'
 import { isUndefined, omit } from '@gyron/shared'
 
-export { Fragment } from '@gyron/runtime'
+export { Fragment } from 'gyron'
 
 /**
  * Adaptation of all built-in jsx supported conversion functions

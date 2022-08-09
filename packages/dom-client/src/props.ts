@@ -1,4 +1,3 @@
-import { VNode, VNodeProps, warn, removeBuiltInProps } from '@gyron/runtime'
 import {
   diffWord,
   isBoolean,
@@ -9,6 +8,7 @@ import {
 } from '@gyron/shared'
 import { isControlledElementProp, controlledElementValue } from './controlled'
 import { NS } from './opt'
+import type { VNode, VNodeProps } from 'packages/gyron/src'
 
 export type Listener = () => any
 export type Style = string | Record<string, string>
@@ -135,20 +135,20 @@ export function patchProp(
     try {
       setAttribute(el, key, newValue, vnode)
     } catch (e) {
-      warn(e, null, 'PatchProp')
+      console.warn(e)
     }
   }
 }
 
 export function mountProps(el: HTMLElement | SVGElement, vnode: VNode) {
-  for (const key in removeBuiltInProps(vnode.props)) {
+  for (const key in vnode.props) {
     patchProp(el, key, vnode, null, vnode.props[key])
   }
 }
 
 export function patchProps(el: HTMLElement | SVGElement, n1: VNode, n2: VNode) {
   const unmounts = []
-  for (const key in removeBuiltInProps(n2.props)) {
+  for (const key in n2.props) {
     unmounts.push(key)
     const oldValue = n1.props?.[key]
     const newValue = n2.props?.[key]

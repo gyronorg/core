@@ -31,7 +31,7 @@
     "@babel/core": "^7.18.5",
     "@babel/plugin-syntax-jsx": "^7.16.7",
     "@babel/plugin-transform-typescript": "^7.17.12",
-    "@gyron/runtime": "^0.0.12-alpha.2",
+    "gyron": "^0.0.12-alpha.2",
     "@gyron/shared": "^0.0.11"
   }
 }

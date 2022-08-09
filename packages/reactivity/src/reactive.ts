@@ -107,9 +107,7 @@ function get(target: object, key: string | symbol, receiver: object) {
 
   if (targetIsArray) {
     if (hasOwn(arrayInstrumentations, key)) {
-      // 跳过一些内置操作，比如splice会分为两步完成。
-      // 第一步把后面的数值拷贝填充的删除下标
-      // 第二步则是修改length删除多余的部分
+      // skip listening to the array's built-in methods, which access the array's length, and just listen to the length.
       return Reflect.get(arrayInstrumentations, key, receiver)
     }
   }

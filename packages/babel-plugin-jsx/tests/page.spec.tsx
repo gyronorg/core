@@ -1,4 +1,4 @@
-import { createInstance, nextRender } from '@gyron/runtime'
+import { createInstance, nextRender } from 'gyron'
 import { trim } from './util'
 import { View } from './view'
 

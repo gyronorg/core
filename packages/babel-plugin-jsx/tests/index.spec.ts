@@ -3,7 +3,7 @@ import { transform, trim } from './util'
 describe('JSX', () => {
   test('Transform', () => {
     const file = `
-      import { useValue } from '@gyron/runtime'
+      import { useValue } from 'gyron'
 
       function app() {
         const content = useValue(0)
@@ -32,7 +32,7 @@ describe('JSX', () => {
 
   test('Transform Multiple', () => {
     const file = `
-      import { useValue } from '@gyron/runtime'
+      import { useValue } from 'gyron'
 
       function app() {
         const content = useValue(0)

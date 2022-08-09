@@ -1,5 +1,5 @@
 import { renderToString } from '@gyron/dom-server'
-import { h, createSSRInstance, nextRender, createText } from '@gyron/runtime'
+import { h, createSSRInstance, nextRender, createText } from 'gyron'
 import { createMemoryRouter, Link, Route, Router, Routes } from '../src'
 
 describe('SSR Router', () => {

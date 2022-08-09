@@ -1,4 +1,4 @@
-import { createInstance, Element, nextRender, useValue } from '@gyron/runtime'
+import { createInstance, Element, nextRender, useValue } from 'gyron'
 import { noop } from '@gyron/shared'
 
 describe('Demo', () => {

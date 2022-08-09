@@ -38,7 +38,7 @@ import { collectHmrComponent, refreshComponentType } from './hmr'
 import { hydrate } from './hydrate'
 import { invokeLifecycle } from './lifecycle'
 import { setRef } from './ref'
-import { normalizeComponent } from './renderComponent'
+import { normalizeComponent, removeBuiltInProps } from './renderComponent'
 import { pushQueueJob, SchedulerJob } from './scheduler'
 import { isVNode, isVNodeComponent } from './shared'
 import {
@@ -226,7 +226,11 @@ function patchKeyed(
         if (isVNodeComponent(c2n) && isVNodeComponent(c1n)) {
           patchComponent(c1n, c2n, parentComponent)
         } else {
-          patchProps(c1n.el as HTMLElement, c1n, c2n)
+          patchProps(
+            c1n.el as HTMLElement,
+            c1n,
+            extend({}, c2n, { props: removeBuiltInProps(c2n.props) })
+          )
         }
       }
       // 1, end
@@ -296,7 +300,10 @@ function mountElement(
     setRef(el, vnode.props.ref)
   }
 
-  mountProps(el as HTMLElement, vnode)
+  mountProps(
+    el as HTMLElement,
+    extend({}, vnode, { props: removeBuiltInProps(vnode.props) })
+  )
 
   if (shouldValue(vnode.children)) {
     vnode.children = normalizeChildrenVNode(vnode)
@@ -315,7 +322,7 @@ function patchElement(
   isSvg: boolean
 ) {
   const el = (n2.el = n1.el) as HTMLElement
-  patchProps(el, n1, n2)
+  patchProps(el, n1, extend({}, n2, { props: removeBuiltInProps(n2.props) }))
   patchChildren(n1, n2, container, anchor, parentComponent, isSvg)
 }
 

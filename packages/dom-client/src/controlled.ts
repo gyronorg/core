@@ -1,4 +1,4 @@
-import { Component, VNode, RenderElement } from '@gyron/runtime'
+import { Component, VNode, RenderElement } from 'packages/gyron/src'
 import { isArray, isSet } from '@gyron/shared'
 
 function setSelectValue(el: HTMLSelectElement, value: any) {

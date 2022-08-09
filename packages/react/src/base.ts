@@ -11,7 +11,7 @@ import {
   WrapperFunction,
   useWatch,
   isResponsive,
-} from '@gyron/runtime'
+} from 'gyron'
 
 export function useState<S>(
   initialState: S | (() => S)

@@ -1,4 +1,4 @@
-import { createInstance, h, nextRender, VNode } from '@gyron/runtime'
+import { createInstance, h, nextRender, VNode } from 'gyron'
 import { useState, useEffect, createContext } from '../src'
 
 describe('base', () => {

@@ -1,4 +1,4 @@
-import { h, Primitive, useInject, usePlugin } from '@gyron/runtime'
+import { h, Primitive, useInject, usePlugin } from 'gyron'
 import { isString, isUndefined } from '@gyron/shared'
 import { createPath, parsePath, To } from 'history'
 import { matchPath, normalizeRoutes } from './matches'

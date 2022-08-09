@@ -21,5 +21,8 @@
   },
   "devDependencies": {
     "@gyron/shared": "^0.0.11"
+  },
+  "dependencies": {
+    "gyron": "^0.0.12-alpha.2"
   }
 }

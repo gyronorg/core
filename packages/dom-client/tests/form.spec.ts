@@ -1,4 +1,4 @@
-import { createInstance, h, nextRender, useValue } from '@gyron/runtime'
+import { createInstance, h, nextRender, useValue } from 'gyron'
 import { createElement } from '../src'
 
 describe('Controlled element', () => {

@@ -1,10 +1,4 @@
-import {
-  createInstance,
-  createVNode,
-  useValue,
-  h,
-  nextRender,
-} from '@gyron/runtime'
+import { createInstance, createVNode, useValue, h, nextRender } from 'gyron'
 
 describe('Diff', () => {
   const container = document.createElement('div')

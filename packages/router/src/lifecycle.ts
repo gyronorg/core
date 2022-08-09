@@ -1,9 +1,4 @@
-import {
-  isVNodeComponent,
-  onAfterMount,
-  onDestroyed,
-  usePlugin,
-} from '@gyron/runtime'
+import { isVNodeComponent, onAfterMount, onDestroyed, usePlugin } from 'gyron'
 import {
   RouterHookBeforeEach,
   RouterHookAfterEach,

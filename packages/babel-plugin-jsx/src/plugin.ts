@@ -99,8 +99,7 @@ export function babelViteJsx(options: Partial<Options> = {}): VitePlugin {
           }
 
           if (componentHmr.length) {
-            result.code =
-              `\nimport { rerender } from '@gyron/runtime'\n` + result.code
+            result.code = `\nimport { rerender } from 'gyron'\n` + result.code
             result.code += `\nimport.meta.hot.accept(({ ${componentHmr
               .map((comp) => comp.name)
               .join(', ')} }) => {

@@ -1,5 +1,5 @@
 import { mountProps, patchProps, createElement } from '../src'
-import { createVNode } from '@gyron/runtime'
+import { createVNode } from 'gyron'
 import { NS } from '../src/opt'
 
 describe('Mount Props', () => {

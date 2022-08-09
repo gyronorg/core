@@ -1,4 +1,4 @@
-import { createInstance } from '@gyron/runtime'
+import { createInstance } from 'gyron'
 import { h, jsx, jsxs } from '../src'
 
 describe('jsx-runtime', () => {

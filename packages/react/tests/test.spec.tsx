@@ -1,4 +1,4 @@
-import { createInstance, FC } from '@gyron/runtime'
+import { createInstance, FC } from 'gyron'
 import { createContext } from '../src'
 
 describe('base', () => {

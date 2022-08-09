@@ -19,7 +19,7 @@
     "build:dts": "rollup -c"
   },
   "dependencies": {
-    "@gyron/runtime": "^0.0.12-alpha.2",
+    "gyron": "^0.0.12-alpha.2",
     "@gyron/shared": "^0.0.11"
   }
 }

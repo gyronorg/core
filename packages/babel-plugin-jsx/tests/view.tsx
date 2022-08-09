@@ -1,4 +1,4 @@
-import { FC, useReactive } from '@gyron/runtime'
+import { FC, useReactive } from 'gyron'
 
 export function ComponentA() {
   return <span>a</span>

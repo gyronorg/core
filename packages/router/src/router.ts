@@ -1,11 +1,4 @@
-import {
-  createPlugin,
-  FC,
-  Primitive,
-  useValue,
-  usePlugin,
-  warn,
-} from '@gyron/runtime'
+import { createPlugin, FC, Primitive, useValue, usePlugin, warn } from 'gyron'
 import { isEqual, isFunction, noop } from '@gyron/shared'
 import {
   createBrowserHistory,

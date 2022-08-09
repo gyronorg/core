@@ -5,7 +5,7 @@ import {
   h,
   Instance,
   nextRender,
-} from '@gyron/runtime'
+} from 'gyron'
 import { createMemoryRouter, Link, Route, Router, Routes } from '../src'
 import { generate } from './each.spec'
 
