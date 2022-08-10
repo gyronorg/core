@@ -63,10 +63,9 @@ export {
   isVNodeComponent,
 } from './shared'
 export { warn, error } from './assert'
-export { createPlugin } from './plugin'
+export { createPlugin, usePlugin } from './plugin'
 export { rerender } from './hmr'
 export {
-  usePlugin,
   useComponentContext,
   useProvide,
   useInject,

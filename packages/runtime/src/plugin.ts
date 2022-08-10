@@ -9,6 +9,10 @@ export interface Plugin<D extends object, E = any> {
   name?: string
 }
 
+export function usePlugin() {
+  return plugins
+}
+
 export function createPlugin<D extends object, E = any>(option: Plugin<D, E>) {
   if (isUndefined(option.data)) {
     console.warn('invalid plugin data', option.data)

@@ -1,10 +1,5 @@
 import { warn } from './assert'
 import { Component, getCurrentComponent } from './component'
-import { plugins } from './plugin'
-
-export function usePlugin() {
-  return plugins
-}
 
 export function provide(
   component: Component,
