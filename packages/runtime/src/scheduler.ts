@@ -34,22 +34,14 @@ export function pushQueueJob(job: SchedulerJob) {
   } else {
     // same component update using the latest data update
     // array.prototype.splice will trigger update multiple times, the first time the data is incorrect, see Proxy splice set
-    let index = queue.length - 1
-    let shouldInsert = false
-    while (index >= 0) {
-      if (queue[index].id === job.id) {
-        shouldInsert = true
-        break
-      }
-      index--
-    }
-    if (shouldInsert) {
+    const index = queue.findIndex((item) => item.id === job.id)
+    if (index >= 0) {
       // prioritise the same component update to completion.
       // when multiple updates of the same component are found in a synchronous task,
       // insert its next task at the end of an update task of the same type.
       // jobId = 3; queue = [1, 3, 5]
-      // queue = [1, 3, 3, 5]
-      queue.splice(index, 0, job)
+      // queue = [1, 3, 5]
+      queue.splice(index, 1, job)
     } else {
       queue.push(job)
     }
@@ -102,8 +94,8 @@ export function cancelTimeout(callback: number) {
 }
 
 function shouldYieldHost() {
-  if (now() - startTime < frameYield) {
-    return false
+  if (now() - startTime > frameYield) {
+    return true
   }
   if (isInputPending !== null) {
     return isInputPending()
