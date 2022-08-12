@@ -11,7 +11,9 @@ export interface SchedulerJob {
 
 const queue: SchedulerJob[] = []
 const resolvedPromise: Promise<unknown> = Promise.resolve()
+const frameYield = 5
 let currentJobPromise: Promise<unknown>
+let startTime = -1
 
 /**
  * TODO Update tasks need to be prioritised, with those of higher priority being executed first, followed by those of lower priority.
@@ -99,10 +101,8 @@ export function cancelTimeout(callback: number) {
   }
 }
 
-let startTime = -1
-
 function shouldYieldHost() {
-  if (now() - startTime < 5) {
+  if (now() - startTime < frameYield) {
     return false
   }
   if (isInputPending !== null) {
