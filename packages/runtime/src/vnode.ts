@@ -1,5 +1,12 @@
 import { isVNode } from './shared'
-import { extend, isArray, isFunction, isString, omit } from '@gyron/shared'
+import {
+  extend,
+  isArray,
+  isFunction,
+  isString,
+  omit,
+  shouldValue,
+} from '@gyron/shared'
 import {
   Component,
   ComponentDefaultProps,
@@ -149,9 +156,9 @@ export function createFragment(children: Children[]): VNode<typeof Fragment> {
   return {
     type: Fragment,
     nodeType: NodeType.Fragment,
-    children: children,
     props: {},
     flag: Gyron,
+    children: children,
   }
 }
 
@@ -159,9 +166,9 @@ export function createText(children: TextContent): VNode<typeof Text> {
   return {
     type: Text,
     nodeType: NodeType.Text,
-    children: children,
     props: {},
     flag: Gyron,
+    children: children,
   }
 }
 
@@ -169,22 +176,22 @@ export function createComment(children?: string): VNode<typeof Comment> {
   return {
     type: Comment,
     nodeType: NodeType.Comment,
-    children: children,
     props: {},
     flag: Gyron,
+    children: children,
   }
 }
 
-export function normalizeVNode(child: VNodeChildren): VNode {
-  if (isVNode(child)) {
-    return child
+export function normalizeVNode(value: VNodeChildren): VNode {
+  if (isVNode(value)) {
+    return value
   }
-  if (child == null || typeof child === 'boolean') {
+  if (value === null || typeof value === 'boolean') {
     return createComment()
-  } else if (Array.isArray(child)) {
-    return createFragment(child.slice() as VNode[])
+  } else if (Array.isArray(value)) {
+    return createFragment(value.slice() as VNode[])
   } else {
-    return createText(String(child))
+    return createText(String(value))
   }
 }
 
@@ -199,7 +206,9 @@ export function normalizeChildrenVNode(vnode: VNode) {
 
   const children = isArray(vnode.children) ? vnode.children : [vnode.children]
 
-  return children.map((node) => normalizeVNodeWithLink(node, parent))
+  return children
+    .filter(shouldValue)
+    .map((node) => normalizeVNodeWithLink(node, parent))
 }
 
 export function normalizeVNodeWithLink(children: Children, parent: VNode) {

@@ -39,7 +39,7 @@ import { hydrate } from './hydrate'
 import { invokeLifecycle } from './lifecycle'
 import { setRef } from './ref'
 import { normalizeComponent, removeBuiltInProps } from './renderComponent'
-import { pushQueueJob, SchedulerJob } from './scheduler'
+import { JobPriority, pushQueueJob, SchedulerJob } from './scheduler'
 import { isVNode, isVNodeComponent } from './shared'
 import {
   Children,
@@ -62,7 +62,7 @@ function isSameVNodeType(n1: VNode, n2: VNode) {
 }
 
 function isKeyPatch(n1: VNode[], n2: VNode[]) {
-  if (n1[0] && n2[0] && isObject(n1[0]) && isObject(n2[0])) {
+  if (n1 && n2 && n1[0] && n2[0] && isObject(n1[0]) && isObject(n2[0])) {
     return shouldValue(n1[0].key) && shouldValue(n2[0].key)
   }
   return false
@@ -273,13 +273,15 @@ function patchChildren(
   const c1 = n1.children as VNode[]
   const c2 = n2.children as VNode[]
 
-  if (isKeyPatch(c1, c2)) {
-    const el = (n2.el = n1.el)
-    patchKeyed(c1, c2, el || container, anchor, parentComponent, isSvg)
-  } else {
-    // if the fragment node does not have a dom instance, use the container
-    const el = (n2.el = n1.el)
-    patchNonKeyed(c1, c2, el || container, anchor, parentComponent, isSvg)
+  if (c1.length || c2.length) {
+    if (isKeyPatch(c1, c2)) {
+      const el = (n2.el = n1.el)
+      patchKeyed(c1, c2, el || container, anchor, parentComponent, isSvg)
+    } else {
+      // if the fragment node does not have a dom instance, use the container
+      const el = (n2.el = n1.el)
+      patchNonKeyed(c1, c2, el || container, anchor, parentComponent, isSvg)
+    }
   }
 }
 
@@ -414,16 +416,14 @@ function renderComponentEffect(component: Component) {
     }
   }
 
-  const useEffect = (component.effect = createEffect(
-    updateComponentEffect,
-    () => pushQueueJob(component.update)
+  const effect = (component.effect = createEffect(updateComponentEffect, () =>
+    pushQueueJob(component.update)
   ))
 
-  const update = (component.update = useEffect.run.bind(
-    useEffect
-  ) as SchedulerJob)
+  const update = (component.update = effect.run.bind(effect) as SchedulerJob)
   update.id = component.uid
   update.component = component
+  update.priority = JobPriority.NORMAL_TIMEOUT
   update()
 }
 
