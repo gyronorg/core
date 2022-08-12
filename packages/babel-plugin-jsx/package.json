@@ -21,7 +21,7 @@
     "@types/hash-sum": "^1.0.0",
     "@types/lodash-es": "^4.17.6",
     "babel-jest": "^28.1.1",
-    "esbuild": "^0.14.38",
+    "esbuild": "^0.15.1",
     "hash-sum": "^2.0.0",
     "html-tags": "^3.1.0",
     "lodash-es": "^4.17.21",
