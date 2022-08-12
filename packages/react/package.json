@@ -3,7 +3,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -21,10 +21,10 @@
     "build:dts": "rollup -c"
   },
   "devDependencies": {
-    "@gyron/babel-plugin-jsx": "^0.0.12"
+    "@gyron/babel-plugin-jsx": "^0.0.13"
   },
   "dependencies": {
-    "@gyron/shared": "^0.0.12",
-    "gyron": "^0.0.12"
+    "@gyron/shared": "^0.0.13",
+    "gyron": "^0.0.13"
   }
 }
