@@ -65,16 +65,16 @@ export function flushJobs() {
 export const now = () =>
   typeof performance === 'object' ? performance.now() : Date.now()
 
-const localNavigator = navigator as Navigator & {
+const navigator = global.navigator as Navigator & {
   scheduling: { isInputPending: () => boolean }
 }
 
 // https://web.dev/isinputpending/
 const isInputPending: () => boolean =
   typeof navigator !== 'undefined' &&
-  localNavigator.scheduling !== undefined &&
-  localNavigator.scheduling.isInputPending !== undefined
-    ? localNavigator.scheduling.isInputPending.bind(localNavigator.scheduling)
+  navigator.scheduling !== undefined &&
+  navigator.scheduling.isInputPending !== undefined
+    ? navigator.scheduling.isInputPending.bind(navigator.scheduling)
     : null
 
 const timeout = (callback: () => void, ms: number) => {
