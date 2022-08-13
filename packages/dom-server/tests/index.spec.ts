@@ -5,7 +5,7 @@ import {
   createFragment,
   createComponent,
   useValue,
-} from 'gyron'
+} from '@gyron/runtime'
 import { renderToString } from '../src'
 
 describe('RenderToString', () => {

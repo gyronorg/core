@@ -1,4 +1,4 @@
-import { VNode, FC, isVNodeComponent } from 'gyron'
+import { VNode, FC, isVNodeComponent } from '@gyron/runtime'
 import { To } from 'history'
 
 export enum RouteFlag {

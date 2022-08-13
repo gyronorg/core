@@ -1,4 +1,10 @@
-import { createInstance, createText, h, Instance, nextRender } from 'gyron'
+import {
+  createInstance,
+  createText,
+  h,
+  Instance,
+  nextRender,
+} from '@gyron/runtime'
 import {
   createMemoryRouter,
   generateQuery,

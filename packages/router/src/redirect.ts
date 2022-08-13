@@ -1,4 +1,4 @@
-import { FC, isVNodeComponent, VNode } from 'gyron'
+import { FC, isVNodeComponent, VNode } from '@gyron/runtime'
 import { To } from 'history'
 
 export interface RedirectProps {

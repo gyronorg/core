@@ -1,4 +1,10 @@
-import { cloneVNode, createText, FC, getCurrentComponent, provide } from 'gyron'
+import {
+  cloneVNode,
+  createText,
+  FC,
+  getCurrentComponent,
+  provide,
+} from '@gyron/runtime'
 import { TypeOutlet, TypeOutletRaw, useOutlet, useRouter } from './hooks'
 
 export const Outlet = FC(function Outlet() {

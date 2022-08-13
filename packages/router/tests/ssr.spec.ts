@@ -1,37 +1,39 @@
 import { renderToString } from '@gyron/dom-server'
-import { h, createSSRInstance, nextRender, createText } from 'gyron'
+import { h, createSSRInstance, nextRender, createText } from '@gyron/runtime'
 import { createMemoryRouter, Link, Route, Router, Routes } from '../src'
 
 describe('SSR Router', () => {
   test('404', async () => {
     const router = createMemoryRouter()
-    const root = h(() =>
-      h(
-        Router,
-        { router: router },
-        h(Routes, null, [
-          h(Route, { path: '/', strict: true, element: createText('foo') }),
-          h(Route, { path: 'bar', element: createText('bar') }),
-          h(Route, { path: '*', element: createText('404') }),
-        ])
+    const { root } = createSSRInstance(
+      h(() =>
+        h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Route, { path: '/', strict: true, element: createText('foo') }),
+            h(Route, { path: 'bar', element: createText('bar') }),
+            h(Route, { path: '*', element: createText('404') }),
+          ])
+        )
       )
     )
-    createSSRInstance(root)
     const html = await renderToString(root)
     expect(html).toBe('<!--[-->foo<!--]-->')
   })
 
   test('Link Component', async () => {
     const router = createMemoryRouter()
-    const root = h(
-      Router,
-      { router },
-      h('div', null, [
-        h(Link, { to: '/' }, '默认'),
-        h(Link, { to: '/login' }, '登陆'),
-      ])
+    const { root } = createSSRInstance(
+      h(
+        Router,
+        { router },
+        h('div', null, [
+          h(Link, { to: '/' }, '默认'),
+          h(Link, { to: '/login' }, '登陆'),
+        ])
+      )
     )
-    createSSRInstance(root)
     const html = await renderToString(root)
     expect(html).toBe(
       '<div><a class="" href="/">默认</a><a class="" href="/login">登陆</a></div>'
@@ -40,21 +42,22 @@ describe('SSR Router', () => {
 
   test('Routes Component', async () => {
     const router = createMemoryRouter()
-    const root = h(
-      Router,
-      { router: router },
-      h('div', null, [
+    const { root } = createSSRInstance(
+      h(
+        Router,
+        { router: router },
         h('div', null, [
-          h(Link, { to: '/', activeClassName: 'active' }, 'page1'),
-          h(Link, { to: '/page2', activeClassName: 'active' }, 'page2'),
-        ]),
-        h(Routes, null, [
-          h(Route, { path: '/', strict: true, element: createText('page1') }),
-          h(Route, { path: '/page2', element: createText('page2') }),
-        ]),
-      ])
+          h('div', null, [
+            h(Link, { to: '/', activeClassName: 'active' }, 'page1'),
+            h(Link, { to: '/page2', activeClassName: 'active' }, 'page2'),
+          ]),
+          h(Routes, null, [
+            h(Route, { path: '/', strict: true, element: createText('page1') }),
+            h(Route, { path: '/page2', element: createText('page2') }),
+          ]),
+        ])
+      )
     )
-    createSSRInstance(root)
 
     await router.extra.push('/')
     await nextRender()
@@ -73,20 +76,21 @@ describe('SSR Router', () => {
 
   test('Route contains Link', async () => {
     const router = createMemoryRouter()
-    const root = h(() =>
-      h(
-        Router,
-        { router: router },
-        h(Routes, null, [
-          h(Route, {
-            path: '/',
-            strict: true,
-            element: h(Link, { to: '/' }, 'foo'),
-          }),
-        ])
+    const { root } = createSSRInstance(
+      h(() =>
+        h(
+          Router,
+          { router: router },
+          h(Routes, null, [
+            h(Route, {
+              path: '/',
+              strict: true,
+              element: h(Link, { to: '/' }, 'foo'),
+            }),
+          ])
+        )
       )
     )
-    createSSRInstance(root)
     const html = await renderToString(root)
     expect(html).toBe('<!--[--><a class="" href="/">foo</a><!--]-->')
   })

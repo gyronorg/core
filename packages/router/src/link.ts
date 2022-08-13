@@ -1,4 +1,4 @@
-import { createVNode, VNodeDefaultProps, FC } from 'gyron'
+import { createVNode, VNodeDefaultProps, FC } from '@gyron/runtime'
 import { extend } from '@gyron/shared'
 import { To } from 'history'
 import { useHref, useRouter } from './hooks'

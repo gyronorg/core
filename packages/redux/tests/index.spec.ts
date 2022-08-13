@@ -1,4 +1,4 @@
-import { useEffect } from 'gyron'
+import { useEffect } from '@gyron/runtime'
 import { createSlice, createStore, useDispatch, useSelector } from '../src'
 import { appEnv } from './utils'
 

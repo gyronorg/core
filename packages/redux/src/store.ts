@@ -6,7 +6,7 @@ import {
   usePlugin,
   FC,
   warn,
-} from 'gyron'
+} from '@gyron/runtime'
 import { extend, isFunction, readonly, readwrite } from '@gyron/shared'
 import { sync } from '@gyron/sync'
 import {
@@ -40,7 +40,7 @@ function getStoreWithContext() {
   const store: StorePlugin = context.get(TypeStore)
   if (!store) {
     throw new Error(
-      'Please use(store) to register the store, and then use the hook function provided by dox'
+      'Please <Provider store={store} /> to register the store, and then use the hook function provided by redux'
     )
   }
   return store

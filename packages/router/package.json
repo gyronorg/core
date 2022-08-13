@@ -23,7 +23,7 @@
   "dependencies": {
     "@gyron/shared": "^0.0.13",
     "@gyron/sync": "^0.0.13",
-    "gyron": "^0.0.13",
+    "@gyron/runtime": "^0.0.13",
     "history": "^5.3.0",
     "path-to-regexp": "^6.2.0"
   },

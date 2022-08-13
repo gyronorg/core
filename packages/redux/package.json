@@ -24,7 +24,7 @@
     "@gyron/shared": "^0.0.13",
     "@gyron/sync": "^0.0.13",
     "@reduxjs/toolkit": "^1.8.1",
-    "gyron": "^0.0.13"
+    "@gyron/runtime": "^0.0.13"
   },
   "devDependencies": {
     "@types/clone": "^2.1.1",

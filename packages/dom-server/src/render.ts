@@ -13,7 +13,7 @@ import {
   isVNode,
   isVNodeText,
   ComponentSetupFunction,
-} from 'gyron'
+} from '@gyron/runtime'
 import {
   escape,
   shouldValue,

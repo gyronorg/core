@@ -1,4 +1,4 @@
-import { createInstance, createVNode, FC, h, nextRender } from 'gyron'
+import { createInstance, createVNode, FC, h, nextRender } from '@gyron/runtime'
 import {
   createAction,
   createReducer,

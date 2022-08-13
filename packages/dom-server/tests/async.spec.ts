@@ -1,4 +1,4 @@
-import { createText, h } from 'gyron'
+import { createText, h } from '@gyron/runtime'
 import { sleep } from '@gyron/shared'
 import { renderToString } from '../src'
 

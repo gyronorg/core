@@ -1,4 +1,4 @@
-import { VNode, isVNodeComponent } from 'gyron'
+import { VNode, isVNodeComponent } from '@gyron/runtime'
 import { extend, isArray, isObject, omit, resolve } from '@gyron/shared'
 import { match, parse, pathToRegexp } from 'path-to-regexp'
 import { useHref } from './hooks'

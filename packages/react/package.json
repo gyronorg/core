@@ -25,6 +25,6 @@
   },
   "dependencies": {
     "@gyron/shared": "^0.0.13",
-    "gyron": "^0.0.13"
+    "@gyron/runtime": "^0.0.13"
   }
 }

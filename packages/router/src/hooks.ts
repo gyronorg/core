@@ -1,4 +1,4 @@
-import { h, Primitive, useInject, usePlugin } from 'gyron'
+import { h, Primitive, useInject, usePlugin } from '@gyron/runtime'
 import { isString, isUndefined } from '@gyron/shared'
 import { createPath, parsePath, To } from 'history'
 import { matchPath, normalizeRoutes } from './matches'
@@ -71,7 +71,7 @@ export function useRouter() {
   const router: RouterBase = context.get(TypeRouter)
   if (!router) {
     throw new Error(
-      'Please use(router) or <Router></Router> to register the router, and then use the hook function provided by dox'
+      'Please <Router></Router> to register the router, and then use the hook function provided by useRouter'
     )
   }
   return router

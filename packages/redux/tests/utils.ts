@@ -1,4 +1,4 @@
-import { createInstance, createComment, h } from 'gyron'
+import { createInstance, createComment, h } from '@gyron/runtime'
 import type { Noop } from '@gyron/shared'
 
 export function appEnv(s: any, f: Noop) {

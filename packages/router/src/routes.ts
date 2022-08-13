@@ -7,7 +7,7 @@ import {
   provide,
   useProvide,
   useReactive,
-} from 'gyron'
+} from '@gyron/runtime'
 import { extend } from '@gyron/shared'
 import { sync } from '@gyron/sync'
 import {

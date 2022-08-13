@@ -1,4 +1,4 @@
-import { VNodeProps, removeBuiltInProps } from 'gyron'
+import { VNodeProps, removeBuiltInProps } from '@gyron/runtime'
 import { isEventProps, isString } from '@gyron/shared'
 import { SSRBuffer } from './buffer'
 
