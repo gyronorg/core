@@ -3,7 +3,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -19,7 +19,7 @@
     "build:dts": "rollup -c"
   },
   "dependencies": {
-    "@gyron/runtime": "^0.0.13",
+    "@gyron/runtime": "^0.0.14",
     "csstype": "^3.1.0"
   }
 }
