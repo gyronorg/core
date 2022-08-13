@@ -4,7 +4,6 @@ import {
   Primitive,
   useValue,
   usePlugin,
-  warn,
 } from '@gyron/runtime'
 import { isEqual, isFunction, noop } from '@gyron/shared'
 import {
@@ -182,16 +181,8 @@ export function createRouter(option: Partial<RouterOption>) {
   })
 }
 
-export const Router = FC<RouterProps>(function Router({ router }, component) {
+export const Router = FC<RouterProps>(function Router({ router }) {
   const plugins = usePlugin()
-
-  if (plugins.has(TypeRouter) && __WARN__) {
-    warn(
-      'The plug-in is already loaded and repeated loading will overwrite the previous behavior.',
-      component,
-      '@gyron/router'
-    )
-  }
 
   const route = useValue({})
   plugins.set(TypeRouter, router.data)

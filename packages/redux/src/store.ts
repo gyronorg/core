@@ -5,7 +5,6 @@ import {
   useReactive,
   usePlugin,
   FC,
-  warn,
 } from '@gyron/runtime'
 import { extend, isFunction, readonly, readwrite } from '@gyron/shared'
 import { sync } from '@gyron/sync'
@@ -109,18 +108,10 @@ export function createStore<
   })
 }
 
-export const Provider = FC<ProviderProps>(function Provider(props, component) {
+export const Provider = FC<ProviderProps>(function Provider({ store }) {
   const plugins = usePlugin()
 
-  if (plugins.has(TypeStore)) {
-    warn(
-      'The plug-in is already loaded and repeated loading will overwrite the previous behavior.',
-      component,
-      '@gyron/redux'
-    )
-  }
-
-  plugins.set(TypeStore, props.store.data)
+  plugins.set(TypeStore, store.data)
 
   return function Provider({ children }) {
     return children
