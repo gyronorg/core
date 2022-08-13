@@ -65,7 +65,9 @@ export function flushJobs() {
 export const now = () =>
   typeof performance === 'object' ? performance.now() : Date.now()
 
-const navigator = global.navigator as Navigator & {
+const self = typeof global === 'object' ? global : window
+
+const navigator = self.navigator as Navigator & {
   scheduling: { isInputPending: () => boolean }
 }
 
@@ -78,7 +80,7 @@ const isInputPending: () => boolean =
     : null
 
 const timeout = (callback: () => void, ms: number) => {
-  if (global.requestIdleCallback) {
+  if (self.requestIdleCallback) {
     requestIdleCallback(callback, { timeout: ms })
   } else {
     setTimeout(callback, ms)
@@ -86,7 +88,7 @@ const timeout = (callback: () => void, ms: number) => {
 }
 
 export function cancelTimeout(callback: number) {
-  if (global.requestIdleCallback) {
+  if (self.requestIdleCallback) {
     cancelIdleCallback(callback)
   } else {
     clearTimeout(callback)
