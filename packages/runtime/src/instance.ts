@@ -1,6 +1,6 @@
 import { isString } from '@gyron/shared'
 import { querySelector } from '@gyron/dom-client'
-import { patch, unmount } from './renderer'
+import { patch, unmount } from './render'
 import { hydrate } from './hydrate'
 import { checkVersion } from './version'
 import type { RenderElement, VNode } from './vnode'

@@ -16,7 +16,7 @@ import {
   normalizeChildrenVNode,
   normalizeVNodeWithLink,
 } from './vnode'
-import { mountComponent, patch } from './renderer'
+import { mountComponent, patch } from './render'
 import { setRef } from './ref'
 import type { VNode, RenderElement } from './vnode'
 
