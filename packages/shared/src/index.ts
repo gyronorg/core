@@ -275,7 +275,7 @@ export function omit<T extends object, K extends keyof T | (keyof T)[]>(
   o: T,
   k: K
 ): Omit<T, K extends Array<any> ? K[number] : K> {
-  const target = Object.create({})
+  const target: any = {}
   for (const key in o) {
     if (isArray(k)) {
       if (!k.includes(key)) {

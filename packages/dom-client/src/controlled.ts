@@ -91,3 +91,7 @@ export function isControlledElementProp(el: RenderElement, key: string) {
   }
   return false
 }
+
+export function isSelectElement(vnode: VNode) {
+  return vnode.el && vnode.el.nodeName === 'SELECT'
+}

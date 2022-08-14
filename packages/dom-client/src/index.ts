@@ -9,3 +9,4 @@ export {
   querySelector,
 } from './opt'
 export { mountProps, patchProps } from './props'
+export { isSelectElement } from './controlled'

@@ -3,6 +3,7 @@ import {
   createElement,
   createText,
   insert,
+  isSelectElement,
   mountProps,
   nextSibling,
   patchProps,
@@ -181,7 +182,7 @@ function patchNonKeyed(
   const minLength = Math.min(c1length, c2length)
   for (let i = 0; i < minLength; i++) {
     const prevChild = c1[i]
-    const nextChild = normalizeVNode(c2[i])
+    const nextChild = c2[i]
     patch(prevChild, nextChild, container, anchor, parentComponent)
   }
   if (c1length > c2length) {
@@ -218,7 +219,9 @@ function patchKeyed(
       if (c1n.index !== i) {
         // insert to new position when node order is changed
         const anchor = container.childNodes[i]
-        insert(c1n.el, container, anchor.nextSibling)
+        if (c1n.el !== anchor.nextSibling) {
+          insert(c1n.el, container, anchor.nextSibling)
+        }
       }
       // update props after migration is complete
       // element update attribute
@@ -267,13 +270,10 @@ function patchChildren(
   parentComponent: Component,
   isSvg: boolean
 ) {
-  n1.children = normalizeChildrenVNode(n1)
-  n2.children = normalizeChildrenVNode(n2)
-
   const c1 = n1.children as VNode[]
-  const c2 = n2.children as VNode[]
+  const c2: VNode[] = (n2.children = normalizeChildrenVNode(n2))
 
-  if (c1.length || c2.length) {
+  if (c1?.length || c2?.length) {
     if (isKeyPatch(c1, c2)) {
       const el = (n2.el = n1.el)
       patchKeyed(c1, c2, el || container, anchor, parentComponent, isSvg)
@@ -324,7 +324,9 @@ function patchElement(
   isSvg: boolean
 ) {
   const el = (n2.el = n1.el) as HTMLElement
-  patchProps(el, n1, extend({}, n2, { props: removeBuiltInProps(n2.props) }))
+  if (!isEqual(n1.props, n2.props) || isSelectElement(n2)) {
+    patchProps(el, n1, extend({}, n2, { props: removeBuiltInProps(n2.props) }))
+  }
   patchChildren(n1, n2, container, anchor, parentComponent, isSvg)
 }
 
@@ -333,6 +335,7 @@ function renderComponentEffect(component: Component) {
     component.subTree = nextTree
     if (component.mounted) {
       const { anchor } = prevTree
+      component.subTree.anchor = anchor
       patch(prevTree, nextTree, component.$parent, anchor, component)
       // onAfterUpdate
       invokeLifecycle(component, 'afterUpdates')
@@ -484,6 +487,7 @@ function enterComponent(
       const component = getCacheComponent(n2.type)
       component.destroyed = false
       component.mounted = true
+      // TODO validate the cache component props
       patch(null, component.subTree, container, anchor, parentComponent)
     } else {
       mountComponent(n2, container, anchor, parentComponent)
@@ -583,10 +587,6 @@ export function patch(
     throw new Error(
       'The parent element is not found when updating, please check the code.'
     )
-  }
-
-  if (n1 === n2) {
-    return null
   }
 
   if (n1 && !isSameVNodeType(n1, n2)) {
