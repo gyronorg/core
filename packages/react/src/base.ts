@@ -1,17 +1,14 @@
 import { isFunction } from '@gyron/shared'
 import {
   useValue,
-  Primitive,
   onAfterMount,
   onAfterUpdate,
   getCurrentComponent,
   FC,
-  ComponentSetupFunction,
-  VNode,
-  WrapperFunction,
   useWatch,
   isResponsive,
-} from 'gyron'
+} from '@gyron/runtime'
+import type { Primitive, VNode, WrapperFunction } from '@gyron/runtime'
 
 export function useState<S>(
   initialState: S | (() => S)
@@ -69,8 +66,8 @@ export function useEffect(
 }
 
 export interface Context<T> {
-  Provider: WrapperFunction<ComponentSetupFunction<{ value: T }>, { value: T }>
-  Consumer: WrapperFunction<ComponentSetupFunction<{ value: T }>, { value: T }>
+  Provider: WrapperFunction<{ value: T }>
+  Consumer: WrapperFunction<{ value: T }>
   displayName?: string | undefined
   get value(): T
 }

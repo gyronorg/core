@@ -33,12 +33,6 @@ export type UtilComponentProps<T extends VNodeType, D = never> = T extends
   ? Props
   : D
 
-export type UtilFunctionProps<T> = T extends (props: infer A) => infer C
-  ? C extends (props: infer B) => any
-    ? B & A
-    : A
-  : any
-
 export type ComponentDefaultProps = {
   readonly isSSR: boolean
   readonly children: VNodeChildren
@@ -79,9 +73,9 @@ type AsyncComponentFunctionReturn<Props extends object = object> = {
   ) => Promise<VNode<VNodeType>>
 }
 
-export type WrapperFunction<T, Props extends object> = {
+export type WrapperFunction<Props extends object> = {
   (
-    props: Omit<UtilFunctionProps<T>, keyof ComponentDefaultProps>,
+    props: Omit<Props, keyof ComponentDefaultProps>,
     component: Component<Props>
   ): VNode
 }
@@ -338,14 +332,14 @@ export function FCA<
 
   ret.__loader = load
 
-  return ret as unknown as WrapperFunction<T, Props>
+  return ret as unknown as WrapperFunction<Props>
 }
 
 export function FC<
   Props extends object = object,
   T extends ComponentSetupFunction<Props> = ComponentSetupFunction<Props>
 >(componentFunction: T) {
-  return componentFunction as WrapperFunction<T, Props>
+  return componentFunction as WrapperFunction<Props>
 }
 
 /**
@@ -392,5 +386,5 @@ export function memo<
   // }
   componentFunction.__cache = true
   componentFunction.__cacheIndex = cacheIndex++
-  return componentFunction as WrapperFunction<T, Props>
+  return componentFunction as WrapperFunction<Props>
 }

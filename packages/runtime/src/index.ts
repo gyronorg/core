@@ -89,7 +89,6 @@ export type {
   AsyncComponentFunction,
   ComponentDefaultProps,
   UtilComponentProps,
-  UtilFunctionProps,
   WrapperFunction,
 } from './component'
 export type {
