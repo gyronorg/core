@@ -22,7 +22,7 @@ export {
   exposeComponent,
   forceUpdate,
   clearCacheComponent,
-  memo,
+  keepComponent,
   removeBuiltInProps,
   FCA,
   FC,

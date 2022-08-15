@@ -40,6 +40,7 @@ export type ComponentDefaultProps = {
 export type ComponentParentProps = {
   readonly key: string | number | symbol
   readonly ref: UserRef
+  readonly memo: any[]
 }
 
 export type ComponentFunction<Props> = (
@@ -370,7 +371,7 @@ export function clearCacheComponent(componentFunction: ComponentSetupFunction) {
   }
 }
 
-export function memo<
+export function keepComponent<
   Props extends object = object,
   T extends ComponentSetupFunction<Props> = ComponentSetupFunction<Props>
 >(componentFunction: T) {
@@ -461,5 +462,5 @@ export function removeBuiltInProps(props: Partial<VNodeProps>) {
     {},
     props
   )
-  return omit(propsClone, ['isSSR', 'children', 'ref', 'key'])
+  return omit(propsClone, ['isSSR', 'children', 'ref', 'key', 'memo'])
 }

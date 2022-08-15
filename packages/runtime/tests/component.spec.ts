@@ -21,7 +21,7 @@ import {
   isVNodeComponent,
   registerErrorHandler,
   useWatch,
-  memo,
+  keepComponent,
 } from '../src'
 import { effectTracks } from '@gyron/reactivity'
 import { Gyron } from '../src/vnode'
@@ -585,9 +585,9 @@ describe('Component', () => {
     expect(deps.get('count').size).toBe(0)
   })
 
-  test('memo component', async () => {
+  test('keep component', async () => {
     const update = jest.fn()
-    const Memo = memo<{ count: number }>(() => {
+    const Memo = keepComponent<{ count: number }>(() => {
       onAfterUpdate(update)
       return ({ count }) => h('div', null, count)
     })
@@ -607,14 +607,14 @@ describe('Component', () => {
     expect(container.innerHTML).toBe('<div>1</div><div>1</div>')
   })
 
-  test('memo cache component state', async () => {
-    const Memo = memo(() => {
+  test('keep cache component state', async () => {
+    const Memo = keepComponent(() => {
       const count = useValue(0)
       return () =>
         h(
           'div',
           {
-            id: 'memo',
+            id: 'keep',
             onClick() {
               count.value++
             },
@@ -628,18 +628,18 @@ describe('Component', () => {
         return trigger.value ? h(Memo) : 'empty'
       })
     ).render(container)
-    const box = container.querySelector('#memo') as HTMLElement
+    const box = container.querySelector('#keep') as HTMLElement
     box.click()
     await nextRender()
-    expect(container.innerHTML).toBe('<div id="memo">1</div>')
+    expect(container.innerHTML).toBe('<div id="keep">1</div>')
     trigger.value = false
     await nextRender()
     expect(container.innerHTML).toBe('empty')
     trigger.value = true
     await nextRender()
-    expect(container.innerHTML).toBe('<div id="memo">1</div>')
+    expect(container.innerHTML).toBe('<div id="keep">1</div>')
     box.click()
     await nextRender()
-    expect(container.innerHTML).toBe('<div id="memo">2</div>')
+    expect(container.innerHTML).toBe('<div id="keep">2</div>')
   })
 })

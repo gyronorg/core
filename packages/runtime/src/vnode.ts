@@ -12,6 +12,7 @@ import {
   Component,
   ComponentDefaultProps,
   ComponentFunction,
+  ComponentParentProps,
   ComponentSetupFunction,
 } from './component'
 import { UserRef } from './ref'
@@ -94,10 +95,12 @@ export interface VNode<T extends VNodeType = VNodeType> {
   component?: Component
   // children node
   children?: VNodeChildren
-  cacheChildren?: VNodeChildren
 }
 
-export interface VNodeProps extends VNodeEvent, Partial<ComponentDefaultProps> {
+export interface VNodeProps
+  extends VNodeEvent,
+    Partial<ComponentDefaultProps>,
+    Partial<ComponentParentProps> {
   [k: string]: any
 }
 
@@ -163,7 +166,6 @@ export function createVNode(
     flag: Gyron,
     props: VNodeProps,
     children: children,
-    cacheChildren: children,
   }
   if (type === Element) {
     vnode.tag = tag as string

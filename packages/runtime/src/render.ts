@@ -271,6 +271,18 @@ function patchChildren(
   parentComponent: Component,
   isSvg: boolean
 ) {
+  const c1memo = n1.props.memo
+  const c2memo = n2.props.memo
+  if (isArray(c1memo)) {
+    const index = c1memo.findIndex((item, index) => {
+      return c2memo[index] !== item
+    })
+    if (index < 0) {
+      n2.children = n1.children
+      return
+    }
+  }
+
   const c1 = n1.children as VNode[]
   const c2: VNode[] = (n2.children = normalizeChildrenVNode(n2))
 
@@ -468,8 +480,8 @@ function patchComponent(
   n2: VNode<ComponentSetupFunction>,
   parentComponent: Component
 ) {
+  const component = (n2.component = n1.component)
   if (!isCacheComponent(n1.component.type) || !isEqual(n1.props, n2.props)) {
-    const component = (n2.component = n1.component)
     normalizeComponent(n2, component, parentComponent)
     component.update()
   }
@@ -490,8 +502,13 @@ function enterComponent(
       const component = getCacheComponent(n2.type)
       component.destroyed = false
       component.mounted = true
-      // TODO validate the cache component props
-      patch(null, component.subTree, container, anchor, parentComponent)
+      component.vnode = n2
+      component.$parent = container
+      if (isEqual(removeBuiltInProps(component.props), n2.props)) {
+        patch(null, component.subTree, container, anchor, parentComponent)
+      } else {
+        mountComponent(n2, container, anchor, parentComponent)
+      }
     } else {
       mountComponent(n2, container, anchor, parentComponent)
     }
