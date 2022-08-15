@@ -116,7 +116,7 @@ function get(target: object, key: string | symbol, receiver: object) {
 
   track(target, key, TrackTypes.GET)
 
-  if (res && typeof res === 'object') {
+  if (res && typeof res === 'object' && !isResponsive(res)) {
     // deep useReactive
     return useReactive(res)
   }

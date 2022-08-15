@@ -84,13 +84,17 @@ export interface VNode<T extends VNodeType = VNodeType> {
   nodeType: NodeType
   props: Partial<VNodeProps>
   el?: RenderElement
+  // true flag bits to ensure accurate position when inserting elements
   anchor?: RenderElement
   key?: number | string | symbol
+  // parent vnode
   parent?: VNode
   tag?: string
   is?: any
   component?: Component
+  // children node
   children?: VNodeChildren
+  cacheChildren?: VNodeChildren
 }
 
 export interface VNodeProps extends VNodeEvent, Partial<ComponentDefaultProps> {
@@ -159,6 +163,7 @@ export function createVNode(
     flag: Gyron,
     props: VNodeProps,
     children: children,
+    cacheChildren: children,
   }
   if (type === Element) {
     vnode.tag = tag as string
@@ -185,7 +190,7 @@ export function normalizeVNode(value: VNodeChildren): VNode {
   } else if (Array.isArray(value)) {
     return createVNode(value.slice() as VNode[])
   } else {
-    return createVNode(String(value))
+    return createVNode('' + value)
   }
 }
 

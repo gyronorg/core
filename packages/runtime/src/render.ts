@@ -22,7 +22,6 @@ import {
   isEqual,
   isObject,
   isPromise,
-  omit,
   shouldValue,
 } from '@gyron/shared'
 import { warn } from './assert'
@@ -94,9 +93,10 @@ function mountText(
 }
 
 function patchText(n1: VNode, n2: VNode) {
-  const c1 = String(n1.children)
-  const c2 = String(n2.children)
   const el = (n2.el = n1.el)
+
+  const c1 = '' + n1.children
+  const c2 = '' + n2.children
 
   if (c1 !== c2) {
     el.textContent = c2
@@ -216,12 +216,12 @@ function patchKeyed(
     const c1n = o1[c2n.key]
     if (c1n) {
       // 1, find the same key value of the node, and then inserted into the corresponding location. (Do not delete add, move directly)
-      extend(c2[i], omit(c1n, ['children', 'props']))
+      const el = (c2[i].el = c1n.el)
       if (c1n.index !== i) {
         // insert to new position when node order is changed
         const anchor = container.childNodes[i]
-        if (c1n.el !== anchor.nextSibling) {
-          insert(c1n.el, container, anchor.nextSibling)
+        if (el !== anchor.nextSibling) {
+          insert(el, container, anchor.nextSibling)
         }
       }
       // update props after migration is complete
@@ -231,7 +231,7 @@ function patchKeyed(
           patchComponent(c1n, c2n, parentComponent)
         } else {
           patchProps(
-            c1n.el as HTMLElement,
+            el as HTMLElement,
             c1n,
             extend({}, c2n, { props: removeBuiltInProps(c2n.props) })
           )
@@ -598,8 +598,7 @@ export function patch(
     n1 = null
   }
 
-  const { type } = n2
-  switch (type) {
+  switch (n2.type) {
     case Text:
       enterText(n1, n2, container, anchor)
       break

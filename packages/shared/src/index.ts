@@ -207,7 +207,7 @@ export function deepArrayFind<
   }
 }
 
-export function isEqual(target: object, source: object, k?: string) {
+export function isEqual<T = any>(target: T, source: T, k?: string) {
   if (keys(target).length !== keys(source).length) {
     return false
   }
