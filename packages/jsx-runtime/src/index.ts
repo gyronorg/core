@@ -1,6 +1,6 @@
 import {
   Children,
-  createFragment,
+  createVNode,
   VNode,
   VNodeProps,
   VNodeType,
@@ -20,7 +20,7 @@ export function h(
   ...children: Children[]
 ) {
   if (type === Fragment) {
-    return createFragment(children as VNode[])
+    return createVNode(children as VNode[])
   }
 
   return H(

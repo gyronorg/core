@@ -1,4 +1,4 @@
-import { createText, h } from '@gyron/runtime'
+import { createVNode, h } from '@gyron/runtime'
 import { sleep } from '@gyron/shared'
 import { renderToString } from '../src'
 
@@ -15,7 +15,7 @@ describe('Async', () => {
   test('plain text', async () => {
     const App = async () => {
       await sleep(0)
-      return createText('foo')
+      return createVNode('foo')
     }
     const html = await renderToString(h(App))
     expect(html).toBe('foo')

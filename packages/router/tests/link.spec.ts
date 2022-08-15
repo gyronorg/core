@@ -1,7 +1,7 @@
 import {
   createInstance,
   useRef,
-  createText,
+  createVNode,
   h,
   Instance,
   nextRender,
@@ -81,7 +81,7 @@ describe('Link', () => {
                 ]
               }),
             }),
-            h(Route, { path: '/foo', element: createText('foo') }),
+            h(Route, { path: '/foo', element: createVNode('foo') }),
           ])
         )
       })

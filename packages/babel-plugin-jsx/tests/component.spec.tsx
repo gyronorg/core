@@ -56,9 +56,9 @@ describe('Component TSX', () => {
 
   test('child A and B', async () => {
     const container = document.createElement('div')
-    const A = FC(() => {
+    const A = FC<{ w: number }>(() => {
       const v = useValue(0)
-      return (props: { w: number }) => (
+      return (props) => (
         <div
           onClick={() => {
             v.value++
@@ -69,9 +69,9 @@ describe('Component TSX', () => {
         </div>
       )
     })
-    const B = FC(() => {
+    const B = FC<{ w: number }>(() => {
       const v = useValue(0)
-      return (props: { w: number }) => (
+      return (props) => (
         <div
           onClick={() => {
             v.value++

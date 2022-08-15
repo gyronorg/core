@@ -4,6 +4,7 @@ import {
   isArray,
   isFunction,
   isString,
+  isUndefined,
   omit,
   shouldValue,
 } from '@gyron/shared'
@@ -14,13 +15,37 @@ import {
   ComponentSetupFunction,
 } from './component'
 import { UserRef } from './ref'
-import { VNodeEvent } from './eventType'
 
 export const Gyron = Symbol.for('gyron')
 export const Text = Symbol.for('gyron.text')
 export const Element = Symbol.for('gyron.element')
 export const Comment = Symbol.for('gyron.comment')
 export const Fragment = Symbol.for('gyron.fragment')
+
+type ToUpper<T extends string> = T extends `${infer F}${infer Rest}`
+  ? `${Uppercase<F>}${Rest}`
+  : never
+
+type ToLower<T extends string> = T extends `${infer F}${infer Rest}`
+  ? `${Lowercase<F>}${Rest}`
+  : never
+
+type APrefixEvent<K extends string, P extends string> = K extends string
+  ? `${P}${ToUpper<K>}`
+  : never
+
+type RPrefixEvent<
+  K extends string,
+  P extends string
+> = K extends `${P}${infer Key}` ? ToLower<Key> : never
+
+type Prefix = 'on'
+
+export type VNodeEvent = {
+  [Key in APrefixEvent<keyof HTMLElementEventMap, Prefix>]?: (
+    e: HTMLElementEventMap[RPrefixEvent<Key, Prefix>]
+  ) => any
+}
 
 export enum NodeType {
   Fragment = -2,
@@ -107,72 +132,41 @@ export function createVNode(
   props?: Partial<VNodeProps>,
   children?: VNodeChildren
 ): VNode {
-  if (isString(tag)) {
-    return createElement(tag, props, children)
-  }
-  if (isFunction(tag)) {
-    return createComponent(tag, props, children)
-  }
-  if (isArray(tag)) {
-    return createFragment(mergeVNode(tag.map(normalizeVNode), props))
-  }
-  return createText(tag as TextContent)
-}
+  let VNodeProps = props ? props : {}
 
-export function createElement(
-  tag: string,
-  props?: Partial<VNodeProps>,
-  children?: VNodeChildren
-): VNode {
-  const key = props ? props.key : null
-  return {
-    type: Element,
-    nodeType: NodeType.Element,
+  const key = VNodeProps.key || null
+  let type: VNodeType = Text
+  let nodeType: NodeType = NodeType.Text
+
+  if (isString(tag) && (!isUndefined(props) || !isUndefined(children))) {
+    type = Element
+    nodeType = NodeType.Element
+  } else if (isFunction(tag)) {
+    type = tag
+    nodeType = NodeType.Component
+    VNodeProps = omit(VNodeProps, 'key')
+  } else if (isArray(tag)) {
+    type = Fragment
+    nodeType = NodeType.Fragment
+    children = mergeVNode(tag.map(normalizeVNode), VNodeProps)
+  } else {
+    children = tag as TextContent
+  }
+  const vnode: VNode = {
+    type: type,
+    nodeType: nodeType,
     key: key,
     flag: Gyron,
-    tag: tag,
-    props: props,
+    props: VNodeProps,
     children: children,
   }
-}
-
-export function createComponent(
-  componentFunction: ComponentSetupFunction,
-  props?: Partial<VNodeProps>,
-  children?: VNodeChildren
-): VNode<ComponentSetupFunction> {
-  const key = props ? props.key : null
-  return {
-    type: componentFunction,
-    nodeType: NodeType.Component,
-    key: key,
-    flag: Gyron,
-    props: omit(props, 'key'),
-    children: children,
+  if (type === Element) {
+    vnode.tag = tag as string
   }
+  return vnode
 }
 
-export function createFragment(children: Children[]): VNode<typeof Fragment> {
-  return {
-    type: Fragment,
-    nodeType: NodeType.Fragment,
-    props: {},
-    flag: Gyron,
-    children: children,
-  }
-}
-
-export function createText(children: TextContent): VNode<typeof Text> {
-  return {
-    type: Text,
-    nodeType: NodeType.Text,
-    props: {},
-    flag: Gyron,
-    children: children,
-  }
-}
-
-export function createComment(children?: string): VNode<typeof Comment> {
+export function createVNodeComment(children?: string): VNode<typeof Comment> {
   return {
     type: Comment,
     nodeType: NodeType.Comment,
@@ -187,11 +181,11 @@ export function normalizeVNode(value: VNodeChildren): VNode {
     return value
   }
   if (value === null || typeof value === 'boolean') {
-    return createComment()
+    return createVNodeComment()
   } else if (Array.isArray(value)) {
-    return createFragment(value.slice() as VNode[])
+    return createVNode(value.slice() as VNode[])
   } else {
-    return createText(String(value))
+    return createVNode(String(value))
   }
 }
 

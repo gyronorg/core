@@ -333,7 +333,7 @@ declare namespace React {
 
   // DOM Elements
   // TODO: generalize this to everything in `keyof ReactHTML`, not just "input"
-  function createElement(
+  function createVNode(
     type: 'input',
     props?:
       | (InputHTMLAttributes<HTMLInputElement> &
@@ -344,17 +344,17 @@ declare namespace React {
     InputHTMLAttributes<HTMLInputElement>,
     HTMLInputElement
   >
-  function createElement<P extends HTMLAttributes<T>, T extends HTMLElement>(
+  function createVNode<P extends HTMLAttributes<T>, T extends HTMLElement>(
     type: keyof ReactHTML,
     props?: (ClassAttributes<T> & P) | null,
     ...children: ReactNode[]
   ): DetailedReactHTMLElement<P, T>
-  function createElement<P extends SVGAttributes<T>, T extends SVGElement>(
+  function createVNode<P extends SVGAttributes<T>, T extends SVGElement>(
     type: keyof ReactSVG,
     props?: (ClassAttributes<T> & P) | null,
     ...children: ReactNode[]
   ): ReactSVGElement
-  function createElement<P extends DOMAttributes<T>, T extends Element>(
+  function createVNode<P extends DOMAttributes<T>, T extends Element>(
     type: string,
     props?: (ClassAttributes<T> & P) | null,
     ...children: ReactNode[]
@@ -362,12 +362,12 @@ declare namespace React {
 
   // Custom components
 
-  function createElement<P extends {}>(
+  function createVNode<P extends {}>(
     type: FunctionComponent<P>,
     props?: (Attributes & P) | null,
     ...children: ReactNode[]
   ): FunctionComponentElement<P>
-  function createElement<P extends {}>(
+  function createVNode<P extends {}>(
     type: ClassType<
       P,
       ClassicComponent<P, ComponentState>,
@@ -376,7 +376,7 @@ declare namespace React {
     props?: (ClassAttributes<ClassicComponent<P, ComponentState>> & P) | null,
     ...children: ReactNode[]
   ): CElement<P, ClassicComponent<P, ComponentState>>
-  function createElement<
+  function createVNode<
     P extends {},
     T extends Component<P, ComponentState>,
     C extends ComponentClass<P>
@@ -385,7 +385,7 @@ declare namespace React {
     props?: (ClassAttributes<T> & P) | null,
     ...children: ReactNode[]
   ): CElement<P, T>
-  function createElement<P extends {}>(
+  function createVNode<P extends {}>(
     type: FunctionComponent<P> | ComponentClass<P> | string,
     props?: (Attributes & P) | null,
     ...children: ReactNode[]

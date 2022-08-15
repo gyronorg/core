@@ -4,14 +4,13 @@ import {
   isVNodeComment,
   isVNodeFragment,
   h,
-  createText,
-  createComment,
-  createFragment,
+  createVNode,
+  createVNodeComment,
 } from '../src'
 
 test('shared', () => {
-  expect(isVNodeElement(h('div'))).toBe(true)
-  expect(isVNodeText(createText(''))).toBe(true)
-  expect(isVNodeComment(createComment(''))).toBe(true)
-  expect(isVNodeFragment(createFragment([]))).toBe(true)
+  expect(isVNodeElement(h('div', null, null))).toBe(true)
+  expect(isVNodeText(createVNode(''))).toBe(true)
+  expect(isVNodeComment(createVNodeComment(''))).toBe(true)
+  expect(isVNodeFragment(createVNode([]))).toBe(true)
 })

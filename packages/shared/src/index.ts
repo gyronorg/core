@@ -212,11 +212,9 @@ export function isEqual(target: object, source: object, k?: string) {
     return false
   }
   for (const key in target) {
-    if (hasOwn(target, key) && hasOwn(source, key)) {
-      if (key !== k) {
-        if (target[key] !== source[key]) {
-          return false
-        }
+    if (key !== k) {
+      if (target[key] !== source[key]) {
+        return false
       }
     }
   }

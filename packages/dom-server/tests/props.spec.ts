@@ -1,4 +1,4 @@
-import { createComponent, createVNode } from '@gyron/runtime'
+import { createVNode } from '@gyron/runtime'
 import { renderToString } from '../src'
 
 describe('Props', () => {
@@ -46,7 +46,7 @@ describe('Props', () => {
 
   test('component class style', async () => {
     const html = await renderToString(
-      createComponent(() => {
+      createVNode(() => {
         return createVNode(
           'div',
           {

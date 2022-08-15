@@ -1,6 +1,6 @@
 import {
   createInstance,
-  createText,
+  createVNode,
   h,
   Instance,
   nextRender,
@@ -42,8 +42,8 @@ describe('next', () => {
           Router,
           { router: router },
           h(Routes, null, [
-            h(Route, { path: '', strict: true, element: createText('') }),
-            h(Route, { path: 'foo', element: createText('foo') }),
+            h(Route, { path: '', strict: true, element: createVNode('') }),
+            h(Route, { path: 'foo', element: createVNode('foo') }),
           ])
         )
       })
@@ -62,9 +62,9 @@ describe('next', () => {
           { router: router },
           h(Routes, null, [
             h(Redirect, { path: '', redirect: 'foo' }),
-            h(Route, { path: 'foo', element: createText('foo') }, [
+            h(Route, { path: 'foo', element: createVNode('foo') }, [
               h(Redirect, { path: 'baz', redirect: 'bar' }),
-              h(Route, { path: 'bar', element: createText('bar') }),
+              h(Route, { path: 'bar', element: createVNode('bar') }),
             ]),
           ])
         )
@@ -102,9 +102,9 @@ describe('next', () => {
                       return h('span', null, h(Outlet))
                     }),
                   },
-                  h(Route, { path: 'baz', element: createText('baz') })
+                  h(Route, { path: 'baz', element: createVNode('baz') })
                 ),
-                h(Route, { path: 'bar', element: createText('bar') }),
+                h(Route, { path: 'bar', element: createVNode('bar') }),
               ]
             ),
           ])
@@ -131,7 +131,7 @@ describe('next', () => {
           Router,
           { router: router },
           h(Routes, null, [
-            h(Route, { path: '*', element: createText('404') }),
+            h(Route, { path: '*', element: createVNode('404') }),
             h(
               Route,
               {
@@ -140,12 +140,12 @@ describe('next', () => {
                   return h('span', null, h(Outlet))
                 }),
               },
-              h(Route, { path: '*', element: createText('in foo 404') })
+              h(Route, { path: '*', element: createVNode('in foo 404') })
             ),
             h(Route, {
               path: '',
               strict: true,
-              element: createText(''),
+              element: createVNode(''),
             }),
           ])
         )
@@ -209,7 +209,7 @@ describe('next', () => {
               { path: '' },
               h(Route, {
                 path: 'foo',
-                element: createText('foo'),
+                element: createVNode('foo'),
               })
             ),
           ])
@@ -230,7 +230,7 @@ describe('next', () => {
           useRoutes([
             {
               path: '',
-              element: createText('foo'),
+              element: createVNode('foo'),
             },
           ])
         )
@@ -246,7 +246,7 @@ describe('next', () => {
           Router,
           { router: router },
           h(Routes, null, [
-            h(Route, { path: '', strict: true, element: createText('') }),
+            h(Route, { path: '', strict: true, element: createVNode('') }),
             h(Route, {
               path: 'foo',
               element: h(() => String(useMatch('/foo'))),
@@ -281,7 +281,7 @@ describe('next', () => {
               element: h(() => {
                 const route = useRoute()
                 title = route.value.meta.title
-                return createText('')
+                return createVNode('')
               }),
               meta: { title: 'foo' },
             }),
@@ -304,7 +304,7 @@ describe('next', () => {
               path: ':id',
               element: h(() => {
                 onBeforeRouteUpdate(beforeUpdate)
-                return () => createText('')
+                return () => createVNode('')
               }),
             }),
             h(Route, {

@@ -1,4 +1,4 @@
-import { createText, h } from '@gyron/runtime'
+import { createVNode, h } from '@gyron/runtime'
 import {
   normalizeRoutes,
   generateNestedRoutes,
@@ -14,7 +14,7 @@ import {
 describe('matches', () => {
   test('generateNestedRoutes', () => {
     const routes = [
-      h(Route, { path: 'foo', element: createText('foo') }),
+      h(Route, { path: 'foo', element: createVNode('foo') }),
       h(Redirect, { path: 'baz', redirect: 'foo' }),
     ]
     const nestedRoutes = generateNestedRoutes(routes)
@@ -22,7 +22,7 @@ describe('matches', () => {
     expect(nestedRoutes[0].extra).toEqual(
       expect.objectContaining<Partial<RouteRecordExtra>>({
         children: [],
-        element: createText('foo'),
+        element: createVNode('foo'),
         regexpPath: '/foo',
       })
     )
@@ -36,8 +36,8 @@ describe('matches', () => {
 
   test('base url', () => {
     const routes = [
-      h(Route, { path: 'foo', element: createText('foo') }),
-      h(Route, { path: 'bar', element: createText('bar') }),
+      h(Route, { path: 'foo', element: createVNode('foo') }),
+      h(Route, { path: 'bar', element: createVNode('bar') }),
     ]
     const nestedRoutes = generateNestedRoutes(routes)
     const matchRouteBranch = generateRouteBranch(
@@ -45,22 +45,22 @@ describe('matches', () => {
       '/base-directory/foo',
       '/base-directory'
     )
-    expect(matchRouteBranch[0].extra.element).toEqual(createText('foo'))
+    expect(matchRouteBranch[0].extra.element).toEqual(createVNode('foo'))
   })
 
   test('normalizeRoutes with useRoutes', () => {
     const routesRecord = normalizeRoutes([
       {
         path: '',
-        element: createText(''),
+        element: createVNode(''),
       },
       {
         path: 'foo',
-        element: createText('foo'),
+        element: createVNode('foo'),
         children: [
           {
             path: ':id',
-            element: createText(':id'),
+            element: createVNode(':id'),
           },
         ],
       },
@@ -69,7 +69,7 @@ describe('matches', () => {
       expect.objectContaining<Partial<RouteRecordExtra>>({
         regexpPath: '/foo/:id',
         children: [],
-        element: createText(':id'),
+        element: createVNode(':id'),
       })
     )
   })
@@ -90,10 +90,10 @@ describe('matches', () => {
 
   test('generateRouteBranch', () => {
     const routes = [
-      h(Route, { path: 'foo', element: createText('foo') }),
+      h(Route, { path: 'foo', element: createVNode('foo') }),
       h(Route, {
         path: '/invoices/:id/invoice',
-        element: createText('invoice'),
+        element: createVNode('invoice'),
       }),
       h(
         Route,
@@ -101,15 +101,15 @@ describe('matches', () => {
           path: 'user',
         },
         h(Route, { path: ':id' }, [
-          h(Route, { path: '*', element: createText('user 404') }),
+          h(Route, { path: '*', element: createVNode('user 404') }),
           h(Route, { path: 'detail' }),
         ])
       ),
       h(Route, { path: 'dashboard' }, [
-        h(Route, { path: 'welcome', element: createText('foo') }),
+        h(Route, { path: 'welcome', element: createVNode('foo') }),
         h(Redirect, { path: 'welcomes', redirect: 'welcome' }),
       ]),
-      h(Route, { path: '*', element: createText('404') }),
+      h(Route, { path: '*', element: createVNode('404') }),
       h(Redirect, { path: '/baz/foo', redirect: 'foo' }),
     ]
     const nestedRoutes = generateNestedRoutes(routes)
@@ -133,10 +133,10 @@ describe('matches', () => {
       '/invoices/FFCCAA/invoice',
       '/'
     )
-    expect(matchRouteBranch[0].extra.element).toEqual(createText('invoice'))
+    expect(matchRouteBranch[0].extra.element).toEqual(createVNode('invoice'))
 
     matchRouteBranch = generateRouteBranch(nestedRoutes, '/ccccc/qqqq', '/')
-    expect(matchRouteBranch[0].extra.element).toEqual(createText('404'))
+    expect(matchRouteBranch[0].extra.element).toEqual(createVNode('404'))
 
     matchRouteBranch = generateRouteBranch(
       nestedRoutes,
@@ -145,7 +145,7 @@ describe('matches', () => {
     )
     expect(
       matchRouteBranch[0].extra.matched[0].extra.matched[0].extra.element
-    ).toEqual(createText('user 404'))
+    ).toEqual(createVNode('user 404'))
 
     matchRouteBranch = generateRouteBranch(nestedRoutes, '/baz/foo', '/')
     expect(matchRouteBranch[0].path).toBe('foo')
@@ -154,7 +154,7 @@ describe('matches', () => {
   test('nested 404', () => {
     const routes = [
       h(Route, { path: 'dashboard' }, [
-        h(Route, { path: 'welcome', element: createText('foo') }),
+        h(Route, { path: 'welcome', element: createVNode('foo') }),
         h(Redirect, { path: 'welcomes', redirect: 'welcome' }),
       ]),
     ]
@@ -171,34 +171,34 @@ describe('matches', () => {
   test('index route', () => {
     const routes = [
       h(Route, { path: 'dashboard' }, [
-        h(Route, { index: true, element: createText('welcome') }),
-        h(Route, { path: 'form', element: createText('form') }),
-        h(Route, { path: '*', element: createText('404') }),
+        h(Route, { index: true, element: createVNode('welcome') }),
+        h(Route, { path: 'form', element: createVNode('form') }),
+        h(Route, { path: '*', element: createVNode('404') }),
       ]),
     ]
     const nestedRoutes = generateNestedRoutes(routes)
     let matchRouteBranch = generateRouteBranch(nestedRoutes, '/dashboard', '/')
     expect(matchRouteBranch[0].extra.matched[0].extra.element).toEqual(
-      createText('welcome')
+      createVNode('welcome')
     )
 
     matchRouteBranch = generateRouteBranch(nestedRoutes, '/dashboard/form', '/')
     expect(matchRouteBranch[0].extra.matched[0].extra.element).toEqual(
-      createText('form')
+      createVNode('form')
     )
 
     matchRouteBranch = generateRouteBranch(nestedRoutes, '/dashboard/test', '/')
     expect(matchRouteBranch[0].extra.matched[0].extra.element).toEqual(
-      createText('404')
+      createVNode('404')
     )
   })
 
   test('redirect to root path', () => {
     const routes = [
-      h(Route, { path: 'foo', element: createText('foo') }),
+      h(Route, { path: 'foo', element: createVNode('foo') }),
       h(Route, { path: 'dashboard' }, [
-        h(Route, { index: true, element: createText('dashboard') }),
-        h(Route, { path: 'login', element: createText('login') }),
+        h(Route, { index: true, element: createVNode('dashboard') }),
+        h(Route, { path: 'login', element: createVNode('login') }),
         h(Redirect, { path: 'welcome', redirect: '/foo' }),
       ]),
       h(Redirect, { path: '/baz/foo', redirect: '/dashboard' }),
@@ -214,19 +214,19 @@ describe('matches', () => {
       '/'
     )
     expect(matchRouteBranch.length).toBe(1)
-    expect(matchRouteBranch[0].extra.element).toEqual(createText('foo'))
+    expect(matchRouteBranch[0].extra.element).toEqual(createVNode('foo'))
     matchRouteBranch = generateRouteBranch(nestedRoutes, '/role', '/')
     expect(matchRouteBranch.length).toBe(1)
     expect(matchRouteBranch[0].extra.matched[0].extra.element).toEqual(
-      createText('login')
+      createVNode('login')
     )
   })
 
   test('redirect nested least three', () => {
     const routes = [
-      h(Route, { path: 'foo', element: createText('foo') }),
+      h(Route, { path: 'foo', element: createVNode('foo') }),
       h(Route, { path: 'dashboard' }, [
-        h(Route, { path: 'login', element: createText('login') }, [
+        h(Route, { path: 'login', element: createVNode('login') }, [
           h(Redirect, { path: 'admin', redirect: '/foo' }),
         ]),
       ]),
@@ -238,7 +238,7 @@ describe('matches', () => {
       '/'
     )
     expect(matchRouteBranch.length).toBe(1)
-    expect(matchRouteBranch[0].extra.element).toEqual(createText('foo'))
+    expect(matchRouteBranch[0].extra.element).toEqual(createVNode('foo'))
   })
 
   test('normalized path', () => {
@@ -247,7 +247,7 @@ describe('matches', () => {
         path: {
           pathname: 'foo',
         },
-        element: createText('foo'),
+        element: createVNode('foo'),
       }),
       h(
         Route,
@@ -257,7 +257,7 @@ describe('matches', () => {
           },
         },
         [
-          h(Route, { index: true, element: createText('foo') }),
+          h(Route, { index: true, element: createVNode('foo') }),
           h(Redirect, {
             path: {
               pathname: 'welcome',
@@ -285,13 +285,13 @@ describe('matches', () => {
       '/dashboard/welcome',
       '/'
     )
-    expect(matchRouteBranch[0].extra.element).toEqual(createText('foo'))
+    expect(matchRouteBranch[0].extra.element).toEqual(createVNode('foo'))
   })
 
   test('route priority', () => {
     const routes = [
-      h(Route, { path: 'foo', element: createText('foo') }),
-      h(Route, { path: ':id', element: createText(':id') }),
+      h(Route, { path: 'foo', element: createVNode('foo') }),
+      h(Route, { path: ':id', element: createVNode(':id') }),
     ]
     const nestedRoutes = generateNestedRoutes(routes)
     const matchRouteBranch = generateRouteBranch(nestedRoutes, '/foo', '/')

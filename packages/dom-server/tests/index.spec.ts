@@ -1,21 +1,14 @@
-import {
-  createVNode,
-  createText,
-  createComment,
-  createFragment,
-  createComponent,
-  useValue,
-} from '@gyron/runtime'
+import { createVNode, createVNodeComment, useValue } from '@gyron/runtime'
 import { renderToString } from '../src'
 
 describe('RenderToString', () => {
   test('[RenderToString] text', async () => {
-    const html = await renderToString(createText('text'))
+    const html = await renderToString(createVNode('text'))
     expect(html).toBe('text')
   })
 
   test('[RenderToString] comment', async () => {
-    const html = await renderToString(createComment())
+    const html = await renderToString(createVNodeComment())
     expect(html).toBe('<!---->')
   })
 
@@ -29,7 +22,7 @@ describe('RenderToString', () => {
       createVNode(
         'div',
         null,
-        createFragment([createText('hello'), createText('world')])
+        createVNode([createVNode('hello'), createVNode('world')])
       )
     )
     expect(html).toBe('<div><!--[-->hello<!--|-->world<!--]--></div>')
@@ -37,18 +30,18 @@ describe('RenderToString', () => {
 
   test('[RenderToString] element fragment', async () => {
     const Child = () =>
-      createFragment([
+      createVNode([
         createVNode('p', null, 'foo'),
         createVNode('p', null, 'bar'),
       ])
-    const html = await renderToString(createComponent(Child))
+    const html = await renderToString(createVNode(Child))
 
     expect(html).toBe('<!--[--><p>foo</p><p>bar</p><!--]-->')
   })
 
   test('[RenderToString] component', async () => {
     const html = await renderToString(
-      createComponent(() => {
+      createVNode(() => {
         return createVNode('div', null, 'text')
       })
     )
@@ -57,7 +50,7 @@ describe('RenderToString', () => {
 
   test('[RenderToString] useValue value component', async () => {
     const html = await renderToString(
-      createComponent(() => {
+      createVNode(() => {
         const count = useValue(0)
         return () => {
           return createVNode('div', null, count.value)
@@ -68,9 +61,9 @@ describe('RenderToString', () => {
   })
 
   test('[RenderToString] deep component', async () => {
-    const Child = createComponent(() => createVNode('div', null, 'child'))
+    const Child = createVNode(() => createVNode('div', null, 'child'))
     const html = await renderToString(
-      createComponent(() => {
+      createVNode(() => {
         return createVNode('div', null, Child)
       })
     )

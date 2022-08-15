@@ -1,4 +1,4 @@
-import { createFragment, createInstance, h, rerender } from '../src'
+import { createVNode, createInstance, h, rerender } from '../src'
 
 describe('hmr', () => {
   const container = document.createElement('div')
@@ -36,7 +36,7 @@ describe('hmr', () => {
     Foo.__hmr_id = 'foo'
     Bar.__hmr_id = 'bar'
     Baz.__hmr_id = 'baz'
-    createInstance(createFragment([h(Bar), h(Baz)])).render(container)
+    createInstance(createVNode([h(Bar), h(Baz)])).render(container)
     expect(container.innerHTML).toBe(
       '<div>hello world</div><div>hello world</div>'
     )

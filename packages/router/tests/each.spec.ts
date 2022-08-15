@@ -1,4 +1,4 @@
-import { createInstance, createText, h, nextRender } from '@gyron/runtime'
+import { createInstance, createVNode, h, nextRender } from '@gyron/runtime'
 import {
   createMemoryRouter,
   onAfterRouteEach,
@@ -80,9 +80,9 @@ describe('each', () => {
           Router,
           { router: router },
           h(Routes, null, [
-            h(Route, { path: '/', strict: true, element: createText('foo') }),
-            h(Route, { path: '/bar', element: createText('bar') }),
-            h(Route, { path: '/baz', element: createText('baz') }),
+            h(Route, { path: '/', strict: true, element: createVNode('foo') }),
+            h(Route, { path: '/bar', element: createVNode('bar') }),
+            h(Route, { path: '/baz', element: createVNode('baz') }),
           ])
         )
       })

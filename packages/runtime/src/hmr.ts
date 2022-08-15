@@ -1,7 +1,7 @@
 import { extend, isString } from '@gyron/shared'
 import { VNode } from './vnode'
-import { Component, ComponentSetupFunction } from './component'
-import { normalizeComponent } from './renderComponent'
+import { ComponentSetupFunction, normalizeComponent } from './component'
+import type { Component } from './component'
 
 const record: Map<string, Component> = /* #__PURE__ */ new Map()
 const dep: Map<string, Set<string>> = /* #__PURE__ */ new Map()

@@ -1,5 +1,5 @@
 import { renderToString } from '@gyron/dom-server'
-import { h, createSSRInstance, nextRender, createText } from '@gyron/runtime'
+import { h, createSSRInstance, nextRender, createVNode } from '@gyron/runtime'
 import { createMemoryRouter, Link, Route, Router, Routes } from '../src'
 
 describe('SSR Router', () => {
@@ -11,9 +11,9 @@ describe('SSR Router', () => {
           Router,
           { router: router },
           h(Routes, null, [
-            h(Route, { path: '/', strict: true, element: createText('foo') }),
-            h(Route, { path: 'bar', element: createText('bar') }),
-            h(Route, { path: '*', element: createText('404') }),
+            h(Route, { path: '/', strict: true, element: createVNode('foo') }),
+            h(Route, { path: 'bar', element: createVNode('bar') }),
+            h(Route, { path: '*', element: createVNode('404') }),
           ])
         )
       )
@@ -52,8 +52,12 @@ describe('SSR Router', () => {
             h(Link, { to: '/page2', activeClassName: 'active' }, 'page2'),
           ]),
           h(Routes, null, [
-            h(Route, { path: '/', strict: true, element: createText('page1') }),
-            h(Route, { path: '/page2', element: createText('page2') }),
+            h(Route, {
+              path: '/',
+              strict: true,
+              element: createVNode('page1'),
+            }),
+            h(Route, { path: '/page2', element: createVNode('page2') }),
           ]),
         ])
       )

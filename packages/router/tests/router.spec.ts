@@ -1,6 +1,6 @@
 import {
   createInstance,
-  createText,
+  createVNode,
   h,
   Instance,
   nextRender,
@@ -31,8 +31,8 @@ describe('router', () => {
             router: router,
           },
           h(Routes, null, [
-            h(Route, { path: '', strict: true, element: createText('') }),
-            h(Route, { path: 'foo', element: createText('foo') }),
+            h(Route, { path: '', strict: true, element: createVNode('') }),
+            h(Route, { path: 'foo', element: createVNode('foo') }),
           ])
         )
       })
@@ -51,8 +51,8 @@ describe('router', () => {
           Router,
           { router: router },
           h(Routes, null, [
-            h(Route, { path: '', strict: true, element: createText('') }),
-            h(Route, { path: 'foo', element: createText('foo') }),
+            h(Route, { path: '', strict: true, element: createVNode('') }),
+            h(Route, { path: 'foo', element: createVNode('foo') }),
           ])
         )
       })

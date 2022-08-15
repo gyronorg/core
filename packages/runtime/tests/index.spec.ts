@@ -1,12 +1,4 @@
-import {
-  createInstance,
-  createVNode,
-  h,
-  useValue,
-  nextRender,
-  createFragment,
-  createText,
-} from '../src'
+import { createInstance, createVNode, h, useValue, nextRender } from '../src'
 
 describe('Runtime', () => {
   const container = document.createElement('div')
@@ -22,7 +14,7 @@ describe('Runtime', () => {
   })
 
   test('fragment html', () => {
-    createInstance(createFragment(['hello ', 'Gyron'])).render(container)
+    createInstance(createVNode(['hello ', 'Gyron'])).render(container)
     expect(container.innerHTML).toBe('hello Gyron')
   })
 
@@ -71,11 +63,11 @@ describe('Runtime', () => {
   test('selector element', () => {
     container.id = 'root'
     document.body.appendChild(container)
-    createInstance(createText('Gyron')).render('#root')
+    createInstance(createVNode('Gyron')).render('#root')
     expect(container.innerHTML).toBe('Gyron')
     document.body.removeChild(container)
 
-    const app = createInstance(createText('Gyron')).render('#app')
+    const app = createInstance(createVNode('Gyron')).render('#app')
     expect(app).toBe(null)
   })
 

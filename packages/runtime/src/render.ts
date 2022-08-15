@@ -34,12 +34,13 @@ import {
   isAsyncComponent,
   isCacheComponent,
   renderComponent,
+  normalizeComponent,
+  removeBuiltInProps,
 } from './component'
 import { collectHmrComponent, refreshComponentType } from './hmr'
 import { hydrate } from './hydrate'
 import { invokeLifecycle } from './lifecycle'
 import { setRef } from './ref'
-import { normalizeComponent, removeBuiltInProps } from './renderComponent'
 import { JobPriority, pushQueueJob, SchedulerJob } from './scheduler'
 import { isVNode, isVNodeComponent } from './shared'
 import {
@@ -327,7 +328,9 @@ function patchElement(
   if (!isEqual(n1.props, n2.props) || isSelectElement(n2)) {
     patchProps(el, n1, extend({}, n2, { props: removeBuiltInProps(n2.props) }))
   }
-  patchChildren(n1, n2, container, anchor, parentComponent, isSvg)
+  if (n1.children || n2.children) {
+    patchChildren(n1, n2, container, anchor, parentComponent, isSvg)
+  }
 }
 
 function renderComponentEffect(component: Component) {

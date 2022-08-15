@@ -11,12 +11,10 @@ import {
   useComputed,
   defineProps,
   onDestroyed,
-  createFragment,
   Children,
   useRef,
   onBeforeUpdate,
   getCurrentComponent,
-  createText,
   forceUpdate,
   registerWarnHandler,
   onAfterUpdate,
@@ -80,7 +78,7 @@ describe('Component', () => {
   test('force update', () => {
     let count = 0
     const App = h(() => {
-      return createText(count)
+      return createVNode(count)
     })
     createInstance(App).render(container)
     count = 1
@@ -95,7 +93,7 @@ describe('Component', () => {
     })
     const App = h(() => {
       registerWarnHandler(fn)
-      return Promise.resolve(createText('foo'))
+      return Promise.resolve(createVNode('foo'))
     })
     createInstance(App).render(container)
     expect(fn).toHaveBeenCalled()
@@ -454,7 +452,7 @@ describe('Component', () => {
     const list = useValue([0])
     createInstance(
       h(() => {
-        return createFragment(
+        return createVNode(
           list.value.map((item) => h('li', { key: item }, item))
         )
       })
@@ -541,7 +539,7 @@ describe('Component', () => {
     ])
     const app = createInstance(
       h(() => {
-        return createFragment(
+        return createVNode(
           list.value.map((item) =>
             h('li', { key: item.key, ...item.props }, item.value)
           )

@@ -1,6 +1,6 @@
 import {
   cloneVNode,
-  createText,
+  createVNode,
   FC,
   getCurrentComponent,
   provide,
@@ -14,7 +14,7 @@ export const Outlet = FC(function Outlet() {
 
   if (!route) {
     // Render an empty text node placeholder when there is no child route
-    return createText('')
+    return createVNode('')
   }
 
   return route.matches.map((route) => {

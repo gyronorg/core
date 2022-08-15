@@ -5,9 +5,9 @@ import {
   Effect,
   EffectFunction,
 } from '@gyron/reactivity'
-import { extend, isFunction, isPromise } from '@gyron/shared'
+import { extend, isFunction, isPromise, omit } from '@gyron/shared'
 import {
-  createComment,
+  createVNodeComment,
   VNode,
   VNodeType,
   normalizeVNode,
@@ -16,14 +16,13 @@ import {
   cloneVNode,
   VNodeChildren,
 } from './vnode'
-import {
-  callWithErrorHandling,
-  ErrorHandlingType,
-  normalizeComponent,
-  normalizeComponentProps,
-} from './renderComponent'
 import { SchedulerJob } from './scheduler'
-import { invokeLifecycle, Lifecycle, onDestroyed } from './lifecycle'
+import {
+  initialLifecycle,
+  invokeLifecycle,
+  Lifecycle,
+  onDestroyed,
+} from './lifecycle'
 import { error, warn } from './assert'
 import { UserRef } from './ref'
 
@@ -295,7 +294,7 @@ export function FCA<
       })
       .catch((e) => {
         error(e, component, 'AsyncComponent')
-        return createComment('AsyncComponentError')
+        return createVNodeComment('AsyncComponentError')
       })
   }
 
@@ -326,7 +325,7 @@ export function FCA<
         ? setup
           ? setup(props)
           : cloneVNode(resolveComp)
-        : props.fallback || createComment('AsyncComponentWrapper')
+        : props.fallback || createVNodeComment('AsyncComponentWrapper')
     }
   }
 
@@ -387,4 +386,80 @@ export function memo<
   componentFunction.__cache = true
   componentFunction.__cacheIndex = cacheIndex++
   return componentFunction as WrapperFunction<Props>
+}
+
+export enum ErrorHandlingType {
+  Render = 'Render',
+  Setup = 'Setup',
+  Lifecycle = 'Lifecycle',
+  Scheduler = 'Scheduler',
+}
+
+export function callWithErrorHandling(
+  fn: (...args: any[]) => any | Promise<any>,
+  instance: Component | null,
+  type: ErrorHandlingType,
+  args?: unknown[]
+) {
+  let res: any
+  try {
+    res = args ? fn(...args) : fn()
+  } catch (err) {
+    error(err, instance, type)
+  }
+  return res
+}
+
+export function normalizeComponent(
+  vnode: VNode<ComponentSetupFunction>,
+  component: Component,
+  parentComponent?: Component
+) {
+  const { type } = vnode
+
+  let setup: ComponentSetupFunction
+  if (isFunction(type)) {
+    setup = type
+  }
+
+  if (!component.props) {
+    component.props = {}
+  }
+
+  component.oldProps = extend({}, component.props)
+  component.props = extend(component.props, vnode.props, {
+    children: vnode.children,
+  })
+  component.lifecycle = component.lifecycle || initialLifecycle()
+  component.exposed = component.exposed || {}
+  component.vnode = vnode
+  component.parent = parentComponent || component.parent
+  component.setup = setup || component.setup
+  component.type = type
+
+  if (type.__cache && !isCacheComponent(type)) {
+    collectCacheComponent(type, component)
+  }
+}
+
+export function normalizeComponentProps(
+  component: Component,
+  isSSR: boolean
+): VNodeProps {
+  const builtinProps: ComponentDefaultProps = {
+    children: component.vnode.children,
+    isSSR: isSSR,
+  }
+
+  const props = extend<VNodeProps>(component.props, builtinProps)
+
+  return props
+}
+
+export function removeBuiltInProps(props: Partial<VNodeProps>) {
+  const propsClone: ComponentDefaultProps & ComponentParentProps = extend(
+    {},
+    props
+  )
+  return omit(propsClone, ['isSSR', 'children', 'ref', 'key'])
 }

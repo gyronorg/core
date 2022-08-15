@@ -1,6 +1,10 @@
 import { isBoolean } from '@gyron/shared'
-import { Component, getCurrentComponent } from './component'
-import { callWithErrorHandling, ErrorHandlingType } from './renderComponent'
+import {
+  getCurrentComponent,
+  callWithErrorHandling,
+  ErrorHandlingType,
+} from './component'
+import type { Component } from './component'
 
 type LifecycleCallback = (component: Component) => any
 type LifecycleUpdateCallback = (

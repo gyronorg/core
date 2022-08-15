@@ -1,15 +1,11 @@
 import { noop, sleep } from '@gyron/shared'
 import {
   createSSRInstance,
-  createText,
+  createVNode,
   h,
   nextRender,
   useValue,
-  createComment,
-  createComponent,
-  createVNode,
-  createElement,
-  createFragment,
+  createVNodeComment,
   VNode,
   FCA,
   useRef,
@@ -39,7 +35,7 @@ describe('SSR', () => {
     const text = useValue('foo')
     const { container } = ssr(
       'foo',
-      h(() => createText(text.value))
+      h(() => createVNode(text.value))
     )
     expect(container.innerHTML).toBe('foo')
     text.value = 'bar'
@@ -54,7 +50,7 @@ describe('SSR', () => {
     console.warn = fn
     const { container } = ssr(
       '<span>foo</span>',
-      h(() => createText('foo'))
+      h(() => createVNode('foo'))
     )
     expect(container.innerHTML).toBe('foo')
     expect(fn).toHaveBeenCalled()
@@ -67,14 +63,14 @@ describe('SSR', () => {
     console.warn = fn
     const { container } = ssr(
       'foo',
-      h(() => createText('bar'))
+      h(() => createVNode('bar'))
     )
     expect(container.innerHTML).toBe('bar')
     expect(fn).toHaveBeenCalled()
   })
 
   test('comment', () => {
-    const { container } = ssr('<!---->', createComment())
+    const { container } = ssr('<!---->', createVNodeComment())
     expect(container.innerHTML).toBe('<!---->')
   })
 
@@ -83,7 +79,7 @@ describe('SSR', () => {
       expect(message).toContain('[hydrate] server render mismatch')
     })
     console.warn = fn
-    const { container } = ssr('foo', createComment())
+    const { container } = ssr('foo', createVNodeComment())
     expect(container.innerHTML).toBe('<!---->')
     expect(fn).toHaveBeenCalled()
   })
@@ -93,7 +89,7 @@ describe('SSR', () => {
     const { container } = ssr(
       '<div>0</div>',
       h(() =>
-        createElement(
+        createVNode(
           'div',
           {
             onClick() {
@@ -115,14 +111,14 @@ describe('SSR', () => {
 
   test('element ref', () => {
     const divRef = useRef()
-    ssr('<div>0</div>', createElement('div', { ref: divRef }, 0))
+    ssr('<div>0</div>', createVNode('div', { ref: divRef }, 0))
     expect(divRef.current.innerHTML).toBe('0')
   })
 
   test('component', async () => {
     const text = useValue('foo')
-    const Child = createComponent(() => createText(text.value))
-    const Parent = createComponent(() => Child)
+    const Child = createVNode(() => createVNode(text.value))
+    const Parent = createVNode(() => Child)
     const { container } = ssr('foo', Parent)
     expect(container.innerHTML).toBe('foo')
     text.value = 'bar'
@@ -134,10 +130,8 @@ describe('SSR', () => {
     const list = useValue([0])
     const { container } = ssr(
       '<!--[--><span>0</span><!--]-->',
-      createComponent(() =>
-        createFragment(
-          list.value.map((item) => createElement('span', null, item))
-        )
+      createVNode(() =>
+        createVNode(list.value.map((item) => createVNode('span', null, item)))
       )
     )
 
@@ -156,7 +150,7 @@ describe('SSR', () => {
     console.warn = fn
     const { container } = ssr(
       '<span>0</span>',
-      createComponent(() => createFragment([createElement('span', null, 0)]))
+      createVNode(() => createVNode([createVNode('span', null, 0)]))
     )
     expect(container.innerHTML).toBe('<span>0</span>')
     expect(fn).toHaveBeenCalled()
@@ -165,11 +159,11 @@ describe('SSR', () => {
   test('children expression', async () => {
     const { container } = ssr(
       '<div><!--[-->b<!--|-->2022<!--|-->a<!--]--></div>',
-      createComponent(() =>
+      createVNode(() =>
         createVNode(
           'div',
           null,
-          createFragment(['b', new Date().getFullYear(), 'a'])
+          createVNode(['b', new Date().getFullYear(), 'a'])
         )
       )
     )
@@ -183,9 +177,9 @@ describe('SSR', () => {
     const count = useValue(0)
     const { container } = ssr(
       '<div><b><p>0</p><ul><li>0</li></ul></b></div>',
-      createComponent(() =>
+      createVNode(() =>
         createVNode('div', null, [
-          createComponent(() => {
+          createVNode(() => {
             return () =>
               createVNode('b', null, [
                 createVNode('p', null, count.value),

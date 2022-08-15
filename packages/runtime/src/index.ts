@@ -23,18 +23,14 @@ export {
   forceUpdate,
   clearCacheComponent,
   memo,
+  removeBuiltInProps,
   FCA,
   FC,
 } from './component'
-export { removeBuiltInProps } from './renderComponent'
 export { createInstance, render, createContext } from './instance'
 export {
   createVNode,
-  createComponent,
-  createFragment,
-  createText,
-  createElement,
-  createComment,
+  createVNodeComment,
   cloneVNode,
   mergeVNode,
   normalizeChildrenVNode,

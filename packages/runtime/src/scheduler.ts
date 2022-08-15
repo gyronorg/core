@@ -1,6 +1,6 @@
 import type { Noop } from '@gyron/shared'
 import type { Component } from './component'
-import { callWithErrorHandling, ErrorHandlingType } from './renderComponent'
+import { ErrorHandlingType, callWithErrorHandling } from './component'
 
 export interface SchedulerJob {
   (): void
