@@ -2,22 +2,22 @@ import { createVNode, createVNodeComment, useValue } from '@gyron/runtime'
 import { renderToString } from '../src'
 
 describe('RenderToString', () => {
-  test('[RenderToString] text', async () => {
+  test('text', async () => {
     const html = await renderToString(createVNode('text'))
     expect(html).toBe('text')
   })
 
-  test('[RenderToString] comment', async () => {
+  test('comment', async () => {
     const html = await renderToString(createVNodeComment())
     expect(html).toBe('<!---->')
   })
 
-  test('[RenderToString] element', async () => {
+  test('element', async () => {
     const html = await renderToString(createVNode('div', null, 'text'))
     expect(html).toBe('<div>text</div>')
   })
 
-  test('[RenderToString] multiple text fragment', async () => {
+  test('multiple text fragment', async () => {
     const html = await renderToString(
       createVNode(
         'div',
@@ -28,7 +28,7 @@ describe('RenderToString', () => {
     expect(html).toBe('<div><!--[-->hello<!--|-->world<!--]--></div>')
   })
 
-  test('[RenderToString] element fragment', async () => {
+  test('element fragment', async () => {
     const Child = () =>
       createVNode([
         createVNode('p', null, 'foo'),
@@ -39,7 +39,7 @@ describe('RenderToString', () => {
     expect(html).toBe('<!--[--><p>foo</p><p>bar</p><!--]-->')
   })
 
-  test('[RenderToString] component', async () => {
+  test('component', async () => {
     const html = await renderToString(
       createVNode(() => {
         return createVNode('div', null, 'text')
@@ -48,7 +48,7 @@ describe('RenderToString', () => {
     expect(html).toBe('<div>text</div>')
   })
 
-  test('[RenderToString] useValue value component', async () => {
+  test('useValue value component', async () => {
     const html = await renderToString(
       createVNode(() => {
         const count = useValue(0)
@@ -60,7 +60,7 @@ describe('RenderToString', () => {
     expect(html).toBe('<div>0</div>')
   })
 
-  test('[RenderToString] deep component', async () => {
+  test('deep component', async () => {
     const Child = createVNode(() => createVNode('div', null, 'child'))
     const html = await renderToString(
       createVNode(() => {
@@ -68,5 +68,10 @@ describe('RenderToString', () => {
       })
     )
     expect(html).toBe('<div><div>child</div></div>')
+  })
+
+  test('self close tag render', async () => {
+    const html = await renderToString(createVNode('img', { alt: 'logo' }))
+    expect(html).toBe('<img alt="logo" />')
   })
 })

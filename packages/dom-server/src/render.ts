@@ -24,6 +24,23 @@ import {
 import { renderBuffer, SSRBuffer } from './buffer'
 import { renderProps } from './props'
 
+const selfTags = [
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+]
+
 export function renderToString(vnode: VNode) {
   const buffer = renderComponentSubBuffer(vnode)
   return renderBuffer(buffer.buffer)
@@ -99,14 +116,17 @@ function renderElement(
 
   renderProps(buffer, vnode.props)
 
-  buffer.push('>')
-
-  if (shouldValue(vnode.children)) {
-    vnode.children = normalizeChildrenVNode(vnode)
-    renderChildren(buffer, vnode.children, vnode, parentComponent)
+  const isSelfCloseTag = selfTags.includes(vnode.tag)
+  if (isSelfCloseTag) {
+    buffer.push(' />')
+  } else {
+    buffer.push('>')
+    if (shouldValue(vnode.children)) {
+      vnode.children = normalizeChildrenVNode(vnode)
+      renderChildren(buffer, vnode.children, vnode, parentComponent)
+    }
+    buffer.push(`</${vnode.tag}>`)
   }
-
-  buffer.push(`</${vnode.tag}>`)
 }
 
 function renderComponentSubBuffer(
