@@ -17,12 +17,7 @@ import {
   VNodeChildren,
 } from './vnode'
 import { SchedulerJob } from './scheduler'
-import {
-  initialLifecycle,
-  invokeLifecycle,
-  Lifecycle,
-  onDestroyed,
-} from './lifecycle'
+import { invokeLifecycle, Lifecycle, onDestroyed } from './lifecycle'
 import { error, warn } from './assert'
 import { UserRef } from './ref'
 
@@ -431,7 +426,6 @@ export function normalizeComponent(
   component.props = extend(component.props, vnode.props, {
     children: vnode.children,
   })
-  component.lifecycle = component.lifecycle || initialLifecycle()
   component.exposed = component.exposed || {}
   component.vnode = vnode
   component.parent = parentComponent || component.parent

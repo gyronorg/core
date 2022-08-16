@@ -12,15 +12,17 @@ type LifecycleUpdateCallback = (
   props?: object
 ) => any | boolean
 
-export interface Lifecycle {
+export type Lifecycle = Partial<{
   beforeMounts: Set<LifecycleCallback>
   afterMounts: Set<LifecycleCallback>
   destroyed: Set<LifecycleCallback>
   beforeUpdates: Set<LifecycleUpdateCallback>
   afterUpdates: Set<LifecycleUpdateCallback>
-}
+}>
 
 function wrapLifecycle(component: Component, type: keyof Lifecycle) {
+  if (!component.lifecycle || !component.lifecycle[type]) return
+
   const lifecycle = [...component.lifecycle[type]]
   const wrapResult = []
 
@@ -54,34 +56,40 @@ function useComponent() {
   return component
 }
 
-export function initialLifecycle(): Lifecycle {
-  return {
-    beforeMounts: new Set(),
-    afterMounts: new Set(),
-    destroyed: new Set(),
-    beforeUpdates: new Set(),
-    afterUpdates: new Set(),
+function initialLifecycle(component: Component, key: keyof Lifecycle) {
+  if (!component.lifecycle) {
+    component.lifecycle = {
+      [key]: new Set(),
+    }
+  }
+  if (!component.lifecycle[key]) {
+    component.lifecycle[key] = new Set()
   }
 }
 
 export function onBeforeMount(callback: LifecycleCallback) {
   const component = useComponent()
+  initialLifecycle(component, 'beforeMounts')
   component.lifecycle.beforeMounts.add(callback)
 }
 export function onAfterMount(callback: LifecycleCallback) {
   const component = useComponent()
+  initialLifecycle(component, 'afterMounts')
   component.lifecycle.afterMounts.add(callback)
 }
 export function onDestroyed(callback: LifecycleCallback) {
   const component = useComponent()
+  initialLifecycle(component, 'destroyed')
   component.lifecycle.destroyed.add(callback)
 }
 export function onBeforeUpdate(callback: LifecycleUpdateCallback) {
   const component = useComponent()
+  initialLifecycle(component, 'beforeUpdates')
   component.lifecycle.beforeUpdates.add(callback)
 }
 export function onAfterUpdate(callback: LifecycleUpdateCallback) {
   const component = useComponent()
+  initialLifecycle(component, 'afterUpdates')
   component.lifecycle.afterUpdates.add(callback)
 }
 
