@@ -79,30 +79,6 @@ function getNextSibling(vnode: VNode) {
   return null
 }
 
-function mountText(
-  vnode: VNode,
-  container: RenderElement,
-  anchor: RenderElement
-) {
-  const textNode = createText(vnode.children as string) as RenderElement
-
-  textNode.__vnode__ = vnode
-  vnode.el = textNode
-
-  insert(textNode, container, anchor)
-}
-
-function patchText(n1: VNode, n2: VNode) {
-  const el = (n2.el = n1.el)
-
-  const c1 = '' + n1.children
-  const c2 = '' + n2.children
-
-  if (c1 !== c2) {
-    el.textContent = c2
-  }
-}
-
 function mountChildrenNode(
   node: VNode,
   container: RenderElement,
@@ -589,9 +565,21 @@ function enterText(
 ) {
   if (n1 === null || !n1.el) {
     // when hydrating the code, since there is no empty text node on the server side, you need to execute mountText
-    mountText(n2, container, anchor)
+    const textNode = createText(n2.children as string) as RenderElement
+
+    textNode.__vnode__ = n2
+    n2.el = textNode
+
+    insert(textNode, container, anchor)
   } else {
-    patchText(n1, n2)
+    const el = (n2.el = n1.el)
+
+    const c1 = '' + n1.children
+    const c2 = '' + n2.children
+
+    if (c1 !== c2) {
+      el.textContent = c2
+    }
   }
 }
 
