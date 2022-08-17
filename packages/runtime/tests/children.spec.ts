@@ -1,4 +1,4 @@
-import { createInstance, nextRender, createVNode, h, useRef } from '../src'
+import { createInstance, nextRender, createVNode, h, createRef } from '../src'
 import { useValue } from '@gyron/reactivity'
 import { createText } from '@gyron/dom-client'
 
@@ -45,7 +45,7 @@ describe('Children', () => {
   })
 
   test('anchor', async () => {
-    const p = useRef<HTMLElement>()
+    const p = createRef<HTMLElement>()
     const fragment = createVNode([
       createVNode('span', {}, 'before'),
       createVNode('span', {}, 'middle'),

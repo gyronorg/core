@@ -1,10 +1,4 @@
-import {
-  createPlugin,
-  FC,
-  Primitive,
-  useValue,
-  usePlugin,
-} from '@gyron/runtime'
+import { FC, Primitive, useValue, getPlugins } from '@gyron/runtime'
 import { isEqual, isFunction, noop } from '@gyron/shared'
 import {
   createBrowserHistory,
@@ -174,15 +168,15 @@ export function createRouter(option: Partial<RouterOption>) {
     router.addHook('afterEach', option.afterEach)
   }
 
-  return createPlugin({
+  return {
     name: 'router',
     extra: router,
     data: router,
-  })
+  }
 }
 
 export const Router = FC<RouterProps>(function Router({ router }) {
-  const plugins = usePlugin()
+  const plugins = getPlugins()
 
   const route = useValue({})
   plugins.set(TypeRouter, router.data)

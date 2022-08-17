@@ -104,6 +104,21 @@ export interface VNodeProps
   [k: string]: any
 }
 
+/**
+ * 克隆 VNode 节点。
+ * ```js
+ * import { createComment, cloneVNode, h } from 'gyron'
+ *
+ * const App = h(() => {
+ *   return createComment('async anchor')
+ * })
+ *
+ * App !== cloneVNode(App) // true
+ * ```
+ * @api global
+ * @param vnode 需要拷贝的节点，也可以是普通的值。
+ * @returns 克隆后的节点。
+ */
 export function cloneVNode<T extends VNode | VNode[]>(vnode: T): T {
   if (isArray(vnode)) {
     return vnode.map(cloneVNode) as T
@@ -118,7 +133,24 @@ export function cloneVNode<T extends VNode | VNode[]>(vnode: T): T {
   return normalizeVNode(vnode) as T
 }
 
-export function mergeVNode<T extends VNode | VNode[] = VNode | VNode[]>(
+/**
+ * 合并`props`到目标节点上。
+ * ```javascript
+ * import { createComment, mergeVNode, h } from 'gyron'
+ *
+ * const Child = h(() => {
+ *   return createComment('async anchor')
+ * })
+ *
+ * const App = mergeVNode(Child, { class: 'container' })
+ * App.props.class === 'container' // true
+ * ```
+ * @api global
+ * @param vnode 需要合并的节点。
+ * @param props  要拷贝到节点的属性。
+ * @returns 返回合并后的节点。
+ */
+export function mergeVNode<T extends VNode | VNode[]>(
   vnode: T,
   props: Partial<VNodeProps>
 ): T {

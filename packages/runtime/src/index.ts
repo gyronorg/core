@@ -59,7 +59,7 @@ export {
   isVNodeComponent,
 } from './shared'
 export { warn, error } from './assert'
-export { createPlugin, usePlugin } from './plugin'
+export { getPlugins } from './plugin'
 export { rerender } from './hmr'
 export {
   useComponentContext,
@@ -75,7 +75,7 @@ export {
   manualErrorHandler,
   manualWarnHandler,
 } from './boundaries'
-export { useRef } from './ref'
+export { createRef } from './ref'
 
 export type { Primitive, Computed, Effect } from '@gyron/reactivity'
 export type {

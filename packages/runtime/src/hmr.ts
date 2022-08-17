@@ -72,7 +72,7 @@ export function rerender(id: string, type: ComponentSetupFunction) {
   } else {
     if (__WARN__) {
       console.warn(
-        'An exception occurs during the hot update collection task, please submit issues to https://github.com/Linkontoask/gyron/issues',
+        'An exception occurs during the hot update collection task, please submit issues to us at https://github.com/gyronorg/core',
         id,
         type
       )

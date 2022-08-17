@@ -23,6 +23,28 @@ export enum JobPriority {
   USER_TIMEOUT = 1,
 }
 
+/**
+ * 等待数据渲染完成，在下一个刻度中可以获取到更新后的 DOM 节点。
+ * ```js
+ * import { h, useValue, nextRender, useRef, onAfterMount } from 'gyron'
+ *
+ * const App = h(() => {
+ *   const count = useValue(0)
+ *   const ref = useRef()
+ *
+ *   onAfterMount(() => {
+ *     count.value++
+ *     nextRender().then(() => {
+ *       console.log(ref.current.innerText) // 1
+ *     })
+ *     console.log(ref.current.innerText) // 0
+ *   })
+ *   return () => h('div', { ref }, count.value)
+ * })
+ *```
+ * @param fn 下一个刻度调用的函数
+ * @returns
+ */
 export function nextRender(fn?: Noop) {
   const p = currentJobPromise || resolvedPromise
   return fn ? p.then(fn) : p

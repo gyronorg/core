@@ -10,6 +10,20 @@ import {
   NodeType,
 } from './vnode'
 
+/**
+ * 判断传入的参数是否为虚拟节点
+ * ```js
+ * import { isVNode, h } from 'gyron'
+ *
+ * const App = h(() => {
+ *   return h('div', 'async anchor')
+ * })
+ *
+ * isVNode(App) // true
+ * ```
+ * @api global
+ * @returns boolean
+ */
 export function isVNode(n: any): n is VNode {
   return n && n.flag === Gyron
 }
@@ -30,6 +44,20 @@ export function isVNodeFragment(n: VNode): n is VNode<typeof Fragment> {
   return n.type === Fragment
 }
 
+/**
+ * 判断传入的参数是否为组件节点
+ * ```js
+ * import { isVNodeComponent, h } from 'gyron'
+ *
+ * const App = h(() => {
+ *   return h('div', 'async anchor')
+ * })
+ *
+ * isVNodeComponent(App) // true
+ * ```
+ * @api global
+ * @returns boolean
+ */
 export function isVNodeComponent(n: VNode): n is VNode<ComponentSetupFunction> {
   return isVNode(n) && isFunction(n.type) && n.nodeType === NodeType.Component
 }

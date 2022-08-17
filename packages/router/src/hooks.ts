@@ -1,4 +1,4 @@
-import { h, Primitive, useInject, usePlugin } from '@gyron/runtime'
+import { h, Primitive, useInject, getPlugins } from '@gyron/runtime'
 import { isString, isUndefined } from '@gyron/shared'
 import { createPath, parsePath, To } from 'history'
 import { matchPath, normalizeRoutes } from './matches'
@@ -67,7 +67,7 @@ export function useMatchesBranch() {
  * which means that when a change occurs, no automatic update is triggered.
  */
 export function useRouter() {
-  const context = usePlugin()
+  const context = getPlugins()
   const router: RouterBase = context.get(TypeRouter)
   if (!router) {
     throw new Error(
@@ -81,7 +81,7 @@ export function useRouter() {
  * Get the matching Route, return null if no Route is matched
  */
 export function useRoute() {
-  const context = usePlugin()
+  const context = getPlugins()
   const route: Primitive<RouteRecord> = context.get(TypeRoute)
   if (!route.value) {
     console.warn(

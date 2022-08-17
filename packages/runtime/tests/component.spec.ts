@@ -12,7 +12,7 @@ import {
   defineProps,
   onDestroyed,
   Children,
-  useRef,
+  createRef,
   onBeforeUpdate,
   getCurrentComponent,
   forceUpdate,
@@ -476,7 +476,7 @@ describe('Component', () => {
   })
 
   test('parameters need to be passed correctly on the component', () => {
-    const divRef = useRef()
+    const divRef = createRef()
     const click = jest.fn()
     const Child = ({ onClick }) => {
       return h('div', { onClick, ref: divRef })

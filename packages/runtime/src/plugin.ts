@@ -1,4 +1,3 @@
-import { isUndefined } from '@gyron/shared'
 import { createContext } from './instance'
 
 export const plugins = createContext()
@@ -9,15 +8,15 @@ export interface Plugin<D extends object, E = any> {
   name?: string
 }
 
-export function usePlugin() {
+/**
+ * 返回所有已经注册的插件
+ * ```js
+ * import { getPlugins } from 'gyron'
+ * const plugins = getPlugins()
+ * ```
+ * @api global
+ * @returns Map
+ */
+export function getPlugins() {
   return plugins
-}
-
-export function createPlugin<D extends object, E = any>(option: Plugin<D, E>) {
-  if (isUndefined(option.data)) {
-    console.warn('invalid plugin data', option.data)
-    return null
-  }
-
-  return option
 }

@@ -86,6 +86,23 @@ function wrapperComputed<T>(
   return new Computed<T>(getter, setter, dependency, memo)
 }
 
+/**
+ * 类似于 javascript 中的访问器属性，但是其依赖的数据的变动会自动触发依赖 useComputed 的数据变更。
+ * ```js
+ * import { useValue, useComputed } from 'gyron'
+ *
+ * const original = useValue(0)
+ * const observed = useComputed(() => {
+ *   return original.value + 1
+ * })
+ * original.value = 10
+ * observed.value === 11 // true
+ * ```
+ * @api reactivity
+ * @param getter 读取数据的函数
+ * @param setter 设置数据的函数
+ * @param dependency 依赖的数组函数，每一个函数的返回值是需要依赖的对象。
+ */
 export function useComputed<T>(getter: () => T): Computed<T>
 export function useComputed<T>(
   getter: () => T,
@@ -100,6 +117,22 @@ export function useComputed(getter: any, unstable?: any, dependency?: any) {
   return wrapperComputed(getter, unstable, dependency, false)
 }
 
+/**
+ * 如果依赖的数据没有更新，则值将不会得到更新。为了避免这种情况，需要使用 useComputed 对数据进行处理。
+ * ```js
+ * import { useValue, useMemo } from 'gyron'
+ *
+ * const original = useValue(0)
+ * const memo = useMemo(() => {
+ *   return Date.now() + original.value
+ * })
+ * memo.value === memo.value // true
+ * ```
+ * @api reactivity
+ * @param getter 读取数据的函数
+ * @param setter 设置数据的函数
+ * @param dependency 依赖的数组函数，每一个函数的返回值是需要依赖的对象。
+ */
 export function useMemo<T>(getter: () => T): Computed<T>
 export function useMemo<T>(
   getter: () => T,

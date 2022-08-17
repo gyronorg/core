@@ -43,8 +43,8 @@ export function enableTrack() {
   shouldTrack = true
 }
 
-export function asyncTrackEffect(useEffect: Effect) {
-  activeEffect = useEffect
+export function asyncTrackEffect(effect: Effect) {
+  activeEffect = effect
 }
 
 export function clearTrackEffect() {
@@ -104,6 +104,27 @@ export function createEffect(
   return effect
 }
 
+/**
+ * 当函数体中的数据变更后会再次调用函数，可以在使用此方法监听某个数据变更。
+ * ```ts
+ * import { useValue, useComputed } from 'gyron'
+ *
+ * const original = useValue(0)
+ * let dummy: number
+ * const s = useEffect(() => {
+ *   dummy = original.value
+ * })
+ * original.value = 10
+ * dummy === original.value // true
+ * s.useEffect.stop()
+ * original.value = 20
+ * dummy === original.value // false
+ * ```
+ * @api reactivity
+ * @param fn 数据变更后的回调函数。
+ * @param dependency 依赖的数组函数，每一个函数的返回值是需要依赖的对象。
+ * @returns 返回一个函数，可以直接调用。函数上会附带`effect`对象，可以访问`effect`对象上的`stop`方法停止对数据的监听。
+ */
 export function useEffect<T = any>(
   fn: EffectFunction<T>,
   dependency?: Dependency[]
@@ -216,12 +237,12 @@ export function trigger(
 
 export function triggerEffect(dep: Dep | Effect[]) {
   const deps = isArray(dep) ? dep : [...dep]
-  for (const useEffect of deps) {
-    if (useEffect !== activeEffect || useEffect.allowEffect) {
-      if (useEffect.scheduler) {
-        useEffect.scheduler()
+  for (const effect of deps) {
+    if (effect !== activeEffect || effect.allowEffect) {
+      if (effect.scheduler) {
+        effect.scheduler()
       } else {
-        useEffect.run()
+        effect.run()
       }
     }
   }

@@ -1,6 +1,6 @@
 import {
   createInstance,
-  useRef,
+  createRef,
   createVNode,
   h,
   Instance,
@@ -57,7 +57,7 @@ describe('Link', () => {
 
   test('Link component render and click push or replace', async () => {
     const router = createMemoryRouter()
-    const LinkRef = useRef()
+    const LinkRef = createRef()
     app = createInstance(
       h(() => {
         return h(

@@ -44,6 +44,16 @@ export interface Target {
   [ReactiveFlags.RAW]?: any
 }
 
+/**
+ * 判断对象是否具有响应式特性。
+ * ```js
+ * import { isResponsive } from 'gyron'
+ *
+ * isResponsive({}) // false
+ * isResponsive(useReactive({})) // true
+ * ```
+ * @api reactivity
+ */
 export function isResponsive(n: any): n is { value: any } {
   // reactivity/src/useReactive ReactiveFlags
   return (
@@ -56,6 +66,24 @@ export function isResponsive(n: any): n is { value: any } {
   )
 }
 
+/**
+ * 访问被代理对象的原始数据，在复杂的对象中非常有用。在 useValue 中会解构 value 对象，返回其原始值。
+ * ```javascript
+ * import { useValue } from 'gyron'
+ *
+ * const original = useValue(0)
+ * let dummy: number
+ * useEffect(() => {
+ *   dummy = toRaw(original)
+ * })
+ * dummy === 0 // true
+ * original.count = 1
+ * dummy === 0 // true
+ * ```
+ * @api reactivity
+ * @param observed 响应式的数据。
+ * @returns 原始数据。
+ */
 export function toRaw<T>(observed: T): RawValue<T> {
   const raw = !isUndefined(observed) && (observed as Target)[ReactiveFlags.RAW]
   if (!isUndefined(raw)) {
@@ -175,6 +203,23 @@ const mutableHandlers: ProxyHandler<object> = {
   ownKeys,
 }
 
+/**
+ * 代理传入的对象，可以传入第二个参数控制对象是否为只读。
+ * ```js
+ * import { useReactive } from 'gyron'
+ *
+ * const original = {
+ *   x: 0,
+ *   y: 0,
+ * }
+ * const observed = useReactive(original)
+ * original !== observed // true
+ * ```
+ * @api reactivity
+ * @param target 需要被响应的数据。
+ * @param readonly 是否为只读数据。
+ * @returns 一个被代理过的对象，内部使用的 Proxy 进行代理。
+ */
 export function useReactive<T extends object>(
   target: T,
   readonly?: boolean

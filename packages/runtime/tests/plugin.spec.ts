@@ -1,5 +1,4 @@
-import { noop } from '@gyron/shared'
-import { createInstance, createPlugin, h, usePlugin } from '../src'
+import { createInstance, h, getPlugins } from '../src'
 import { plugins } from '../src/plugin'
 
 describe('plugin', () => {
@@ -14,16 +13,16 @@ describe('plugin', () => {
     const state = {
       a: 0,
     }
-    const plugin = createPlugin({
+    const plugin = {
       extra: state,
       data: state,
-    })
-    const plugins = usePlugin()
+    }
+    const plugins = getPlugins()
     plugins.set('state', state)
     expect(plugin.extra).toBe(state)
     createInstance(
       h(() => {
-        const context = usePlugin()
+        const context = getPlugins()
         return () =>
           h('div', {
             onClick() {
@@ -36,20 +35,5 @@ describe('plugin', () => {
 
     container.querySelector('div').click()
     expect(state.a).toBe(1)
-  })
-
-  test('invalidate plugin', () => {
-    console.warn = noop
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const plugin = createPlugin({})
-    expect(plugin).toBe(null)
-    createInstance(
-      h(() => {
-        const context = usePlugin()
-        expect([...context.keys()].length).toBe(0)
-        return h('div')
-      })
-    ).render(container)
   })
 })

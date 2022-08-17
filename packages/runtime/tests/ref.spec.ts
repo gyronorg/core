@@ -1,7 +1,7 @@
 import {
   createInstance,
   createVNode,
-  useRef,
+  createRef,
   h,
   useValue,
   Primitive,
@@ -17,7 +17,7 @@ describe('Ref', () => {
   })
 
   test('set element to ref', () => {
-    const ref = useRef()
+    const ref = createRef()
     const App = createVNode(
       'div',
       {
@@ -30,7 +30,7 @@ describe('Ref', () => {
   })
 
   test('set component to ref', () => {
-    const ref = useRef()
+    const ref = createRef()
     const foo = {
       bar: 'bar',
     }
@@ -50,7 +50,7 @@ describe('Ref', () => {
       })
       return () => h('div', null, foo.value)
     }
-    const ref = useRef<{
+    const ref = createRef<{
       foo: Primitive<string>
     }>()
     const App = () => {

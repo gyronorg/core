@@ -2,7 +2,7 @@ import {
   isVNodeComponent,
   onAfterMount,
   onDestroyed,
-  usePlugin,
+  getPlugins,
 } from '@gyron/runtime'
 import {
   RouterHookBeforeEach,
@@ -14,7 +14,7 @@ import { TypeRouter } from './hooks'
 import { RouterBase } from './router'
 
 function getRouter(): RouterBase {
-  const context = usePlugin()
+  const context = getPlugins()
   return context.get(TypeRouter)
 }
 

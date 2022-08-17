@@ -129,10 +129,23 @@ export function createComponentInstance(
   return component
 }
 
+/**
+ * 获取当前组件对象，但是请勿随意更改或者删除其中的值，可能会发生预期之外的错误。
+ * ```js
+ * import { h, getCurrentComponent } from 'gyron'
+ *
+ * const App = h(() => {
+ *   const component = getCurrentComponent()
+ *   return () => h('div', 'hello world')
+ * })
+ * ```
+ * @api component
+ * @returns Component
+ */
 export function getCurrentComponent() {
   if (!_component) {
     warn(
-      'Failed to get component instance, please submit issues to us at https://github.com/Linkontoask/gyron/issues',
+      'Failed to get component instance, please submit issues to us at https://github.com/gyronorg/core',
       null,
       'getCurrentComponent'
     )
@@ -209,12 +222,41 @@ export function renderComponent(component: Component, isSSR = false) {
  * ```js
  * const { foo } = defineProps()
  * ```
+ * @api component
  */
 export function defineProps<T extends object>() {
   const component = getCurrentComponent()
   return component.props as T & ComponentDefaultProps
 }
 
+/**
+ * 暴露组件中的数据给父组件使用。
+ * ```js
+ * import { h, useValue, createRef, exposeComponent } from 'gyron'
+ *
+ * const Child = h(() => {
+ *   const name = useValue('foo')
+ *
+ *   exposeComponent({ name })
+ *
+ *   return h('div', null, name.value)
+ * })
+ *
+ * const App = h(() => {
+ *   const ref = createRef()
+ *
+ *   ref.current // {name: {value: 'foo'}}
+ *
+ *   return () =>
+ *     h(Child, {
+ *       ref,
+ *     })
+ * })
+ * ```
+ * @line 14
+ * @api component
+ * @param exposed object
+ */
 export function exposeComponent(exposed: Record<string | number, any>) {
   const component = getCurrentComponent()
   extend(component.exposed, exposed)
@@ -240,6 +282,7 @@ export function exposeComponent(exposed: Record<string | number, any>) {
  *  }
  * }, [() => changed.value])
  * ```
+ * @api component
  */
 export function useWatch<T = any>(
   watcher: EffectFunction<T>,
@@ -255,6 +298,27 @@ export function isAsyncComponent(
   return componentFunction ? isFunction(componentFunction.__loader) : false
 }
 
+/**
+ * 异步组件的包裹函数，提供 fallback 回退方案，支持打包工具异步导入等场景。
+ * ```ts
+ * import { FCA } from 'gyron'
+ *
+ * interface Props {
+ *   count: number
+ * }
+ *
+ * const Child = FCA<Props>(() => {
+ *   return () => import('./Son')
+ * })
+ *
+ * export const App = FC(() => {
+ *   return <Child fallback={<span>loading...</span>} count={1} />
+ * })
+ *```
+ * @api component
+ * @param componentAsyncFunction function
+ * @returns function
+ */
 export function FCA<
   Props extends object = object,
   T extends AsyncComponentFunction<Props> = AsyncComponentFunction<Props>
@@ -330,6 +394,26 @@ export function FCA<
   return ret as unknown as WrapperFunction<Props>
 }
 
+/**
+ * 定义一个组件，主要用于 typescript 的类型推导
+ * import { FC } from 'gyron'
+ * ```ts
+ * interface Props {
+ *   count: number
+ * }
+ *
+ * const Child = FC<Props>(() => {
+ *   return ({ count }) => <span>{count}</span>
+ * })
+ *
+ * export const App = FC(() => {
+ *   return <Child count={1} />
+ * })
+ * ```
+ * @api component
+ * @param componentFunction function
+ * @returns function
+ */
 export function FC<
   Props extends object = object,
   T extends ComponentSetupFunction<Props> = ComponentSetupFunction<Props>
@@ -358,6 +442,21 @@ export function isCacheComponent(componentFunction: ComponentSetupFunction) {
   return cacheMemoComponent.has(componentFunction)
 }
 
+/**
+ * 传入组件函数，清空组件缓存。
+ * ```js
+ * import { h, keepComponent, clearCacheComponent } from 'gyron'
+ *
+ * const App = keepComponent(() => {
+ *   return h('div')
+ * })
+ *
+ * clearCacheComponent(App)
+ * ```
+ * @api component
+ * @line 7
+ * @param componentFunction function
+ */
 export function clearCacheComponent(componentFunction: ComponentSetupFunction) {
   if (isCacheComponent(componentFunction)) {
     const component = cacheMemoComponent.get(componentFunction)
@@ -366,6 +465,19 @@ export function clearCacheComponent(componentFunction: ComponentSetupFunction) {
   }
 }
 
+/**
+ * 创建一个缓存组件，并且组件的状态可以一直保留。可以使用 `clearCacheComponent` 清空组件缓存。
+ * ```javascript
+ * import { h, keepComponent } from 'gyron'
+ *
+ * const App = keepComponent(() => {
+ *   return h('div')
+ * })
+ * ```
+ * @api component
+ * @param componentFunction function
+ * @returns function
+ */
 export function keepComponent<
   Props extends object = object,
   T extends ComponentSetupFunction<Props> = ComponentSetupFunction<Props>

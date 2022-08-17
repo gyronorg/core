@@ -8,7 +8,7 @@ import {
   createVNodeComment,
   VNode,
   FCA,
-  useRef,
+  createRef,
 } from '../src'
 
 function ssr(html: string, vnode: VNode) {
@@ -110,7 +110,7 @@ describe('SSR', () => {
   })
 
   test('element ref', () => {
-    const divRef = useRef()
+    const divRef = createRef()
     ssr('<div>0</div>', createVNode('div', { ref: divRef }, 0))
     expect(divRef.current.innerHTML).toBe('0')
   })
