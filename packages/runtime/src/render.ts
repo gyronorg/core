@@ -204,7 +204,7 @@ function patchKeyed(
       // element update attribute
       if (!isEqual(c1n.props, c2n.props)) {
         if (isVNodeComponent(c2n) && isVNodeComponent(c1n)) {
-          patchComponent(c1n, c2n, parentComponent)
+          patchComponent(c1n, c2n, container, anchor, parentComponent)
         } else {
           patchProps(
             el as HTMLElement,
@@ -454,12 +454,25 @@ export function mountComponent(
 function patchComponent(
   n1: VNode<ComponentSetupFunction>,
   n2: VNode<ComponentSetupFunction>,
+  container: RenderElement,
+  anchor: RenderElement,
   parentComponent: Component
 ) {
   const component = (n2.component = n1.component)
-  if (!isCacheComponent(n1.component.type) || !isEqual(n1.props, n2.props)) {
+  if (component) {
     normalizeComponent(n2, component, parentComponent)
-    component.update()
+    if (isCacheComponent(n1.component.type)) {
+      if (!isEqual(n1.props, n2.props)) {
+        component.update()
+      }
+    } else {
+      component.update()
+    }
+  } else {
+    if (__WARN__) {
+      console.warn('Component update exception', n1)
+    }
+    mountComponent(n2, container, anchor, parentComponent)
   }
 }
 
@@ -489,7 +502,7 @@ function enterComponent(
       mountComponent(n2, container, anchor, parentComponent)
     }
   } else {
-    patchComponent(n1, n2, parentComponent)
+    patchComponent(n1, n2, container, anchor, parentComponent)
   }
 }
 
