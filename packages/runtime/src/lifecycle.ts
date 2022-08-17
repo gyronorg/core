@@ -63,7 +63,7 @@ function initialLifecycle(component: Component, key: keyof Lifecycle) {
 }
 
 /**
- * 生命周期勾子，注册一个回调函数，组件渲染之前调用。
+ * Lifecycle hooks, register a callback function that is called before the component is rendered.
  * ```js
  * import { h, onBeforeMount } from 'gyron'
  *
@@ -75,7 +75,7 @@ function initialLifecycle(component: Component, key: keyof Lifecycle) {
  * })
  * ```
  * @api component
- * @param callback 回调函数
+ * @param callback Callback function.
  */
 export function onBeforeMount(callback: LifecycleCallback) {
   const component = getCurrentComponent()
@@ -84,7 +84,8 @@ export function onBeforeMount(callback: LifecycleCallback) {
 }
 
 /**
- * 生命周期勾子，注册一个回调函数，组件渲染之后调用，可以在回调函数中拿到真实的 DOM 信息。
+ * Life cycle hooks, register a callback function to be called after the component has been rendered,
+ * where you can get the real DOM information in the callback function.
  * ```js
  * import { h, onAfterMount } from 'gyron'
  *
@@ -96,7 +97,7 @@ export function onBeforeMount(callback: LifecycleCallback) {
  * })
  * ```
  * @api component
- * @param callback 回调函数
+ * @param callback Callback function.
  */
 export function onAfterMount(callback: LifecycleCallback) {
   const component = getCurrentComponent()
@@ -105,7 +106,7 @@ export function onAfterMount(callback: LifecycleCallback) {
 }
 
 /**
- * 生命周期勾子，注册一个回调函数，组件销毁之后调用。
+ * Lifecycle hook to register a callback function to be called after the component has been destroyed.
  * ```js
  * import { h, onDestroyed } from 'gyron'
  *
@@ -120,7 +121,7 @@ export function onAfterMount(callback: LifecycleCallback) {
  * })
  * ```
  * @api component
- * @param callback 回调函数
+ * @param callback Callback function.
  */
 export function onDestroyed(callback: LifecycleCallback) {
   const component = getCurrentComponent()
@@ -129,19 +130,20 @@ export function onDestroyed(callback: LifecycleCallback) {
 }
 
 /**
- * 生命周期勾子，注册一个回调函数，组件更新之前调用。可以返回 Falsy 组织自身和子组件的更新。
+ * Lifecycle hooks that register a callback function to be called before the component is updated.
+ * Updates to the `Falsy` organisation itself and to child components can be returned.
  * ```js
  * import { h, onBeforeUpdate } from 'gyron'
  *
  * const App = h(() => {
  *   onBeforeUpdate((oldProps, props) => {
- *     return false // 当发生变更也不会更新视图
+ *     return false // The view will not be updated even when changes occur
  *   })
  *   return () => h('div', 'hello world')
  * })
  * ```
  * @api component
- * @param callback 回调函数
+ * @param callback Callback function.
  */
 export function onBeforeUpdate(callback: LifecycleUpdateCallback) {
   const component = getCurrentComponent()
@@ -150,7 +152,7 @@ export function onBeforeUpdate(callback: LifecycleUpdateCallback) {
 }
 
 /**
- * 生命周期勾子，注册一个回调函数，组件渲染之前调用。
+ * Lifecycle hooks, register a callback function that is called before the component is rendered.
  * ```js
  * import { h, onAfterUpdate } from 'gyron'
  *
@@ -162,7 +164,7 @@ export function onBeforeUpdate(callback: LifecycleUpdateCallback) {
  * })
  * ```
  * @api component
- * @param callback 回调函数
+ * @param callback Callback function.
  */
 export function onAfterUpdate(callback: LifecycleUpdateCallback) {
   const component = getCurrentComponent()

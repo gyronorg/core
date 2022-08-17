@@ -3,7 +3,7 @@ import { createInstance, Instance } from './instance'
 import { VNode } from './vnode'
 
 /**
- * 创建服务端应用。服务端应用中所有组件的参数`isSSR`始终为 true。
+ * Create a server-side application. The parameter `isSSR` is always true for all components in the server-side application.
  * ```javascript
  * import { h, createSSRInstance, renderToString } from 'gyron'
  *

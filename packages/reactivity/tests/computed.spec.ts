@@ -65,14 +65,6 @@ describe('useComputed', () => {
     })
     a0.x = 1
     expect(a2).toBe(4)
-
-    // 1，activeEffect 是 a2。
-    // 2，取 a1 的值，a1 的 dep push a2；
-    //    a2 的 deps push a1 的 dep；
-    //    activeEffect 是 a1
-    // 3，取 a0 的值，a0 的 dep push a1（activeEffect）。
-    // 4，改变 a0 的值，找到 a0 的 dep，也就是 a1。
-    // 5，通过实例化 useComputed 时传递的 scheduler 触发 a1 的 dep（也就是a2）
   })
 
   test('useComputed memo data', () => {

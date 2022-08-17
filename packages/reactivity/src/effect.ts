@@ -105,7 +105,8 @@ export function createEffect(
 }
 
 /**
- * 当函数体中的数据变更后会再次调用函数，可以在使用此方法监听某个数据变更。
+ * The function will be called again when the data in the function body has changed,
+ * so you can use this method to listen for a data change.
  * ```ts
  * import { useValue, useComputed } from 'gyron'
  *
@@ -121,9 +122,9 @@ export function createEffect(
  * dummy === original.value // false
  * ```
  * @api reactivity
- * @param fn 数据变更后的回调函数。
- * @param dependency 依赖的数组函数，每一个函数的返回值是需要依赖的对象。
- * @returns 返回一个函数，可以直接调用。函数上会附带`effect`对象，可以访问`effect`对象上的`stop`方法停止对数据的监听。
+ * @param fn Callback function after data change.
+ * @param dependency Dependent array functions, where the return value of each function is the object to be dependent on.
+ * @returns Returns a function that can be called directly. The function will have an `effect` object attached to it and the `stop` method on the `effect` object can be accessed to stop listening to the data.
  */
 export function useEffect<T = any>(
   fn: EffectFunction<T>,

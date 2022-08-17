@@ -14,7 +14,8 @@ export const ErrorType = Symbol.for('gyron.error-handler')
 export const WarnType = Symbol.for('gyron.warn-handler')
 
 /**
- * 注册一个错误的事件监听，当组件发生错误时将会执行注册的回调函数
+ * Register an event listener for errors and the registered callbackfunction
+ * will be executed when an error occurs in the component.
  * ```js
  * import { registerErrorHandler, h } from 'gyron'
  * const App = h(() => {
@@ -25,7 +26,7 @@ export const WarnType = Symbol.for('gyron.warn-handler')
  * })
  * ```
  * @api boundaries
- * @param handler BoundariesHandler
+ * @param handler Handling functions.
  */
 export function registerErrorHandler(handler: BoundariesHandler) {
   const component = getCurrentComponent()
@@ -33,7 +34,8 @@ export function registerErrorHandler(handler: BoundariesHandler) {
 }
 
 /**
- * 注册一个警告的事件监听，当组件发生警告时将会执行注册的回调函数
+ * Register an event listener for warnings, the registered callback function
+ * will be executed when a warning occurs on the component.
  * ```js
  * import { registerWarnHandler, useInject, h } from 'gyron'
  *
@@ -46,7 +48,7 @@ export function registerErrorHandler(handler: BoundariesHandler) {
  * })
  *```
  * @api boundaries
- * @param handler BoundariesHandler
+ * @param handler Handling functions.
  */
 export function registerWarnHandler(handler: BoundariesHandler) {
   const component = getCurrentComponent()
@@ -86,7 +88,7 @@ function manualHandlerBase(
 }
 
 /**
- * 主动触发通过 registerErrorHandler 方法注册的事件回调
+ * Proactive triggering of event callbacks registered via the registerErrorHandler method.
  * ```js
  * import { manualErrorHandler, h } from 'gyron'
  *
@@ -98,7 +100,7 @@ function manualHandlerBase(
  * })
  * ```
  * @api boundaries
- * @param error Error
+ * @param error Error message
  * @param component Component
  */
 export function manualErrorHandler(
@@ -109,7 +111,7 @@ export function manualErrorHandler(
 }
 
 /**
- * 主动触发通过 registerWarnHandler 方法注册的事件回调
+ * Proactive triggering of event callbacks registered via the registerWarnHandler method
  * ```js
  * import { manualWarnHandler, h } from 'gyron'
  *

@@ -9,7 +9,7 @@ export interface Plugin<D extends object, E = any> {
 }
 
 /**
- * 返回所有已经注册的插件
+ * Return all registered plugins
  * ```js
  * import { getPlugins } from 'gyron'
  * const plugins = getPlugins()

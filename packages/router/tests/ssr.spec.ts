@@ -29,14 +29,14 @@ describe('SSR Router', () => {
         Router,
         { router },
         h('div', null, [
-          h(Link, { to: '/' }, '默认'),
-          h(Link, { to: '/login' }, '登陆'),
+          h(Link, { to: '/' }, 'Dashboard'),
+          h(Link, { to: '/login' }, 'Login'),
         ])
       )
     )
     const html = await renderToString(root)
     expect(html).toBe(
-      '<div><a class="" href="/">默认</a><a class="" href="/login">登陆</a></div>'
+      '<div><a class="" href="/">Dashboard</a><a class="" href="/login">Login</a></div>'
     )
   })
 

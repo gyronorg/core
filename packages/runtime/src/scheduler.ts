@@ -12,6 +12,7 @@ export interface SchedulerJob {
 const queue: SchedulerJob[] = []
 const resolvedPromise: Promise<unknown> = Promise.resolve()
 const frameYield = 5
+const delaysTime = 1000 / 60
 let currentJobPromise: Promise<unknown>
 let startTime = -1
 
@@ -24,7 +25,7 @@ export enum JobPriority {
 }
 
 /**
- * 等待数据渲染完成，在下一个刻度中可以获取到更新后的 DOM 节点。
+ * Wait for the data to finish rendering and the updated DOM node will be available in the next tick.
  * ```js
  * import { h, useValue, nextRender, useRef, onAfterMount } from 'gyron'
  *
@@ -42,7 +43,7 @@ export enum JobPriority {
  *   return () => h('div', { ref }, count.value)
  * })
  *```
- * @param fn 下一个刻度调用的函数
+ * @param fn The next scale call function.
  * @returns
  */
 export function nextRender(fn?: Noop) {
@@ -149,7 +150,7 @@ function workLoop(pendingJobs?: SchedulerJob[]) {
           timeout(() => {
             workLoop(pendingJobs)
             resolve()
-          }, 1000 / 24)
+          }, delaysTime)
         })
       }
       break

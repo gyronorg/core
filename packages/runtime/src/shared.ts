@@ -11,7 +11,7 @@ import {
 } from './vnode'
 
 /**
- * 判断传入的参数是否为虚拟节点
+ * Determine if the incoming parameter is a virtual node
  * ```js
  * import { isVNode, h } from 'gyron'
  *
@@ -45,7 +45,7 @@ export function isVNodeFragment(n: VNode): n is VNode<typeof Fragment> {
 }
 
 /**
- * 判断传入的参数是否为组件节点
+ * Determine if the incoming parameter is a component node
  * ```js
  * import { isVNodeComponent, h } from 'gyron'
  *

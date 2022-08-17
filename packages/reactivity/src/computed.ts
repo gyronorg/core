@@ -87,7 +87,8 @@ function wrapperComputed<T>(
 }
 
 /**
- * 类似于 javascript 中的访问器属性，但是其依赖的数据的变动会自动触发依赖 useComputed 的数据变更。
+ * Similar to the accessor property in javascript,
+ * but changes to the data it depends on will automatically trigger changes to the data that depends on useComputed.
  * ```js
  * import { useValue, useComputed } from 'gyron'
  *
@@ -99,9 +100,9 @@ function wrapperComputed<T>(
  * observed.value === 11 // true
  * ```
  * @api reactivity
- * @param getter 读取数据的函数
- * @param setter 设置数据的函数
- * @param dependency 依赖的数组函数，每一个函数的返回值是需要依赖的对象。
+ * @param getter Functions for reading data
+ * @param setter Functions for setting data
+ * @param dependency Dependent array functions, where the return value of each function is the object to be dependent on.
  */
 export function useComputed<T>(getter: () => T): Computed<T>
 export function useComputed<T>(
@@ -118,7 +119,8 @@ export function useComputed(getter: any, unstable?: any, dependency?: any) {
 }
 
 /**
- * 如果依赖的数据没有更新，则值将不会得到更新。为了避免这种情况，需要使用 useComputed 对数据进行处理。
+ * If the dependent data is not updated, the value will not be updated.
+ * To avoid this, the data needs to be processed using `useComputed`.
  * ```js
  * import { useValue, useMemo } from 'gyron'
  *
@@ -129,9 +131,9 @@ export function useComputed(getter: any, unstable?: any, dependency?: any) {
  * memo.value === memo.value // true
  * ```
  * @api reactivity
- * @param getter 读取数据的函数
- * @param setter 设置数据的函数
- * @param dependency 依赖的数组函数，每一个函数的返回值是需要依赖的对象。
+ * @param getter Functions for reading data.
+ * @param setter Functions for setting data.
+ * @param dependency Dependent array functions, where the return value of each function is the object to be dependent on.
  */
 export function useMemo<T>(getter: () => T): Computed<T>
 export function useMemo<T>(

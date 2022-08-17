@@ -21,7 +21,7 @@ export function sync(target: object, source: object) {
 
   diffs.forEach((v) => {
     const { kind, path } = v
-    // 同步 redux 数据到 useReactive 以便更新 View
+    // Sync redux data to useReactive to update the View
     if (kind === 'N' || kind === 'E') {
       getValueWithPath(path, target, (obj, cur) => {
         obj[cur] = v.rhs

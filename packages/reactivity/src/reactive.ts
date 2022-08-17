@@ -45,7 +45,7 @@ export interface Target {
 }
 
 /**
- * 判断对象是否具有响应式特性。
+ * Determines whether an object has responsive characteristics.
  * ```js
  * import { isResponsive } from 'gyron'
  *
@@ -67,7 +67,8 @@ export function isResponsive(n: any): n is { value: any } {
 }
 
 /**
- * 访问被代理对象的原始数据，在复杂的对象中非常有用。在 useValue 中会解构 value 对象，返回其原始值。
+ * Access to the original data of the object being proxied is very useful in complex objects.
+ * In `useValue` the value object is deconstructed and its original value returned.
  * ```javascript
  * import { useValue } from 'gyron'
  *
@@ -81,8 +82,8 @@ export function isResponsive(n: any): n is { value: any } {
  * dummy === 0 // true
  * ```
  * @api reactivity
- * @param observed 响应式的数据。
- * @returns 原始数据。
+ * @param observed Responsive data.
+ * @returns Raw data.
  */
 export function toRaw<T>(observed: T): RawValue<T> {
   const raw = !isUndefined(observed) && (observed as Target)[ReactiveFlags.RAW]
@@ -204,7 +205,7 @@ const mutableHandlers: ProxyHandler<object> = {
 }
 
 /**
- * 代理传入的对象，可以传入第二个参数控制对象是否为只读。
+ * Proxy incoming objects, a second parameter can be passed to control whether the object is read-only or not.
  * ```js
  * import { useReactive } from 'gyron'
  *
@@ -216,9 +217,9 @@ const mutableHandlers: ProxyHandler<object> = {
  * original !== observed // true
  * ```
  * @api reactivity
- * @param target 需要被响应的数据。
- * @param readonly 是否为只读数据。
- * @returns 一个被代理过的对象，内部使用的 Proxy 进行代理。
+ * @param target The data that needs to be responded to.
+ * @param readonly Whether the data is read-only.
+ * @returns A proxied object, internally proxied using a `Proxy`.
  */
 export function useReactive<T extends object>(
   target: T,

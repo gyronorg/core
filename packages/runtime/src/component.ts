@@ -130,7 +130,7 @@ export function createComponentInstance(
 }
 
 /**
- * 获取当前组件对象，但是请勿随意更改或者删除其中的值，可能会发生预期之外的错误。
+ * Get the current component object, but do not change or delete the values in it, as unintended errors may occur.
  * ```js
  * import { h, getCurrentComponent } from 'gyron'
  *
@@ -230,7 +230,7 @@ export function defineProps<T extends object>() {
 }
 
 /**
- * 暴露组件中的数据给父组件使用。
+ * Exposes the data in the component for use by the parent component.
  * ```js
  * import { h, useValue, createRef, exposeComponent } from 'gyron'
  *
@@ -299,7 +299,8 @@ export function isAsyncComponent(
 }
 
 /**
- * 异步组件的包裹函数，提供 fallback 回退方案，支持打包工具异步导入等场景。
+ * Wrapping functions for asynchronous components, providing fallback solutions,
+ * support for scenarios such as asynchronous import of packaging tools.
  * ```ts
  * import { FCA } from 'gyron'
  *
@@ -395,7 +396,7 @@ export function FCA<
 }
 
 /**
- * 定义一个组件，主要用于 typescript 的类型推导
+ * Define a component that is primarily used for type derivation in typescript
  * import { FC } from 'gyron'
  * ```ts
  * interface Props {
@@ -443,7 +444,7 @@ export function isCacheComponent(componentFunction: ComponentSetupFunction) {
 }
 
 /**
- * 传入组件函数，清空组件缓存。
+ * Pass in the component function to clear the component cache.
  * ```js
  * import { h, keepComponent, clearCacheComponent } from 'gyron'
  *
@@ -466,7 +467,8 @@ export function clearCacheComponent(componentFunction: ComponentSetupFunction) {
 }
 
 /**
- * 创建一个缓存组件，并且组件的状态可以一直保留。可以使用 `clearCacheComponent` 清空组件缓存。
+ * A cached component is created and the state of the component can be retained at all times.
+ * The component cache can be cleared using `clearCacheComponent`.
  * ```javascript
  * import { h, keepComponent } from 'gyron'
  *

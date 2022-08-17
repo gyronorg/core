@@ -12,7 +12,8 @@ import { UtilComponentProps } from './component'
 export type HProps = VNodeProps | string
 
 /**
- * 创建一个 VNode 节点，返回值为一个普通的对象。可以直接运行在浏览器，主要用来在非编译环境下编写应用。
+ * Creates a `VNode` node with a normal object return value.
+ * Can be run directly in the browser and is mainly used to write applications in non-compiled environments.
  * ```js
  * import { h } from 'gyron'
  *
@@ -21,9 +22,9 @@ export type HProps = VNodeProps | string
  * })
  * ```
  * @api global
- * @param type 要创建的节点类型，可以是标签名或者一个函数。
- * @param props 可以是字符串或者对象，如果是字符串则会当作`children`
- * @param children 子节点，可以是 VNode 节点或者字符串。
+ * @param type The type of node to be created, either a tag name or a function.
+ * @param props Can be a string or an object, if it is a string it will be treated as `children`.
+ * @param children A child node, either a VNode node or a string.
  * @returns VNode
  */
 export function h<T extends VNodeType>(
@@ -34,9 +35,7 @@ export function h<T extends VNodeType>(
   if (!type) return
 
   if (isString(props)) {
-    /**
-     * h('div', 'hello world')
-     */
+    // h('div', 'hello world')
     children = props
     props = null
   }

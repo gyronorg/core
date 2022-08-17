@@ -16,22 +16,22 @@ export function createContext() {
 }
 
 /**
- * 渲染虚拟节点到真实的DOM上。
+ * Render virtual nodes to the real DOM.
  * ```js
  * import { render, h } from 'gyron'
  *
  * render(h('div', { id: 'gyron' }), document.body)
  * ```
  * @api global
- * @param vnode 虚拟节点
- * @param container 浏览器中的节点
+ * @param vnode Virtual nodes.
+ * @param container Browser nodes.
  */
 export function render(vnode: VNode, container: Element) {
   patch(null, vnode, container)
 }
 
 /**
- * 创建应用，并通过应用上的`render`方法渲染成实际的 DOM 节点。
+ * Create the application and render it as an actual DOM node via the `render` method on the application.
  * ```js
  * import { h, createInstance } from 'gyron'
  *
@@ -42,9 +42,9 @@ export function render(vnode: VNode, container: Element) {
  * createInstance(h(App)).render('#root')
  * ```
  * @api global
- * @param root 一个 VNode 节点，可以通过 h 函数创建
- * @param isHydrate 用于服务端渲染参数，为 Truthy 则代表使用“水合”方法让界面变得可响应
- * @returns 应用实例
+ * @param root A `VNode` node, which can be created with the `h` function.
+ * @param isHydrate For server-side rendering parameters, `Truthy` means that the "hydration" method is used to make the interface responsive.
+ * @returns Application examples.
  */
 export function createInstance(root: VNode, isHydrate?: boolean) {
   checkVersion()

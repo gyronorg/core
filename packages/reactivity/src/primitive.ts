@@ -29,7 +29,8 @@ export class Primitive<T = any> {
 }
 
 /**
- * 使用 value 属性让基本类型的数据变得可响应，其内部就是使用`useReactive`方法，然后使用 value 作为属性名代理。
+ * Using the `value` attribute to make basic type data responsive is done
+ * internally using the `useReactive` method and then using `value` as a proxy for the attribute name.
  * ```js
  * import { useValue } from 'gyron'
  *
@@ -37,8 +38,8 @@ export class Primitive<T = any> {
  * original.value === 0 // true
  * ```
  * @api reactivity
- * @param value 想要被代理的数据，可以是基本类型，比如数字或者布尔值。
- * @returns 一个被代理过的对象，使用`.value`进行访问。
+ * @param value The data that you want to be proxied can be a basic type, such as a number or a boolean.
+ * @returns An object that has been proxied and is accessed using `.value`.
  */
 export function useValue<T = any>(value: T) {
   return new Primitive(value)

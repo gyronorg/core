@@ -7,8 +7,9 @@ export interface UserRef<T = Ref> {
 }
 
 /**
- * 创建一个 ref 对象，可以绑定到 vnode 节点上，如果绑定的节点是一个普通节点，其值就为 Node，
- * 如果是组件，其值就是组件暴露的对象。可以传递一个默认值，当值未绑定时 current 就是默认值。
+ * creates a `ref` object that can be bound to a `vnode` node. If the bound node is a normal node, its value is `Node`.
+ * If it is a component, the value is the object exposed by the component.
+ * A default value can be passed, `current` is the default value when the value is not bound.
  * ```javascript
  * import { h, createRef } from 'gyron'
  *
@@ -20,7 +21,7 @@ export interface UserRef<T = Ref> {
  * })
  * ```
  * @api global
- * @param initialValue 初始值
+ * @param initialValue initial value.
  */
 export function createRef<T = any>(initialValue?: T): UserRef<T> {
   return {

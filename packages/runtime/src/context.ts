@@ -32,7 +32,7 @@ export function inject<T = unknown>(
 }
 
 /**
- * 向所有子组件中注入任何数据，可以是深度组件，也可以是同级组件。
+ * Inject any data into all child components, either deep components or sibling components.
  * ```js
  * import { h, useProvide } from 'gyron'
  *
@@ -50,7 +50,7 @@ export function useProvide<T = unknown>() {
 }
 
 /**
- * 当上层组件使用`useProvide`之后，通过`useInject`获取注入的数据。
+ * After the upper level component has used `useProvide`, the injected data is retrieved via `useInject`.
  * ```js
  * import { h, useInject } from 'gyron'
  *
@@ -74,7 +74,7 @@ export function useInject() {
 }
 
 /**
- * 获取当前组件中的`context`信息，包含了`provide`和`inject`两个函数。
+ * Gets information about the `context` in the current component and contains the `provide` and `inject` functions.
  * ```javascript
  * import { h, useComponentContext } from 'gyron'
  *

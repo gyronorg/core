@@ -105,7 +105,7 @@ export interface VNodeProps
 }
 
 /**
- * 克隆 VNode 节点。
+ * Clone the `VNode` node.
  * ```js
  * import { createComment, cloneVNode, h } from 'gyron'
  *
@@ -116,8 +116,8 @@ export interface VNodeProps
  * App !== cloneVNode(App) // true
  * ```
  * @api global
- * @param vnode 需要拷贝的节点，也可以是普通的值。
- * @returns 克隆后的节点。
+ * @param vnode The node to be copied, or it can be a normal value.
+ * @returns Nodes after cloning.
  */
 export function cloneVNode<T extends VNode | VNode[]>(vnode: T): T {
   if (isArray(vnode)) {
@@ -134,7 +134,7 @@ export function cloneVNode<T extends VNode | VNode[]>(vnode: T): T {
 }
 
 /**
- * 合并`props`到目标节点上。
+ * Merge `props` to the target node.
  * ```javascript
  * import { createComment, mergeVNode, h } from 'gyron'
  *
@@ -146,9 +146,9 @@ export function cloneVNode<T extends VNode | VNode[]>(vnode: T): T {
  * App.props.class === 'container' // true
  * ```
  * @api global
- * @param vnode 需要合并的节点。
- * @param props  要拷贝到节点的属性。
- * @returns 返回合并后的节点。
+ * @param vnode Nodes that need to be merged.
+ * @param props The attributes to be copied to the node.
+ * @returns Returns the merged node.
  */
 export function mergeVNode<T extends VNode | VNode[]>(
   vnode: T,
