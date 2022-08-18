@@ -20,6 +20,7 @@ import {
   isBoolean,
   isElement,
   isEqual,
+  isFunction,
   isObject,
   isPromise,
   shouldValue,
@@ -47,6 +48,7 @@ import {
   Comment,
   Element,
   Fragment,
+  mergeVNodeWith,
   normalizeChildrenVNode,
   normalizeVNode,
   RenderElement,
@@ -192,7 +194,7 @@ function patchKeyed(
     const c1n = o1[c2n.key]
     if (c1n) {
       // 1, find the same key value of the node, and then inserted into the corresponding location. (Do not delete add, move directly)
-      const el = (c2[i].el = c1n.el)
+      const el = mergeVNodeWith(c2n, c1n).el
       if (c1n.index !== i) {
         // insert to new position when node order is changed
         const anchor = container.childNodes[i]
@@ -203,7 +205,8 @@ function patchKeyed(
       // update props after migration is complete
       // element update attribute
       if (!isEqual(c1n.props, c2n.props)) {
-        if (isVNodeComponent(c2n) && isVNodeComponent(c1n)) {
+        const isComponent = isVNodeComponent(c2n) && isVNodeComponent(c1n)
+        if (isComponent) {
           patchComponent(c1n, c2n, container, anchor, parentComponent)
         } else {
           patchProps(
@@ -247,9 +250,15 @@ function patchChildren(
   parentComponent: Component,
   isSvg: boolean
 ) {
+  if (isFunction(n1.children) && isFunction(n2.children)) {
+    // when the child nodes are all functions, they should be called by the parent node.
+    // <Parent>{count => <Title count={count} />}</Parent>
+    return
+  }
+
   const c1memo = n1.props.memo
   const c2memo = n2.props.memo
-  if (isArray(c1memo)) {
+  if (isArray(c1memo) && isArray(c2memo)) {
     const index = c1memo.findIndex((item, index) => {
       return c2memo[index] !== item
     })

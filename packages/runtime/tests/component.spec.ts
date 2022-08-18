@@ -44,10 +44,10 @@ describe('Component', () => {
   })
 
   test('useReactive props', async () => {
-    const Child = () => {
+    const Child = FC<{ count: number }>(() => {
       const props = defineProps<{ count: number }>()
       return () => h('div', null, props.count)
-    }
+    })
     const count = useValue(0)
     const App = () => {
       return h(Child, { count: count.value })

@@ -24,7 +24,7 @@ import { UserRef } from './ref'
 export type UtilComponentProps<T extends VNodeType, D = never> = T extends
   | ComponentFunction<infer Props>
   | ComponentSetupFunction<infer Props>
-  ? Props
+  ? Omit<Props, keyof ComponentDefaultProps> & Partial<ComponentParentProps>
   : D
 
 export type ComponentDefaultProps = {
@@ -44,7 +44,7 @@ export type ComponentFunction<Props> = (
 
 export interface ComponentSetupFunction<Props extends object = object> {
   (props: Props & Partial<ComponentDefaultProps>, component: Component<Props>):
-    | ComponentFunctionReturn
+    | (VNodeChildren | Promise<VNodeChildren>)
     | ComponentFunction<Props>
   __cache?: boolean
   __cacheIndex?: number
@@ -54,8 +54,6 @@ export interface ComponentSetupFunction<Props extends object = object> {
 export type AsyncComponentFunction<Props extends object = object> = (
   props?: AsyncProps<Props> & Partial<ComponentDefaultProps>
 ) => Promise<ComponentSetupFunction<Props> | VNode>
-
-type ComponentFunctionReturn = VNodeChildren | Promise<VNodeChildren>
 
 type AsyncProps<Props> = Props &
   Partial<ComponentDefaultProps & { fallback: VNode }>
@@ -163,13 +161,13 @@ function renderComponentSubTree(
   renderTree: ReturnType<ComponentSetupFunction<VNodeProps>>
 ) {
   if (isFunction(renderTree)) {
-    component.render = renderTree
+    component.render = renderTree as ComponentFunction<VNodeProps>
     renderTree = callWithErrorHandling(
       renderTree,
       component,
       ErrorHandlingType.Setup,
       [props, component]
-    ) as ComponentFunctionReturn
+    )
   }
   if (isPromise(renderTree)) {
     return renderTree.then((subTree: VNodeChildren) => {

@@ -81,7 +81,7 @@ describe('Lifecycle', () => {
   })
 
   test('beforeUpdate', async () => {
-    const Child = FC(() => {
+    const Child = FC<{ a: number }>(() => {
       onBeforeUpdate(() => {
         return false
       })

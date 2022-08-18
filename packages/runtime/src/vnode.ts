@@ -1,4 +1,4 @@
-import { isVNode } from './shared'
+import { isVNode, isVNodeComponent } from './shared'
 import {
   extend,
   isArray,
@@ -55,8 +55,9 @@ export enum NodeType {
   Text = 3,
   Comment = 8,
 }
+export type FunctionChildren = (...args: any) => any
 export type TextContent = string | number | boolean | null | undefined
-export type Children = VNode | TextContent
+export type Children = VNode | TextContent | FunctionChildren
 export type VNodeChildren = Children | Children[]
 
 export interface VNodeDefaultProps {
@@ -166,6 +167,14 @@ export function mergeVNode<T extends VNode | VNode[]>(
   return vnode
 }
 
+export function mergeVNodeWith(n1: VNode, n2: VNode) {
+  if (isVNodeComponent(n1) && isVNodeComponent(n2)) {
+    n1.component = n2.component
+  }
+  n1.el = n2.el
+  return n1
+}
+
 export function createVNode(
   tag: unknown,
   props?: Partial<VNodeProps>,
@@ -221,11 +230,11 @@ export function normalizeVNode(value: VNodeChildren): VNode {
   }
   if (value === null || typeof value === 'boolean') {
     return createVNodeComment()
-  } else if (Array.isArray(value)) {
-    return createVNode(value.slice() as VNode[])
-  } else {
-    return createVNode('' + value)
   }
+  if (Array.isArray(value)) {
+    return createVNode(value.slice() as VNode[])
+  }
+  return createVNode('' + value)
 }
 
 export function normalizeChildrenVNode(vnode: VNode) {

@@ -7,7 +7,7 @@
     "codecov": "rimraf packages/**/coverage && yarn test --coverage",
     "build": "rimraf packages/**/dist && lerna run build",
     "prepare": "husky install",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "node script/cp.mjs && yarn build && yarn test"
   },
   "engines": {
     "node": ">= 16"
