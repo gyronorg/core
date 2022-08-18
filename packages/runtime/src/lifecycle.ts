@@ -8,9 +8,9 @@ import type { Component } from './component'
 
 type LifecycleCallback = (component: Component) => any
 type LifecycleUpdateCallback = (
-  oldProps: object,
+  prevProps: object,
   props?: object
-) => any | boolean
+) => void | boolean
 
 export type Lifecycle = Partial<{
   beforeMounts: Set<LifecycleCallback>
@@ -30,7 +30,7 @@ function wrapLifecycle(component: Component, type: keyof Lifecycle) {
     const listener = lifecycle[i]
     const params = []
     if (type === 'beforeUpdates' || type === 'afterUpdates') {
-      params.push(component.oldProps, component.props)
+      params.push(component.prevProps, component.props)
     } else {
       params.push(component)
     }
@@ -136,7 +136,7 @@ export function onDestroyed(callback: LifecycleCallback) {
  * import { h, onBeforeUpdate } from 'gyron'
  *
  * const App = h(() => {
- *   onBeforeUpdate((oldProps, props) => {
+ *   onBeforeUpdate((prevProps, props) => {
  *     return false // The view will not be updated even when changes occur
  *   })
  *   return () => h('div', 'hello world')
@@ -157,7 +157,7 @@ export function onBeforeUpdate(callback: LifecycleUpdateCallback) {
  * import { h, onAfterUpdate } from 'gyron'
  *
  * const App = h(() => {
- *   onAfterUpdate((oldProps, props) => {
+ *   onAfterUpdate((prevProps, props) => {
  *     component // self
  *   })
  *   return () => h('div', 'hello world')

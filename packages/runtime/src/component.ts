@@ -88,7 +88,7 @@ export interface Component<T extends object = object> {
   render: ComponentFunction<T>
   setup: ComponentSetupFunction
   props: T & Partial<ComponentDefaultProps & ComponentParentProps>
-  oldProps: T & Partial<ComponentDefaultProps & ComponentParentProps>
+  prevProps: T & Partial<ComponentDefaultProps & ComponentParentProps>
   ctx: Record<string | symbol, unknown>
   lifecycle: Lifecycle
   exposed: Exposed
@@ -117,7 +117,7 @@ export function createComponentInstance(
     render: null,
     setup: null,
     props: null,
-    oldProps: null,
+    prevProps: null,
     lifecycle: null,
     exposed: null,
     $el: null,
@@ -222,7 +222,7 @@ export function renderComponent(component: Component, isSSR = false) {
  * ```
  * @api component
  */
-export function defineProps<T extends object>() {
+export function defineProps<T extends object>(defaultValue?: object) {
   const component = getCurrentComponent()
   return component.props as T & ComponentDefaultProps
 }
@@ -534,7 +534,7 @@ export function normalizeComponent(
     component.props = {}
   }
 
-  component.oldProps = extend({}, component.props)
+  component.prevProps = extend({}, component.props)
   component.props = extend(component.props, vnode.props, {
     children: vnode.children,
   })

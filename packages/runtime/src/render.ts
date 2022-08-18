@@ -23,6 +23,7 @@ import {
   isFunction,
   isObject,
   isPromise,
+  keys,
   shouldValue,
 } from '@gyron/shared'
 import { warn } from './assert'
@@ -81,16 +82,6 @@ function getNextSibling(vnode: VNode) {
   return null
 }
 
-function mountChildrenNode(
-  node: VNode,
-  container: RenderElement,
-  anchor: RenderElement,
-  parentComponent: Component | null = null,
-  isSvg: boolean
-) {
-  patch(null, node, container, anchor, parentComponent, isSvg)
-}
-
 function mountChildren(
   nodes: VNode[] | Children[],
   container: RenderElement,
@@ -102,7 +93,7 @@ function mountChildren(
   for (let i = start; i < nodes.length; i++) {
     const node = normalizeVNode(nodes[i])
     nodes[i] = node
-    mountChildrenNode(node, container, anchor, parentComponent, isSvg)
+    patch(null, node, container, anchor, parentComponent, isSvg)
   }
 }
 
@@ -300,10 +291,10 @@ function mountElement(
     setRef(el, vnode.props.ref)
   }
 
-  mountProps(
-    el as HTMLElement,
-    extend({}, vnode, { props: removeBuiltInProps(vnode.props) })
-  )
+  const props = removeBuiltInProps(vnode.props)
+  if (keys(props).length > 0) {
+    mountProps(el as HTMLElement, extend({}, vnode, { props: props }))
+  }
 
   if (shouldValue(vnode.children)) {
     vnode.children = normalizeChildrenVNode(vnode)
@@ -527,7 +518,7 @@ function enterElement(
 
   if (n1 === null) {
     mountElement(n2, container, anchor, parentComponent, isSvg)
-  } else if (n1.el) {
+  } else {
     patchElement(n1, n2, container, anchor, parentComponent, isSvg)
   }
 }
