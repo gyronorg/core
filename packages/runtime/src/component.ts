@@ -5,7 +5,14 @@ import {
   Effect,
   EffectFunction,
 } from '@gyron/reactivity'
-import { extend, isFunction, isPromise, omit } from '@gyron/shared'
+import {
+  extend,
+  isFunction,
+  isObject,
+  isPromise,
+  isUndefined,
+  omit,
+} from '@gyron/shared'
 import {
   createVNodeComment,
   VNode,
@@ -222,9 +229,21 @@ export function renderComponent(component: Component, isSSR = false) {
  * ```
  * @api component
  */
-export function defineProps<T extends object>(defaultValue?: object) {
+export function defineProps<
+  T extends object,
+  R extends object = T & ComponentDefaultProps
+>(defaultValue?: object) {
   const component = getCurrentComponent()
-  return component.props as T & ComponentDefaultProps
+  if (isObject(defaultValue)) {
+    const props = extend({}, component.props)
+    for (const key in defaultValue) {
+      if (isUndefined(component.props[key])) {
+        props[key] = defaultValue[key]
+      }
+    }
+    return props as R
+  }
+  return component.props as R
 }
 
 /**
