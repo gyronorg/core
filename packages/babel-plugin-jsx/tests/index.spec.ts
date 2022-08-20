@@ -1,7 +1,12 @@
 import { transform, trim } from './util'
 
 describe('JSX', () => {
-  test('Transform', () => {
+  test('import h', () => {
+    const file = 'function c() {return <br />}'
+    const { code } = transform(file)
+    expect(code).toContain('import { h as _h } from "gyron"')
+  })
+  test('transform jsx', () => {
     const file = `
       import { useValue } from 'gyron'
 
@@ -18,19 +23,19 @@ describe('JSX', () => {
     })
   })
 
-  test('Transform props id', () => {
+  test('transform props id', () => {
     const file = `const app = <div id="app"></div>`
     const { code } = transform(file)
     expect(trim(code)).toContain('{"id":"app"}')
   })
 
-  test('Transform event and props', () => {
+  test('transform event and props', () => {
     const file = `const app = <div id="app" onClick={()=>{}}></div>`
     const { code } = transform(file)
     expect(trim(code)).toContain('{"id":"app","onClick":()=>{}}')
   })
 
-  test('Transform Multiple', () => {
+  test('transform Multiple', () => {
     const file = `
       import { useValue } from 'gyron'
 
@@ -43,7 +48,7 @@ describe('JSX', () => {
     expect(code).toContain(`_h("div", {}, _h("span", {}, content.value))`)
   })
 
-  test('Transform Multiple Children', () => {
+  test('transform Multiple Children', () => {
     const file = `
       function app() {
         return <div><ul><li>1</li><li>2</li></ul></div>
@@ -55,7 +60,7 @@ describe('JSX', () => {
     )
   })
 
-  test('Example jsx map', () => {
+  test('example jsx map', () => {
     const file = `
     const app = () => (
       <span>
@@ -68,7 +73,7 @@ describe('JSX', () => {
     expect(code).toContain('[1, 2, 3].map(x => _h("span", {}, x)')
   })
 
-  test('Example jsx map (useValue)', () => {
+  test('example jsx map (useValue)', () => {
     const file = `
     const list = useValue([])
     const app = () => (
@@ -82,7 +87,7 @@ describe('JSX', () => {
     expect(code).toContain('list.value.map(x => _h("span", {}, x)')
   })
 
-  test('Component Child Name Props', () => {
+  test('component Child Name Props', () => {
     const file = `
     const app = () => (
       <A w={0}></A>
@@ -91,7 +96,7 @@ describe('JSX', () => {
     expect(code).toContain('_h(A,')
   })
 
-  test('Component Child MemberName Props', () => {
+  test('component Child MemberName Props', () => {
     const file = `
     const app = () => (
       <A.C w={0}></A.C>
@@ -100,7 +105,7 @@ describe('JSX', () => {
     expect(code).toContain('_h(A.C,')
   })
 
-  test('Component Props Child', () => {
+  test('component Props Child', () => {
     const file = `
     const app = () => (
       <A><B>child</B></A>
@@ -109,19 +114,19 @@ describe('JSX', () => {
     expect(code).toContain('_h(A, {}, _h(B, {}, "child"))')
   })
 
-  test('Component JSXExpressionContainer', () => {
+  test('component JSXExpressionContainer', () => {
     const file = `const app = <div>{x ? 1: 2}</div>`
     const { code } = transform(file)
     expect(code).toContain('_h("div", {}, x ? 1 : 2)')
   })
 
-  test('Component Props isCustomComponent', () => {
+  test('component Props isCustomComponent', () => {
     const file = `const app = <A onClick={""} />`
     const { code } = transform(file)
     expect(trim(code)).toContain('_h(A,{"onClick":""},[])')
   })
 
-  test('Component Children only', () => {
+  test('component Children only', () => {
     const file = `const app = <A>
       <B />
     </A>`

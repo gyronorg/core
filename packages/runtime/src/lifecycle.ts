@@ -7,9 +7,9 @@ import {
 import type { Component } from './component'
 
 type LifecycleCallback = (component: Component) => any
-type LifecycleUpdateCallback = (
-  prevProps: object,
-  props?: object
+type LifecycleUpdateCallback<T extends object = object> = (
+  prevProps: T,
+  props?: T
 ) => void | boolean
 
 export type Lifecycle = Partial<{
@@ -145,7 +145,9 @@ export function onDestroyed(callback: LifecycleCallback) {
  * @api component
  * @param callback Callback function.
  */
-export function onBeforeUpdate(callback: LifecycleUpdateCallback) {
+export function onBeforeUpdate<T extends object>(
+  callback: LifecycleUpdateCallback<T>
+) {
   const component = getCurrentComponent()
   initialLifecycle(component, 'beforeUpdates')
   component.lifecycle.beforeUpdates.add(callback)

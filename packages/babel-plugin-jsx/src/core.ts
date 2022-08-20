@@ -5,7 +5,9 @@ import transformHmr from './hmr'
 import transformImport from './import'
 import transformJsx from './transformJsx'
 import transformSetup from './setup'
+import transformProps from './destructuring'
 import * as t from '@babel/types'
+import path from 'path'
 
 export type { State } from './transformJsx'
 
@@ -13,7 +15,8 @@ export const visitor: Visitor<t.Node> = merge(
   transformImport,
   transformJsx,
   transformHmr,
-  transformSetup
+  transformSetup,
+  transformProps
 )
 
 export const BabelDoJsx = {
@@ -22,6 +25,9 @@ export const BabelDoJsx = {
   visitor: visitor,
 }
 
-export default (() => {
-  return BabelDoJsx
+export default ((_, __, file) => {
+  if (['.jsx', '.tsx'].includes(path.extname(file))) {
+    return BabelDoJsx
+  }
+  return {}
 }) as PluginItem

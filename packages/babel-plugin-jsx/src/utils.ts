@@ -36,13 +36,13 @@ export function isBodyContainJSX(
 
   if (t.isCallExpression(node)) {
     if (t.isIdentifier(node.callee)) {
-      return node.callee.name === 'FC'
+      return node.callee.name === 'FC' || node.callee.name === 'FCA'
     }
     return false
   }
   if (t.isVariableDeclarator(node)) {
     if (t.isCallExpression(node.init) && t.isIdentifier(node.init.callee)) {
-      return node.init.callee.name === 'FC'
+      return node.init.callee.name === 'FC' || node.init.callee.name === 'FCA'
     }
     if (
       t.isArrowFunctionExpression(node.init) ||

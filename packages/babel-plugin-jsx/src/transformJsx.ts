@@ -16,6 +16,7 @@ export type State = t.Node & {
       filename: string
     }
   }
+  addHelper: (name: string) => void
 }
 
 type GetParamsSe<T> = T extends (a: any, a1: infer A) => any ? A : never

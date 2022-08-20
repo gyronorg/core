@@ -1,6 +1,7 @@
 import * as t from '@babel/types'
 import { Visitor, NodePath } from '@babel/core'
 import { hashIds } from './hmr'
+import { addNamed } from '@babel/helper-module-imports'
 
 const hasJSX = (parentPath: NodePath<t.Program>) => {
   let fileHasJSX = false
@@ -24,17 +25,9 @@ export default {
     enter(path) {
       if (hasJSX(path)) {
         const importNames = ['h']
-        const specifiers: Array<
-          | t.ImportSpecifier
-          | t.ImportDefaultSpecifier
-          | t.ImportNamespaceSpecifier
-        > = importNames.map((name) => {
-          return t.importSpecifier(t.identifier(`_${name}`), t.identifier(name))
+        importNames.forEach((name) => {
+          return addNamed(path, name, 'gyron', { nameHint: `_${name}` })
         })
-        path.unshiftContainer(
-          'body',
-          t.importDeclaration(specifiers, t.stringLiteral('gyron'))
-        )
       }
     },
     exit() {
