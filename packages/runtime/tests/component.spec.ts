@@ -435,7 +435,7 @@ describe('Component', () => {
         null,
         h(() => {
           onDestroyed(destroyed)
-          return () => h('div', 'gyron')
+          return () => h('div', 'gyron.js')
         })
       )
     }

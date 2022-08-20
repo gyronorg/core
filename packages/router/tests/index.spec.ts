@@ -324,9 +324,9 @@ describe('next', () => {
   })
 
   test('query', () => {
-    const { id, from } = generateQuery('/foo?id=admin&from=gyron')
+    const { id, from } = generateQuery('/foo?id=admin&from=gyron.js')
     expect(id).toBe('admin')
-    expect(from).toBe('gyron')
+    expect(from).toBe('gyron.js')
   })
 
   test('query in component', async () => {

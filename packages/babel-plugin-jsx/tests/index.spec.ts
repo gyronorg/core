@@ -8,7 +8,7 @@ describe('JSX', () => {
   })
   test('transform jsx', () => {
     const file = `
-      import { useValue } from 'gyron'
+      import { useValue } from '@gyron/runtime'
 
       function app() {
         const content = useValue(0)
@@ -37,7 +37,7 @@ describe('JSX', () => {
 
   test('transform Multiple', () => {
     const file = `
-      import { useValue } from 'gyron'
+      import { useValue } from '@gyron/runtime'
 
       function app() {
         const content = useValue(0)

@@ -7,7 +7,6 @@ import transformJsx from './transformJsx'
 import transformSetup from './setup'
 import transformProps from './destructuring'
 import * as t from '@babel/types'
-import path from 'path'
 
 export type { State } from './transformJsx'
 
@@ -25,9 +24,6 @@ export const BabelDoJsx = {
   visitor: visitor,
 }
 
-export default ((_, __, file) => {
-  if (['.jsx', '.tsx'].includes(path.extname(file))) {
-    return BabelDoJsx
-  }
-  return {}
+export default (() => {
+  return BabelDoJsx
 }) as PluginItem

@@ -1,3 +1,6 @@
+import type { Component } from 'packages/runtime/src/component'
+import type { Lifecycle } from 'packages/runtime/src/lifecycle'
+
 export type Noop = () => void
 
 export function keys(o: any) {
@@ -399,4 +402,15 @@ export function isEventProps(name: string) {
 
 export function normalizeEventName(name: string) {
   return name.slice(2).toLocaleLowerCase()
+}
+
+export function initialLifecycle(component: Component, key: keyof Lifecycle) {
+  if (!component.lifecycle) {
+    component.lifecycle = {
+      [key]: new Set(),
+    }
+  }
+  if (!component.lifecycle[key]) {
+    component.lifecycle[key] = new Set()
+  }
 }

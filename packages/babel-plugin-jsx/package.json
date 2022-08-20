@@ -32,6 +32,7 @@
     "@babel/plugin-syntax-jsx": "^7.16.7",
     "@babel/plugin-transform-typescript": "^7.17.12",
     "@gyron/shared": "^0.0.16",
+    "@gyron/runtime": "^0.0.16",
     "gyron": "^0.0.16"
   }
 }

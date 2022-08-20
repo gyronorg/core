@@ -1,5 +1,5 @@
 import { Component, VNode, RenderElement } from 'packages/gyron/src'
-import { isArray, isSet } from '@gyron/shared'
+import { initialLifecycle, isArray, isSet } from '@gyron/shared'
 
 function setSelectValue(el: HTMLSelectElement, value: any) {
   const isMultiple = el.multiple
@@ -53,6 +53,7 @@ function selectElementControlled(el: RenderElement, value: any, vnode: VNode) {
     if (component.mounted) {
       setSelectValue(el as HTMLSelectElement, value)
     } else {
+      initialLifecycle(component, 'afterMounts')
       component.lifecycle.afterMounts.add(
         setSelectValue.bind(null, el as HTMLSelectElement, value)
       )

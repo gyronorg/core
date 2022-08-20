@@ -1,7 +1,7 @@
-import { createInstance, Element, nextRender, useValue } from 'gyron'
+import { createInstance, Element, nextRender, useValue } from '@gyron/runtime'
 import { noop } from '@gyron/shared'
 
-describe('Demo', () => {
+describe('demo', () => {
   test('example basic', () => {
     const app = <span>test</span>
     expect(typeof app.flag).toBe('symbol')

@@ -1,4 +1,4 @@
-import { isBoolean } from '@gyron/shared'
+import { initialLifecycle, isBoolean } from '@gyron/shared'
 import {
   getCurrentComponent,
   callWithErrorHandling,
@@ -49,17 +49,6 @@ function wrapLifecycle(component: Component, type: keyof Lifecycle) {
   }
 
   return wrapResult
-}
-
-function initialLifecycle(component: Component, key: keyof Lifecycle) {
-  if (!component.lifecycle) {
-    component.lifecycle = {
-      [key]: new Set(),
-    }
-  }
-  if (!component.lifecycle[key]) {
-    component.lifecycle[key] = new Set()
-  }
 }
 
 /**

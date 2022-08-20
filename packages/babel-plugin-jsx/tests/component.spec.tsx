@@ -1,4 +1,4 @@
-import { createInstance, FC, FCA, nextRender, useValue } from 'gyron'
+import { createInstance, FC, FCA, nextRender, useValue } from '@gyron/runtime'
 import { trim } from './util'
 
 describe('Component TSX', () => {
