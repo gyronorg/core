@@ -12,7 +12,7 @@
     <img alt="npm" src="https://img.shields.io/npm/l/@gyron/runtime?style=flat-square">
   </a>
   <a href="https://codecov.io/gh/Linkontoask/gyron">
-    <img src="https://codecov.io/gh/Linkontoask/gyron/branch/master/graph/badge.svg?token=M8YC2QSBFY"/>
+    <img src="https://codecov.io/gh/gyronorg/core/branch/main/graph/badge.svg?token=M8YC2QSBFY"/>
   </a>
 </p>
 
