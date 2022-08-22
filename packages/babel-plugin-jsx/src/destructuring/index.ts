@@ -14,11 +14,11 @@ function transformParamsToUpdateExpression(
     path.isProgram()
   ) as NodePath<t.Program>
   if (program) {
-    // 第一步，导入 onBeforeUpdate
+    // 1, import onBeforeUpdate
     addNamed(program, 'onBeforeUpdate', 'gyron', {
       nameHint: '_onBeforeUpdate',
     })
-    // 生成辅助代码
+    // 2, generate the auxiliary code
     const destructuring = new DestructuringTransformer({
       scope: path.scope,
       arrayLikeIsIterable: true,
