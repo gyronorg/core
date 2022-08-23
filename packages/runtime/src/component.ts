@@ -414,8 +414,8 @@ export function FCA<
 
 /**
  * Define a component that is primarily used for type derivation in typescript
- * import { FC } from 'gyron'
  * ```ts
+ * import { FC } from 'gyron'
  * interface Props {
  *   count: number
  * }
