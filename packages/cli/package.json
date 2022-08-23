@@ -5,7 +5,7 @@
   "bin": {
     "gyron": "dist/index.js"
   },
-  "version": "0.0.16",
+  "version": "0.0.17-alpha.1",
   "license": "MIT",
   "engines": {
     "node": ">= 16"
