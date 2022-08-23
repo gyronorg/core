@@ -14,8 +14,6 @@ import {
   RouterHookBeforeEach,
 } from '../src/event'
 
-type GetParams<T> = T extends (...args: infer K) => any ? K : never
-
 export function generate(paths?: string[]) {
   return paths.map<RouteRecord>((path) => {
     return {
@@ -37,7 +35,7 @@ describe('each', () => {
   })
 
   test('before each', async () => {
-    const fn = jest.fn<void, GetParams<RouterHookBeforeEach>>(
+    const fn = jest.fn<void, Parameters<RouterHookBeforeEach>>(
       (from, to, next) => {
         next()
       }
@@ -54,7 +52,7 @@ describe('each', () => {
   })
 
   test('after each', async () => {
-    const fn = jest.fn<void, GetParams<RouterHookAfterEach>>()
+    const fn = jest.fn<void, Parameters<RouterHookAfterEach>>()
     const { extra: router } = createMemoryRouter()
     router.nestedRoutes = generate(['/', '/foo'])
     router.addHook('afterEach', fn)
