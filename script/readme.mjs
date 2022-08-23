@@ -9,9 +9,18 @@ const root = resolve(__dirname, '../')
 
 const packages = fs.readdirSync(resolve(root, 'packages'))
 
+const action = process.argv[2].slice(1)
+
 packages.forEach((item) => {
-  fs.copyFileSync(
-    resolve(root, 'README.md'),
-    resolve(root, 'packages', item, 'README.md')
-  )
+  switch (action) {
+    case 'c':
+      fs.copyFileSync(
+        resolve(root, 'README.md'),
+        resolve(root, 'packages', item, 'README.md')
+      )
+      break
+    case 'r':
+      fs.rmSync(resolve(root, 'packages', item, 'README.md'))
+      break
+  }
 })
