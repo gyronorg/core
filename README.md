@@ -91,25 +91,6 @@ const App = () => {
 | [shared](./packages/shared/)                     | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/shared?style=flat-square)           | 公共工具函数                                                        |
 | [sync](./packages/sync/)                         | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/sync?style=flat-square)             | 同步第三方数据工具函数，让第三方数据具有反应性                      |
 
-## 响应式
-
-`Gyron` 使用了 `monorepo` 的开发模式，可以将其中的 `@gyron/reactivity` 模版单独拿出来使用
-
-```javascript
-import { useValue, useEffect } from '@gyron/reactivity'
-
-const original = useValue(0)
-let dummy
-useEffect(() => {
-  dummy = original.value
-})
-
-expect(dummy).toBe(0)
-
-original.value = 1
-expect(dummy).toBe(1)
-```
-
 ### 例子
 
 - 浏览器中可以使用 `esm` 格式的静态资源，为什么组件返回一个函数可以阅读[组件](https://gyron.cc/docs/component#%E6%9C%89%E7%8A%B6%E6%80%81%E7%BB%84%E4%BB%B6%20%E5%92%8C%20%E6%97%A0%E7%8A%B6%E6%80%81%E7%BB%84%E4%BB%B6)文档
