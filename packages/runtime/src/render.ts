@@ -269,7 +269,11 @@ function patchChildren(
     } else {
       // if the fragment node does not have a dom instance, use the container
       const el = (n2.el = n1.el)
-      patchNonKeyed(c1, c2, el || container, anchor, parentComponent, isSvg)
+      if (c1) {
+        patchNonKeyed(c1, c2, el || container, anchor, parentComponent, isSvg)
+      } else {
+        mountChildren(c2, el || container, anchor, 0, parentComponent, isSvg)
+      }
     }
   }
 }

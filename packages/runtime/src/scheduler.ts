@@ -13,6 +13,7 @@ const queue: SchedulerJob[] = []
 const resolvedPromise: Promise<unknown> = Promise.resolve()
 const frameYield = 5
 const delaysTime = 1000 / 60
+const pendingJobPromise: Promise<unknown>[] = []
 let currentJobPromise: Promise<unknown>
 let startTime = -1
 
@@ -47,7 +48,9 @@ export enum JobPriority {
  * @returns
  */
 export function nextRender(fn?: Noop) {
-  const p = currentJobPromise || resolvedPromise
+  const p = Promise.all(pendingJobPromise || [resolvedPromise]).finally(() => {
+    pendingJobPromise.length = 0
+  })
   return fn ? p.then(fn) : p
 }
 
@@ -71,6 +74,7 @@ export function pushQueueJob(job: SchedulerJob) {
   }
 
   currentJobPromise = resolvedPromise.then(flushJobs)
+  pendingJobPromise.push(currentJobPromise)
 }
 
 export function flushJobs() {
@@ -79,8 +83,8 @@ export function flushJobs() {
     // opt the behavior of multiple components when synchronized updates block the host process,
     // returning execution to the host when the threshold is exceeded and continuing the
     // component update task when the host environment is free
-    workLoop()
-  } finally {
+    return workLoop()
+  } catch {
     queue.length = 0
   }
 }
@@ -129,31 +133,37 @@ function shouldYieldHost() {
 }
 
 function workLoop(pendingJobs?: SchedulerJob[]) {
-  queue.sort((a, b) => a.id - b.id)
-  const jobs = pendingJobs || queue
+  return new Promise<void>((resolve) => {
+    queue.sort((a, b) => a.id - b.id)
+    const jobs = pendingJobs || queue
 
-  // TODO use pop method
-  let currentJob = jobs.shift()
-  while (currentJob) {
-    callWithErrorHandling(
-      currentJob,
-      currentJob.component,
-      ErrorHandlingType.Scheduler
-    )
-    if (shouldYieldHost() && jobs.length > 0) {
-      // if there are still unUpdated tasks, put the unUpdated tasks to continue when the browser is free
-      currentJobPromise = new Promise<void>((resolve) => {
-        startTime = now()
-        // identify suitable opportunities to perform outstanding updates again
-        const pendingJobs = [...jobs]
-        timeout(() => {
-          workLoop(pendingJobs).then(resolve)
-        }, delaysTime)
-      })
-      break
+    let currentJob = jobs.shift()
+    let idleJob: Promise<void>
+    while (currentJob) {
+      callWithErrorHandling(
+        currentJob,
+        currentJob.component,
+        ErrorHandlingType.Scheduler
+      )
+      if (shouldYieldHost() && jobs.length > 0) {
+        // if there are still unUpdated tasks, put the unUpdated tasks to continue when the browser is free
+        idleJob = new Promise<void>((resolve) => {
+          startTime = now()
+          // identify suitable opportunities to perform outstanding updates again
+          const pendingJobs = [...jobs]
+          timeout(() => {
+            workLoop(pendingJobs).then(resolve)
+          }, delaysTime)
+          jobs.length = 0
+        })
+        break
+      }
+      currentJob = jobs.shift()
     }
-    currentJob = jobs.shift()
-  }
-
-  return currentJobPromise
+    if (idleJob) {
+      idleJob.then(resolve)
+    } else {
+      resolve()
+    }
+  })
 }

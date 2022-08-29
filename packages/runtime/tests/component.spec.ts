@@ -18,7 +18,6 @@ import {
   forceUpdate,
   registerWarnHandler,
   onAfterUpdate,
-  isVNodeComponent,
   registerErrorHandler,
   useWatch,
   keepComponent,
@@ -511,23 +510,6 @@ describe('Component', () => {
     count.value = 2
     await nextRender()
     expect(container.innerHTML).toBe('<span>2</span>')
-  })
-
-  test('clear component update id', async () => {
-    const list = useValue([])
-    const fn = jest.fn()
-    const App = h(() => {
-      onAfterUpdate(fn)
-      return h('div', null, list.value.join('-'))
-    })
-    createInstance(App).render(container)
-    // clear update id
-    App.component.update.id = null
-    list.value.push(0)
-    nextRender(() => {
-      expect(fn).toHaveBeenCalledTimes(1)
-    })
-    expect(isVNodeComponent(App)).toBe(true)
   })
 
   test('keyed component props', async () => {
