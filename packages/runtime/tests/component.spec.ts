@@ -514,8 +514,6 @@ describe('Component', () => {
   })
 
   test('clear component update id', async () => {
-    // use resolvedPromise
-    await nextRender()
     const list = useValue([])
     const fn = jest.fn()
     const App = h(() => {
@@ -527,7 +525,7 @@ describe('Component', () => {
     App.component.update.id = null
     list.value.push(0)
     nextRender(() => {
-      expect(fn).toHaveBeenCalledTimes(2)
+      expect(fn).toHaveBeenCalledTimes(1)
     })
     expect(isVNodeComponent(App)).toBe(true)
   })

@@ -120,7 +120,7 @@ export function onDestroyed(callback: LifecycleCallback) {
 
 /**
  * Lifecycle hooks that register a callback function to be called before the component is updated.
- * Updates to the `Falsy` organisation itself and to child components can be returned.
+ * Returning `Falsy` prevents updates to itself and sub components.
  * ```js
  * import { h, onBeforeUpdate } from 'gyron'
  *

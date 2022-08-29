@@ -14,7 +14,7 @@ export const ErrorType = Symbol.for('gyron.error-handler')
 export const WarnType = Symbol.for('gyron.warn-handler')
 
 /**
- * Register an event listener for errors and the registered callbackfunction
+ * Register an event listener for errors and the registered callback function
  * will be executed when an error occurs in the component.
  * ```js
  * import { registerErrorHandler, h } from 'gyron'
@@ -100,8 +100,8 @@ function manualHandlerBase(
  * })
  * ```
  * @api boundaries
- * @param error Error message
- * @param component Component
+ * @param error Error log message
+ * @param component The component instance, which can be obtained via the second parameter of the component function.
  */
 export function manualErrorHandler(
   error: Error | unknown,
@@ -121,9 +121,9 @@ export function manualErrorHandler(
  * })
  * ```
  * @api boundaries
- * @param warn string
- * @param component Component
+ * @param warn Warning log message.
+ * @param component The component instance, which can be obtained via the second parameter of the component function.
  */
-export function manualWarnHandler(warn: Error | unknown, component: Component) {
+export function manualWarnHandler(warn: string, component: Component) {
   return manualHandlerBase('Warn', warn, component)
 }

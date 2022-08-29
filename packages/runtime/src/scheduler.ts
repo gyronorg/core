@@ -17,7 +17,7 @@ let currentJobPromise: Promise<unknown>
 let startTime = -1
 
 /**
- * TODO Update tasks need to be prioritised, with those of higher priority being executed first, followed by those of lower priority.
+ * TODO Update tasks need to be prioritized, with those of higher priority being executed first, followed by those of lower priority.
  */
 export enum JobPriority {
   NORMAL_TIMEOUT = 0,
@@ -59,7 +59,7 @@ export function pushQueueJob(job: SchedulerJob) {
     // array.prototype.splice will trigger update multiple times, the first time the data is incorrect, see Proxy splice set
     const index = queue.findIndex((item) => item.id === job.id)
     if (index >= 0) {
-      // prioritise the same component update to completion.
+      // priorities the same component update to completion.
       // when multiple updates of the same component are found in a synchronous task,
       // insert its next task at the end of an update task of the same type.
       // jobId = 3; queue = [1, 3, 5]
@@ -76,11 +76,11 @@ export function pushQueueJob(job: SchedulerJob) {
 export function flushJobs() {
   try {
     startTime = now()
-    // optimise the behaviour of multiple components when synchronised updates block the host process,
+    // opt the behavior of multiple components when synchronized updates block the host process,
     // returning execution to the host when the threshold is exceeded and continuing the
     // component update task when the host environment is free
     workLoop()
-  } catch {
+  } finally {
     queue.length = 0
   }
 }
@@ -140,21 +140,20 @@ function workLoop(pendingJobs?: SchedulerJob[]) {
       currentJob.component,
       ErrorHandlingType.Scheduler
     )
-    if (shouldYieldHost()) {
+    if (shouldYieldHost() && jobs.length > 0) {
       // if there are still unUpdated tasks, put the unUpdated tasks to continue when the browser is free
-      if (queue.length) {
-        currentJobPromise = new Promise<void>((resolve) => {
-          startTime = now()
-          // identify suitable opportunities to perform outstanding updates again
-          const pendingJobs = [...queue]
-          timeout(() => {
-            workLoop(pendingJobs)
-            resolve()
-          }, delaysTime)
-        })
-      }
+      currentJobPromise = new Promise<void>((resolve) => {
+        startTime = now()
+        // identify suitable opportunities to perform outstanding updates again
+        const pendingJobs = [...jobs]
+        timeout(() => {
+          workLoop(pendingJobs).then(resolve)
+        }, delaysTime)
+      })
       break
     }
     currentJob = jobs.shift()
   }
+
+  return currentJobPromise
 }

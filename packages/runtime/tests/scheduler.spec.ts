@@ -41,7 +41,6 @@ describe('scheduler', () => {
     createInstance(App).render(container)
     update[0].value = update[1].value = 1
     await nextRender()
-    await nextRender()
     expect(container.innerHTML).toBe('<div>2</div>')
   })
 })

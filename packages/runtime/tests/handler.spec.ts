@@ -32,15 +32,15 @@ describe('Handler Error', () => {
     expect(fn).toHaveBeenCalledTimes(1)
   })
 
-  test('error to warn stack', () => {
-    const fn = jest.fn(({ stack }) => {
-      expect(stack).toContain('Error: Uncaught exceptions')
+  test('error to warn message', () => {
+    const fn = jest.fn(({ message }) => {
+      expect(message).toBe('Uncaught exceptions')
     })
     createInstance(
       h(() => {
         registerWarnHandler(fn)
         const component = getCurrentComponent()
-        manualWarnHandler(new Error('Uncaught exceptions'), component)
+        manualWarnHandler('Uncaught exceptions', component)
 
         return h('div')
       })
@@ -55,7 +55,7 @@ describe('Handler Error', () => {
     createInstance(
       h(() => {
         const component = getCurrentComponent()
-        manualWarnHandler(new Error('Uncaught exceptions'), component)
+        manualWarnHandler('Uncaught exceptions', component)
 
         return h('div')
       })
