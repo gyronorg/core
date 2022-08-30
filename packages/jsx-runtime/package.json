@@ -16,7 +16,7 @@
     "build": "yarn build:dts && yarn build:esm && yarn build:cjs",
     "build:esm": "esbuild src/index.ts --bundle --sourcemap --minify --outfile=dist/esm/index.js --format=esm --platform=node --external:@gyron/* --define:__DEV__=false --define:__WARN__=true",
     "build:cjs": "esbuild src/index.ts --bundle --sourcemap --minify --outfile=dist/cjs/index.js --format=cjs --platform=node --external:@gyron/* --define:__DEV__=false --define:__WARN__=true",
-    "build:dts": "rollup -c"
+    "build:dts": "rollup -c ../../rollup.config.js"
   },
   "dependencies": {
     "@gyron/runtime": "^0.0.17-alpha.1",

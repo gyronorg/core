@@ -14,7 +14,7 @@
   "scripts": {
     "build": "yarn build:dts && yarn build:cjs",
     "build:cjs": "esbuild src/index.ts --bundle --sourcemap --outfile=dist/cjs/index.js --format=cjs --platform=node --external:@gyron/* --external:@babel/*",
-    "build:dts": "rollup -c",
+    "build:dts": "rollup -c ../../rollup.config.js",
     "test": "jest"
   },
   "devDependencies": {
