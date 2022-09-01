@@ -26,6 +26,17 @@ describe('Props', () => {
     expect(html).toBe('<div style="width: 10px"></div>')
   })
 
+  test('lower case style', async () => {
+    const html = await renderToString(
+      createVNode('div', {
+        style: {
+          textAlign: 'center',
+        },
+      })
+    )
+    expect(html).toBe('<div style="text-align: center"></div>')
+  })
+
   test('className to class', async () => {
     const html = await renderToString(
       createVNode('div', {

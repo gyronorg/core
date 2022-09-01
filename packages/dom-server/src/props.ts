@@ -8,7 +8,9 @@ function renderStyle(buffer: SSRBuffer, styles: string | object) {
   } else {
     const res = Object.entries(styles)
       .reduce((style, [key, value]) => {
-        style.push(`${key}: ${value}`)
+        style.push(
+          `${key.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())}: ${value}`
+        )
         return style
       }, [])
       .join('; ')
