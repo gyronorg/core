@@ -33,8 +33,6 @@ const getProto = <T extends CollectionTypes>(v: T): any =>
   Reflect.getPrototypeOf(v)
 
 function get(target: MapTypes, key: unknown) {
-  // #1772: readonly(useReactive(Map)) should return readonly + useReactive version
-  // of the value
   target = (target as any)[ReactiveFlags.RAW]
   const rawTarget = toRaw(target)
   const rawKey = toRaw(key)
@@ -48,8 +46,6 @@ function get(target: MapTypes, key: unknown) {
   } else if (has.call(rawTarget, rawKey)) {
     return target.get(rawKey)
   } else if (target !== rawTarget) {
-    // #3602 readonly(useReactive(Map))
-    // ensure that the nested useReactive `Map` can do tracking for itself
     target.get(key)
   }
 }
@@ -114,8 +110,6 @@ function deleteEntry(this: CollectionTypes, key: unknown) {
     key = toRaw(key)
     hadKey = has.call(target, key)
   }
-
-  // forward the operation before queueing reactions
   const result = target.delete(key)
   if (hadKey) {
     trigger(target, key, TriggerTypes.DELETE)
@@ -126,7 +120,6 @@ function deleteEntry(this: CollectionTypes, key: unknown) {
 function clear(this: IterableCollections) {
   const target = toRaw(this)
   const hadItems = target.size !== 0
-  // forward the operation before queueing reactions
   const result = target.clear()
   if (hadItems) {
     trigger(target, undefined, TriggerTypes.CLEAR)
@@ -145,9 +138,6 @@ function createForEach() {
     const rawTarget = toRaw(target)
     track(rawTarget, ITERATE_KEY, TrackTypes.ITERATE)
     return target.forEach((value: unknown, key: unknown) => {
-      // important: make sure the callback is
-      // 1. invoked with the useReactive map as `this` and 3rd arg
-      // 2. the value received should be a corresponding useReactive/readonly.
       return callback.call(thisArg, value, key, observed)
     })
   }
@@ -173,7 +163,6 @@ function createIterableMethod(method: string | symbol) {
     // return a wrapped iterator which returns observed versions of the
     // values emitted from the real iterator
     return {
-      // iterator protocol
       next() {
         const { value, done } = innerIterator.next()
         return done
@@ -183,7 +172,6 @@ function createIterableMethod(method: string | symbol) {
               done,
             }
       },
-      // iterable protocol
       [Symbol.iterator]() {
         return this
       },

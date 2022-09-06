@@ -67,7 +67,7 @@ export function isResponsive(n: any): n is { value: any } {
 }
 
 /**
- * Access to the original data of the object being proxied is very useful in complex objects.
+ * Access to the original data of the object being proxy is very useful in complex objects.
  * In `useValue` the value object is deconstructed and its original value returned.
  * ```javascript
  * import { useValue } from 'gyron'
@@ -219,7 +219,7 @@ const mutableHandlers: ProxyHandler<object> = {
  * @api reactivity
  * @param target The data that needs to be responded to.
  * @param readonly Whether the data is read-only.
- * @returns A proxied object, internally proxied using a `Proxy`.
+ * @returns A proxy object, internally proxy using a `Proxy`.
  */
 export function useReactive<T extends object>(
   target: T,
