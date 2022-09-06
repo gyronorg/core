@@ -19,9 +19,7 @@ export type State = t.Node & {
   addHelper: (name: string) => void
 }
 
-export type CallExpressionArgument = Array<
-  t.Expression | t.SpreadElement | t.JSXNamespacedName | t.ArgumentPlaceholder
->
+export type CallExpressionArgument = Parameters<typeof t.callExpression>[1]
 
 function transform(path: NodePath<t.JSXElement>, children: any) {
   const openElement = path.get('openingElement').node
