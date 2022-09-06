@@ -19,15 +19,15 @@ export type State = t.Node & {
   addHelper: (name: string) => void
 }
 
-type GetParamsSe<T> = T extends (a: any, a1: infer A) => any ? A : never
+export type CallExpressionArgument = Array<
+  t.Expression | t.SpreadElement | t.JSXNamespacedName | t.ArgumentPlaceholder
+>
 
 function transform(path: NodePath<t.JSXElement>, children: any) {
   const openElement = path.get('openingElement').node
   const context = transformAttr(openElement.attributes)
 
-  const args: GetParamsSe<typeof t.callExpression> = [
-    t.objectExpression(context),
-  ]
+  const args: CallExpressionArgument = [t.objectExpression(context)]
   if (isArray(children) && children.length === 1) {
     args.push(children[0])
   } else {
@@ -141,7 +141,7 @@ function transformJSXElement(path: NodePath<t.JSXElement>, state: State) {
 
 function transformJSXFragment(path: NodePath<t.JSXFragment>, state: State) {
   const children = getChildren(path.get('children'), state)
-  const args: GetParamsSe<typeof t.callExpression> = []
+  const args: CallExpressionArgument = []
   if (isArray(children) && children.length === 1) {
     args.push(children[0])
   } else {
