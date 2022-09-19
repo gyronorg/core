@@ -1,15 +1,14 @@
 const { pathsToModuleNameMapper } = require('ts-jest')
-const { compilerOptions } = require('../../tsconfig.json')
+const { compilerOptions } = require('./tsconfig.json')
 
 module.exports = {
-  transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-  },
+  preset: 'ts-jest',
+  testMatch: [`${process.env.PWD}/tests/**/(*.)+(spec|test).[jt]s?(x)`],
   testEnvironment: 'jsdom',
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: '<rootDir>../../',
+    prefix: '<rootDir>',
   }),
-  collectCoverageFrom: ['src/*.ts'],
+  collectCoverageFrom: [`${process.env.PWD}/src/**/*.ts`],
   globals: {
     __DEV__: true,
     __WARN__: false,
