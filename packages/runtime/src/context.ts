@@ -39,7 +39,7 @@ export function inject<T = unknown>(
  * const App = h(() => {
  *   const provide = useProvide()
  *   provide('data', 0)
- *   return () => h('div', 'hello world')
+ *   return h('div', 'hello world')
  * })
  * ```
  * @api context
@@ -63,7 +63,7 @@ export function useProvide<T = unknown>() {
  * const App = h(() => {
  *   const provide = useProvide()
  *   provide('data', 0)
- *   return () => h(Child)
+ *   return h(Child)
  * })
  * ```
  * @api context
@@ -81,13 +81,13 @@ export function useInject() {
  * const Child = h(() => {
  *   const context = useComponentContext()
  *   context['data'] // 0
- *   return () => h('div', 'child')
+ *   return h('div', 'child')
  * })
  *
  * const App = h(() => {
  *   const { context } = useComponentContext()
  *   context['data'] = 0
- *   return () => h(Child)
+ *   return h(Child)
  * })
  * ```
  * @api context

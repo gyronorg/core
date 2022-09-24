@@ -41,7 +41,7 @@ export enum JobPriority {
  *     })
  *     console.log(ref.current.innerText) // 0
  *   })
- *   return () => h('div', { ref }, count.value)
+ *   return h('div', { ref }, count.value)
  * })
  *```
  * @param fn The next scale call function.

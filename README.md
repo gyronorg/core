@@ -106,6 +106,7 @@ const App = () => {
   } from 'https://cdn.skypack.dev/@gyron/runtime'
   const App = () => {
     const content = useValue(0)
+    // 使用 babel-plugin-jsx 不需要返回一个函数，详情参考 https://gyron.cc/core/jsx/getting-started#%E5%8F%82%E6%95%B0
     return () =>
       h(
         'button',

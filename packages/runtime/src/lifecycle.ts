@@ -60,7 +60,7 @@ function wrapLifecycle(component: Component, type: keyof Lifecycle) {
  *   onBeforeMount((component) => {
  *     component // self
  *   })
- *   return () => h('div', 'hello world')
+ *   return h('div', 'hello world')
  * })
  * ```
  * @api component
@@ -82,7 +82,7 @@ export function onBeforeMount(callback: LifecycleCallback) {
  *   onAfterMount((component) => {
  *     component.$el // HTMLDivElement
  *   })
- *   return () => h('div', 'hello world')
+ *   return h('div', 'hello world')
  * })
  * ```
  * @api component
@@ -106,7 +106,7 @@ export function onAfterMount(callback: LifecycleCallback) {
  *   onDestroyed((component) => {
  *     clearInterval(timer)
  *   })
- *   return () => h('div', 'hello world')
+ *   return h('div', 'hello world')
  * })
  * ```
  * @api component
@@ -128,7 +128,7 @@ export function onDestroyed(callback: LifecycleCallback) {
  *   onBeforeUpdate((prevProps, props) => {
  *     return false // The view will not be updated even when changes occur
  *   })
- *   return () => h('div', 'hello world')
+ *   return h('div', 'hello world')
  * })
  * ```
  * @api component
@@ -151,7 +151,7 @@ export function onBeforeUpdate<T extends object>(
  *   onAfterUpdate((prevProps, props) => {
  *     component // self
  *   })
- *   return () => h('div', 'hello world')
+ *   return h('div', 'hello world')
  * })
  * ```
  * @api component

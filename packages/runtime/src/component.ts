@@ -141,7 +141,7 @@ export function createComponentInstance(
  *
  * const App = h(() => {
  *   const component = getCurrentComponent()
- *   return () => h('div', 'hello world')
+ *   return h('div', 'hello world')
  * })
  * ```
  * @api component
@@ -264,10 +264,7 @@ export function defineProps<
  *
  *   ref.current // {name: {value: 'foo'}}
  *
- *   return () =>
- *     h(Child, {
- *       ref,
- *     })
+ *   return h(Child, { ref })
  * })
  * ```
  * @line 14
@@ -325,9 +322,7 @@ export function isAsyncComponent(
  *   count: number
  * }
  *
- * const Child = FCA<Props>(() => {
- *   return () => import('./Son')
- * })
+ * const Child = FCA<Props>(() => import('./Son'))
  *
  * export const App = FC(() => {
  *   return <Child fallback={<span>loading...</span>} count={1} />

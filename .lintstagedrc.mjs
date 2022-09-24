@@ -19,10 +19,7 @@ function test(files) {
       return prev
     }, {})
 
-  return Object.entries(packages).map(
-    ([key, value]) =>
-      `jest --config packages/${key}/jest.config.js ${value.join(' ')}`
-  )
+  return `jest --config jest.config.js --colors ${Object.values(packages).join(' ')}`
 }
 
 const lint = {
