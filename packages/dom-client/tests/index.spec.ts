@@ -108,4 +108,20 @@ describe('Mount Props', () => {
     patchProps(container, n1, n2)
     expect(container.getAttribute('disabled')).toBeNull()
   })
+
+  test('patch style object', () => {
+    const n1 = createVNode('div', {
+      style: {
+        color: 'red',
+      },
+    })
+    const n2 = createVNode('div', {
+      style: {
+        color: 'red',
+      },
+    })
+    mountProps(container, n1)
+    patchProps(container, n1, n2)
+    expect(container.style.color).toBe('red')
+  })
 })

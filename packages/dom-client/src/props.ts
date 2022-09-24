@@ -2,6 +2,8 @@ import {
   diffWord,
   isBoolean,
   isEventProps,
+  isNull,
+  isObject,
   isString,
   keys,
   normalizeEventName,
@@ -102,8 +104,8 @@ function patchClass(
 
 function patchStyle(
   el: HTMLElement | SVGElement,
-  oldValue: Style,
-  value: Style,
+  oldValue: Style | null,
+  value: Style | null,
   vnode: VNode
 ) {
   if (isString(value)) {
@@ -111,9 +113,21 @@ function patchStyle(
       setAttribute(el, 'style', value, vnode)
     }
   } else {
-    removeAttribute(el, 'style')
-    for (const [k, v] of Object.entries(value)) {
-      el.style[k] = v
+    if (isObject(value)) {
+      for (const [css, cssValue] of Object.entries(value)) {
+        if (!oldValue || oldValue[css] !== cssValue) {
+          el.style[css] = cssValue
+        }
+      }
+      if (isObject(oldValue)) {
+        for (const css in oldValue) {
+          if (!value[css]) {
+            el.style[css] = null
+          }
+        }
+      }
+    } else {
+      removeAttribute(el, 'style')
     }
   }
 }
