@@ -23,6 +23,14 @@ describe('Link', () => {
     app.destroy()
   })
 
+  test('link base string', async () => {
+    const router = createMemoryRouter({ base: '/console' })
+    app = createInstance(
+      h(() => h(Router, { router: router }, [h(Link, { to: 'foo' })]))
+    ).render(container)
+    expect(container.innerHTML).toBe('<a href="/console/foo"></a>')
+  })
+
   test('active class and style', async () => {
     const router = createMemoryRouter()
     app = createInstance(
