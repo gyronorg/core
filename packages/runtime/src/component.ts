@@ -404,7 +404,7 @@ export function FCA<
 
   ret.__loader = load
 
-  return ret as unknown as WrapperFunction<Props>
+  return ret as unknown as WrapperFunction<AsyncProps<Props>>
 }
 
 /**

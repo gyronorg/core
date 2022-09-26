@@ -82,7 +82,7 @@ export function isComment(node: Node): node is Comment {
   return node.nodeType === 8
 }
 
-export function isPromise(f: any): f is Promise<unknown> {
+export function isPromise<T = any>(f: any): f is Promise<T> {
   return isObject(f) && isFunction(f.then) && isFunction(f.catch)
 }
 
