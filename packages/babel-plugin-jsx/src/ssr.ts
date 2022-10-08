@@ -3,11 +3,19 @@ import { State } from './transformJsx'
 import { generateHash, insert } from './utils'
 import * as t from '@babel/types'
 
+export const hashSSR = []
+
 function insertSSRCode(
   path: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
   state: State
 ) {
   const { identifier, filepath } = generateHash(path, state)
+
+  if (hashSSR.includes(filepath + identifier.name)) {
+    return null
+  } else {
+    hashSSR.push(filepath + identifier.name)
+  }
 
   const ssrPath = t.expressionStatement(
     t.assignmentExpression(

@@ -1,6 +1,7 @@
 import * as t from '@babel/types'
 import { Visitor, NodePath } from '@babel/core'
 import { hashIds } from './hmr'
+import { hashSSR } from './ssr'
 import { addNamed } from '@babel/helper-module-imports'
 
 const hasJSX = (parentPath: NodePath<t.Program>) => {
@@ -33,6 +34,7 @@ export default {
     exit() {
       // clean up the cached hash values in the module so that the next hmr update will update them properly
       hashIds.length = 0
+      hashSSR.length = 0
     },
   },
 } as Visitor<t.Node>
