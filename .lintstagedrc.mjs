@@ -19,7 +19,23 @@ function test(files) {
       return prev
     }, {})
 
-  return `jest --config jest.config.js --colors ${Object.values(packages).join(' ')}`
+  const plugin = Object.entries(packages).filter(
+    ([key]) => key === 'babel-plugin-jsx'
+  )
+  const other = Object.entries(packages)
+    .filter(([key]) => key !== 'babel-plugin-jsx')
+    .map(([_, v]) => v)
+
+  return [
+    plugin.length
+      ? `jest --config packages/${plugin[0][0]}/jest.config.js ${plugin[0][1].join(
+          ' '
+        )}`
+      : null,
+    other.length
+      ? `jest --config jest.config.js --colors ${other.join(' ')}`
+      : null,
+  ].filter(Boolean)
 }
 
 const lint = {

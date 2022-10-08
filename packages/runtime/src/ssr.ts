@@ -2,6 +2,10 @@ import { extend } from '@gyron/shared'
 import { createInstance, Instance } from './instance'
 import { VNode } from './vnode'
 
+export interface SSRInstance extends Instance {
+  root: VNode
+}
+
 /**
  * Create a server-side application. The parameter `isSSR` is always true for all components in the server-side application.
  * ```javascript
@@ -19,10 +23,21 @@ import { VNode } from './vnode'
  * })
  * ```
  * @api global
- * @param vnode
- * @returns
+ * @param vnode VNode object
+ * @returns return SSRInstance object
  */
-export function createSSRInstance(vnode: VNode) {
+export function createSSRInstance(vnode: VNode): SSRInstance {
   const ssr = createInstance(vnode, true)
-  return extend<Instance & { root: VNode }>(ssr, { root: vnode })
+  return extend(ssr, { root: vnode })
+}
+
+export interface SSRContext {
+  message: {
+    uri: string
+    props: Record<string, object>
+  }[]
+}
+
+export function createSSRContext(context: SSRContext) {
+  return context
 }

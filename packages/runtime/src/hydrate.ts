@@ -20,6 +20,11 @@ import { mountComponent, patch } from './render'
 import { setRef } from './ref'
 import type { VNode, RenderElement } from './vnode'
 
+/**
+ * 找到 Fragment 结尾的标记，并返回结尾后的第一个节点
+ * @param node "[" 注释节点
+ * @returns 返回 "]" 节点后的第一个节点
+ */
 function locateClosingAsyncAnchor(node: Node | null): Node | null {
   let match = 0
   while (node) {

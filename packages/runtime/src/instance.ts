@@ -47,7 +47,9 @@ export function render(vnode: VNode, container: Element) {
  * @returns Application examples.
  */
 export function createInstance(root: VNode, isHydrate?: boolean) {
-  checkVersion()
+  if (__DEV__) {
+    checkVersion()
+  }
 
   const instance: Instance = {
     container: null,
@@ -63,12 +65,12 @@ export function createInstance(root: VNode, isHydrate?: boolean) {
       if (!instance.container) return null
 
       const firstChild = instance.container.firstChild
-      if (isHydrate) {
-        hydrate(firstChild, root)
-        return instance
-      }
-
-      if (firstChild && (firstChild as RenderElement).__vnode__) {
+      // hydration application in ssr mode
+      // or spa mode when reusing elements
+      if (
+        isHydrate ||
+        (firstChild && (firstChild as RenderElement).__vnode__)
+      ) {
         hydrate(firstChild, root)
         return instance
       }

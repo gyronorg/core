@@ -14,6 +14,7 @@ export function transform(file: string, setup?: boolean) {
     traverse(ast, visitor, null, {
       opts: {
         hmr: true,
+        ssr: true,
         setup: setup,
       },
       file: {

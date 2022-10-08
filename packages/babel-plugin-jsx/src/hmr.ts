@@ -1,30 +1,16 @@
 import * as t from '@babel/types'
 import { NodePath, Visitor } from '@babel/core'
 import { State } from './transformJsx'
-import { isBodyContainJSX } from './utils'
-import hash from 'hash-sum'
+import { generateHash, insert, isBodyContainJSX } from './utils'
 
+// pass enter JSXElement multiple timing
 export const hashIds = []
 
 function insertHMRCode(
   path: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
   state: State
 ) {
-  const id = path.get('id')
-  const filepath = state.file.opts.filename
-
-  let identifier: t.Identifier
-  if (path.isFunctionDeclaration()) {
-    identifier = path.node.id
-  } else {
-    if (id.isIdentifier()) {
-      identifier = id.node
-    } else {
-      return null
-    }
-  }
-
-  const hashId = hash(filepath + identifier.name)
+  const { hashId, identifier } = generateHash(path, state)
 
   if (hashIds.includes(hashId)) {
     return null
@@ -43,11 +29,8 @@ function insertHMRCode(
     path.isProgram()
   ) as NodePath<t.Program>
 
-  if (path.parentPath.isProgram()) {
-    path.parentPath.pushContainer('body', hmr)
-  } else {
-    path.parentPath.insertAfter(hmr)
-  }
+  insert(path, hmr)
+
   program.addComment(
     'trailing',
     ` #__hmr_comp_name:${identifier.name}-${hashId}`,

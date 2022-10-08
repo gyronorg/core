@@ -55,6 +55,9 @@ export interface ComponentSetupFunction<Props extends object = object> {
     | ComponentFunction<Props>
   __cache?: boolean
   __cacheIndex?: number
+  __ssr_uri?: string
+  __ssr_name?: string
+  __hmr_id?: string
   [k: string]: any
 }
 
@@ -538,6 +541,11 @@ export function normalizeComponent(
   parentComponent?: Component
 ) {
   const { type } = vnode
+
+  if (!type) {
+    console.warn('Failed to format component, "type" not found. node: ', vnode)
+    return
+  }
 
   let setup: ComponentSetupFunction
   if (isFunction(type)) {

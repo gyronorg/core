@@ -96,6 +96,10 @@ export interface VNode<T extends VNodeType = VNodeType> {
   component?: Component
   // children node
   children?: VNodeChildren
+  // development hydrate file path
+  __uri?: string
+  // development hydrate declaration identifier
+  __name?: string
 }
 
 export interface VNodeProps
@@ -185,6 +189,8 @@ export function createVNode(
   const key = VNodeProps.key || null
   let type: VNodeType = Text
   let nodeType: NodeType = NodeType.Text
+  let _uri: string
+  let _name: string
 
   if (isString(tag) && (!isUndefined(props) || !isUndefined(children))) {
     type = Element
@@ -193,6 +199,16 @@ export function createVNode(
     type = tag
     nodeType = NodeType.Component
     VNodeProps = omit(VNodeProps, 'key')
+
+    // ssr mode merge context to props
+    const __ssr_uri = (tag as ComponentSetupFunction).__ssr_uri
+    const __ssr_name = (tag as ComponentSetupFunction).__ssr_name
+    if (__ssr_uri) {
+      _uri = __ssr_uri
+    }
+    if (__ssr_name) {
+      _name = __ssr_name
+    }
   } else if (isArray(tag)) {
     type = Fragment
     nodeType = NodeType.Fragment
@@ -207,6 +223,8 @@ export function createVNode(
     flag: Gyron,
     props: VNodeProps,
     children: children,
+    __uri: _uri,
+    __name: _name,
   }
   if (type === Element) {
     vnode.tag = tag as string

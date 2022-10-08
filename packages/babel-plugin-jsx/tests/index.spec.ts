@@ -1,3 +1,5 @@
+import { isFunction } from '@gyron/shared'
+import { createVisitor, initialVisitor } from '../src/utils'
 import { transform, trim } from './util'
 
 describe('JSX', () => {
@@ -159,5 +161,29 @@ describe('JSX', () => {
     const file = `<A single></A>`
     const { code } = transform(file)
     expect(code).toContain('"single": true')
+  })
+
+  test('merge visitor', () => {
+    const enter = jest.fn()
+    const visitors = createVisitor(
+      initialVisitor(
+        {
+          JSX: {
+            enter: enter,
+          },
+        },
+        {
+          JSX: {
+            enter: enter,
+          },
+        }
+      )
+    )
+    expect(!isFunction(visitors.JSX)).toBe(true)
+    if (!isFunction(visitors.JSX)) {
+      expect(typeof visitors.JSX.enter).toBe('function')
+      visitors.JSX.enter.call(null, null, null)
+      expect(enter).toHaveBeenCalledTimes(2)
+    }
   })
 })

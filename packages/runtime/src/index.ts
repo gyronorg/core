@@ -76,6 +76,7 @@ export {
   manualWarnHandler,
 } from './boundaries'
 export { createRef } from './ref'
+export { hydrate } from './hydrate'
 
 export type { Primitive, Computed, Effect } from '@gyron/reactivity'
 export type {

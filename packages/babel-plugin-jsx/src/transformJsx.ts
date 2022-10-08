@@ -7,6 +7,7 @@ import * as t from '@babel/types'
 export interface Options {
   setup: boolean
   hmr: boolean
+  ssr: boolean
 }
 
 export type State = t.Node & {
