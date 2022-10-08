@@ -44,6 +44,7 @@ import { invokeLifecycle } from './lifecycle'
 import { setRef } from './ref'
 import { JobPriority, pushQueueJob, SchedulerJob } from './scheduler'
 import { isVNode, isVNodeComponent } from './shared'
+import { SSRMessage } from './ssr'
 import {
   Children,
   Comment,
@@ -325,7 +326,10 @@ function patchElement(
   }
 }
 
-function renderComponentEffect(component: Component) {
+function renderComponentEffect(
+  component: Component,
+  ssrMessage: SSRMessage = null
+) {
   function patchSubTree(prevTree: VNode, nextTree: VNode) {
     component.subTree = nextTree
     if (component.mounted) {
@@ -381,7 +385,7 @@ function renderComponentEffect(component: Component) {
         function hydrateSubTree() {
           const nextTree = renderComponent(component)
           component.subTree = nextTree as VNode
-          hydrate(component.vnode.el, component.subTree, component)
+          hydrate(component.vnode.el, component.subTree, component, ssrMessage)
 
           component.mounted = true
           // onAfterMount
@@ -429,7 +433,8 @@ export function mountComponent(
   vnode: VNode<ComponentSetupFunction>,
   container: RenderElement,
   anchor: RenderElement,
-  parentComponent: Component
+  parentComponent: Component,
+  ssrMessage: SSRMessage = null
 ) {
   vnode.anchor = anchor
 
@@ -452,7 +457,7 @@ export function mountComponent(
     setRef(component.exposed, component.props.ref)
   }
 
-  renderComponentEffect(component)
+  renderComponentEffect(component, ssrMessage)
 }
 
 function patchComponent(

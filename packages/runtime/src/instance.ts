@@ -1,13 +1,12 @@
-import { isString } from '@gyron/shared'
-import { querySelector } from '@gyron/dom-client'
 import { patch, unmount } from './render'
 import { hydrate } from './hydrate'
 import { checkVersion } from './version'
 import type { RenderElement, VNode } from './vnode'
+import { getUserContainer } from './shared'
 
 export interface Instance {
   container: Element | null
-  render: (containerOrSelector: string | HTMLElement) => Instance
+  render: (containerOrSelector: string | Element) => Instance
   destroy: () => Instance
 }
 
@@ -54,15 +53,15 @@ export function createInstance(root: VNode, isHydrate?: boolean) {
   const instance: Instance = {
     container: null,
     render(containerOrSelector) {
-      if (containerOrSelector) {
-        if (isString(containerOrSelector)) {
-          instance.container = querySelector(containerOrSelector)
-        } else {
-          instance.container = containerOrSelector
-        }
-      }
+      instance.container = getUserContainer(containerOrSelector)
 
-      if (!instance.container) return null
+      if (!instance.container) {
+        console.warn(
+          'Node not found in the document. The parameter is',
+          containerOrSelector
+        )
+        return null
+      }
 
       const firstChild = instance.container.firstChild
       // hydration application in ssr mode

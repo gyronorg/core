@@ -56,7 +56,6 @@ export interface ComponentSetupFunction<Props extends object = object> {
   __cache?: boolean
   __cacheIndex?: number
   __ssr_uri?: string
-  __ssr_name?: string
   __hmr_id?: string
   [k: string]: any
 }

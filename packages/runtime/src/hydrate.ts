@@ -1,4 +1,4 @@
-import { shouldValue, isComment } from '@gyron/shared'
+import { shouldValue, isComment, extend } from '@gyron/shared'
 import {
   createComment,
   insert,
@@ -19,13 +19,14 @@ import {
 import { mountComponent, patch } from './render'
 import { setRef } from './ref'
 import type { VNode, RenderElement } from './vnode'
+import { SSRMessage } from './ssr'
 
 /**
- * 找到 Fragment 结尾的标记，并返回结尾后的第一个节点
- * @param node "[" 注释节点
- * @returns 返回 "]" 节点后的第一个节点
+ * Find the tag at the end of the Fragment and return the first node after the end
+ * @param node "[" annotation node
+ * @returns returns the first node after the "]" node
  */
-function locateClosingAsyncAnchor(node: Node | null): Node | null {
+function locateClosingAsyncAnchor(node: Node): Node {
   let match = 0
   while (node) {
     node = nextSibling(node)
@@ -83,14 +84,15 @@ function mismatch(node: RenderElement, vnode: VNode, isFragment: boolean) {
 export function hydrate(
   node: RenderElement,
   vnode: VNode,
-  parentComponent: Component | null = null
+  parentComponent: Component = null,
+  ssrMessage: SSRMessage = null
 ) {
   const isFragmentStart = isComment(node) && node.data === '['
   const { type, children } = vnode
 
   vnode.el = node
 
-  let nextNode: RenderElement | null = null
+  let nextNode: RenderElement = null
   switch (type) {
     case Text:
       const textNode = node as Text
@@ -121,18 +123,22 @@ export function hydrate(
       if (!isFragmentStart) {
         nextNode = mismatch(node, vnode, isFragmentStart)
       } else {
-        nextNode = hydrateFragment(node, vnode, parentComponent)
+        nextNode = hydrateFragment(node, vnode, parentComponent, ssrMessage)
       }
       break
     case Element:
       if (node.nodeType !== NodeType.Element) {
         nextNode = mismatch(node, vnode, isFragmentStart)
       } else {
-        nextNode = hydrateElement(node, vnode, parentComponent)
+        nextNode = hydrateElement(node, vnode, parentComponent, ssrMessage)
       }
       break
     default:
-      hydrateComponent(vnode as VNode<ComponentSetupFunction>, parentComponent)
+      hydrateComponent(
+        vnode as VNode<ComponentSetupFunction>,
+        parentComponent,
+        ssrMessage
+      )
       nextNode = isFragmentStart
         ? locateClosingAsyncAnchor(node)
         : nextSibling(node)
@@ -143,16 +149,23 @@ export function hydrate(
 
 function hydrateComponent(
   vnode: VNode<ComponentSetupFunction>,
-  parentComponent: Component | null = null
+  parentComponent: Component = null,
+  ssrMessage: SSRMessage = null
 ) {
   const container = vnode.el.parentNode
-  mountComponent(vnode, container, vnode.anchor, parentComponent)
+  if (ssrMessage && vnode.__uri) {
+    // use server-side data hydrate client
+    const ssrProps = ssrMessage[vnode.__uri]
+    extend(vnode.props, ssrProps)
+  }
+  mountComponent(vnode, container, vnode.anchor, parentComponent, ssrMessage)
 }
 
 function hydrateFragment(
   node: RenderElement,
   vnode: VNode,
-  parentComponent: Component | null = null
+  parentComponent: Component = null,
+  ssrMessage: SSRMessage = null
 ) {
   const container = node.parentNode
 
@@ -164,7 +177,8 @@ function hydrateFragment(
     nextSibling(node),
     vnode,
     container,
-    parentComponent
+    parentComponent,
+    ssrMessage
   )
   if (next && isComment(next) && next.data === ']') {
     return nextSibling((vnode.anchor = next))
@@ -182,7 +196,8 @@ function hydrateFragment(
 function hydrateElement(
   node: RenderElement,
   vnode: VNode,
-  parentComponent: Component | null = null
+  parentComponent: Component = null,
+  ssrMessage: SSRMessage = null
 ) {
   const { props, children, el } = vnode
 
@@ -196,7 +211,7 @@ function hydrateElement(
 
   if (shouldValue(children)) {
     vnode.children = normalizeChildrenVNode(vnode)
-    hydrateChildren(node.firstChild, vnode, node, parentComponent)
+    hydrateChildren(node.firstChild, vnode, node, parentComponent, ssrMessage)
   }
 
   return nextSibling(node)
@@ -206,13 +221,14 @@ function hydrateChildren(
   node: RenderElement,
   parentVNode: VNode,
   container: RenderElement,
-  parentComponent: Component | null = null
+  parentComponent: Component = null,
+  ssrMessage: SSRMessage = null
 ) {
   const children = parentVNode.children as VNode[]
   for (let i = 0; i < children.length; i++) {
     const nodeChild = normalizeVNodeWithLink(children[i], parentVNode)
     if (node) {
-      node = hydrate(node, nodeChild, parentComponent)
+      node = hydrate(node, nodeChild, parentComponent, ssrMessage)
     } else if (nodeChild.type === Text) {
       continue
     } else {

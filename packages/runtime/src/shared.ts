@@ -1,4 +1,5 @@
-import { isFunction } from '@gyron/shared'
+import { isFunction, isString } from '@gyron/shared'
+import { querySelector } from '@gyron/dom-client'
 import { ComponentSetupFunction } from './component'
 import {
   VNode,
@@ -60,4 +61,12 @@ export function isVNodeFragment(n: VNode): n is VNode<typeof Fragment> {
  */
 export function isVNodeComponent(n: VNode): n is VNode<ComponentSetupFunction> {
   return isVNode(n) && isFunction(n.type) && n.nodeType === NodeType.Component
+}
+
+export function getUserContainer(containerOrSelector: string | Element) {
+  if (isString(containerOrSelector)) {
+    return querySelector(containerOrSelector)
+  } else {
+    return containerOrSelector
+  }
 }

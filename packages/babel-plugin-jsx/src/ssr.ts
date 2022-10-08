@@ -21,19 +21,11 @@ function insertSSRCode(
     t.assignmentExpression(
       '=',
       t.memberExpression(identifier, t.identifier('__ssr_uri')),
-      t.stringLiteral(filepath)
-    )
-  )
-  const ssrName = t.expressionStatement(
-    t.assignmentExpression(
-      '=',
-      t.memberExpression(identifier, t.identifier('__ssr_name')),
-      t.stringLiteral(identifier.name)
+      t.stringLiteral(filepath + '?name=' + identifier.name)
     )
   )
 
   insert(path, ssrPath)
-  insert(path, ssrName)
 }
 
 export default {

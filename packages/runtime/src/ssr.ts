@@ -1,5 +1,7 @@
 import { extend } from '@gyron/shared'
+import { hydrate } from './hydrate'
 import { createInstance, Instance } from './instance'
+import { getUserContainer } from './shared'
 import { VNode } from './vnode'
 
 export interface SSRInstance extends Instance {
@@ -25,19 +27,35 @@ export interface SSRInstance extends Instance {
  * @api global
  * @param vnode VNode object
  * @returns return SSRInstance object
+ * @deprecated createSSRInstance is deprecated and may be removed in a future version, please use createSSRContext instead
  */
 export function createSSRInstance(vnode: VNode): SSRInstance {
   const ssr = createInstance(vnode, true)
   return extend(ssr, { root: vnode })
 }
 
+export interface SSRMessage {
+  [key: string]: Record<string, any>
+}
+
 export interface SSRContext {
-  message: {
-    uri: string
-    props: Record<string, object>
-  }[]
+  message: SSRMessage
 }
 
 export function createSSRContext(context: SSRContext) {
-  return context
+  return {
+    render: (vnode: VNode, containerOrSelector: string | HTMLElement) => {
+      const container = getUserContainer(containerOrSelector)
+      if (!container) {
+        console.warn(
+          'Node not found in the document. The parameter is',
+          containerOrSelector
+        )
+        return null
+      }
+
+      hydrate(container.firstChild, vnode, null, context.message)
+      return vnode
+    },
+  }
 }

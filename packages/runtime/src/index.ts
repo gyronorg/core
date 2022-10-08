@@ -68,7 +68,7 @@ export {
   inject,
   provide,
 } from './context'
-export { createSSRInstance } from './ssr'
+export { createSSRInstance, createSSRContext } from './ssr'
 export {
   registerErrorHandler,
   registerWarnHandler,

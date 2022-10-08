@@ -1,3 +1,4 @@
+import { renderToString } from '@gyron/dom-server'
 import { noop, sleep } from '@gyron/shared'
 import {
   createSSRInstance,
@@ -10,6 +11,7 @@ import {
   FCA,
   createRef,
   onBeforeMount,
+  createSSRContext,
 } from '../src'
 
 function ssr(html: string, vnode: VNode) {
@@ -247,5 +249,27 @@ describe('SSR', () => {
     createSSRInstance(h(App)).render(container)
     await sleep(0)
     expect(fn).toHaveBeenCalled()
+  })
+
+  test('ssr context message in client', async () => {
+    const uri = 'demo/view/foo.tsx?name=App'
+    const container = document.createElement('div')
+    container.innerHTML = '<span>Hello Gyron</span>'
+
+    const App = h(({ msg }) => {
+      return h('span', null, msg)
+    })
+    App.__uri = uri
+
+    const root = createSSRContext({
+      message: {
+        [uri]: {
+          msg: 'Hello Gyron',
+        },
+      },
+    }).render(App, container)
+
+    const html = await renderToString(root)
+    expect(html).toBe('<span>Hello Gyron</span>')
   })
 })

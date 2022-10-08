@@ -7,6 +7,5 @@ test('ssr basic', () => {
     }
   `
   const { code } = transform(file, true)
-  expect(code).toContain('app.__ssr_uri = "876f2fe4"')
-  expect(code).toContain('app.__ssr_name = "app"')
+  expect(code).toContain('app.__ssr_uri = "876f2fe4?name=app"')
 })
