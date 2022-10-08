@@ -28,11 +28,18 @@ export function babelESBuildJsx(options: Partial<Options> = {}): Plugin {
             plugins,
             sourceMaps: true,
             sourceFileName: filename,
+            filename: filename,
             configFile: false,
           })
           return { contents: result.code }
         } catch (e) {
-          return { errors: [e] }
+          return {
+            errors: [
+              {
+                text: e.message,
+              },
+            ],
+          }
         }
       })
     },
@@ -77,6 +84,7 @@ export function babelViteJsx(options: Partial<Options> = {}): VitePlugin {
           plugins,
           sourceMaps: true,
           sourceFileName: id,
+          filename: id,
           configFile: false,
         })
 
