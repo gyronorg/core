@@ -74,7 +74,7 @@ const App = () => {
 
 “核心”是指前端项目中可能会用到的周边生态，下面列出的是作者本人维护的。
 
-其中 `router` 和 `dox` 也是运行时的代码，是为了解决复杂项目时，项目的路由和状态管理器。
+其中 `router` 和 `redux` 也是运行时的代码，是为了解决复杂项目时，项目的路由和状态管理器。
 `dom-client` 和 `dom-server` 分别对应着客户端渲染接口和服务端渲染接口。
 
 | 名称                                             | 版本                                                                                    | 描述                                                                |
@@ -83,7 +83,7 @@ const App = () => {
 | [cli](./packages/cli/)                           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/cli?style=flat-square)              | 可定制项目的脚手架                                                  |
 | [dom-client](./packages/dom-client/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/dom-client?style=flat-square)       | 对接浏览器 `document` 工具，可自定义接入支持 `ecma` 标准的应用程序  |
 | [dom-server](./packages/dom-server/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/dom-server?style=flat-square)       | 对接服务端 `node` 工具，用于服务端渲染                              |
-| [dox](./packages/dox/)                           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/redux?style=flat-square)              | 全局状态管理器                                                      |
+| [redux](./packages/redux/)                           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/redux?style=flat-square)              | 全局状态管理器                                                      |
 | [jsx-runtime](./packages/jsx-runtime/)           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/jsx-runtime?style=flat-square)      | 支持 `jsx` 语法的运行时，比如 `babel` 的 `transform-react-jsx` 插件 |
 | [reactivity](./packages/reactivity/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/reactivity?style=flat-square)       | 响应式核心                                                          |
 | [router](./packages/router/)                     | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/router?style=flat-square)           | 路由管理器                                                          |

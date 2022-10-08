@@ -62,7 +62,7 @@ export interface ComponentSetupFunction<Props extends object = object> {
 }
 
 export type AsyncComponentFunction<Props extends object = object> = (
-  props?: AsyncProps<Props> & Partial<ComponentDefaultProps>
+  props: AsyncProps<Props>
 ) => Promise<ComponentSetupFunction<Props> | VNode>
 
 type AsyncProps<Props> = Props &
@@ -348,6 +348,7 @@ export function FCA<
   })
 
   const load = (props: AsyncProps<Props>, component: Component) => {
+    _component = component
     return componentAsyncFunction(props)
       .then((value) => {
         loadedRet = true

@@ -2,7 +2,7 @@ import { useEffect } from '@gyron/runtime'
 import { createSlice, createStore, useDispatch, useSelector } from '../src'
 import { appEnv } from './utils'
 
-describe('dox basics', () => {
+describe('redux basics', () => {
   test('store slice useEffect', () => {
     const { reducer, actions } = createSlice({
       name: 'counter',

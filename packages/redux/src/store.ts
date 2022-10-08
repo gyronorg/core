@@ -101,7 +101,7 @@ export function createStore<
   }
 
   return {
-    name: 'dox',
+    name: 'redux',
     extra: store,
     data: { store, state, getStore, getState },
   }

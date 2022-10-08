@@ -9,6 +9,7 @@ import {
   VNode,
   FCA,
   createRef,
+  onBeforeMount,
 } from '../src'
 
 function ssr(html: string, vnode: VNode) {
@@ -233,5 +234,18 @@ describe('SSR', () => {
     container.querySelector('div').click()
     await nextRender()
     expect(container.innerHTML).toBe('<div>1</div>')
+  })
+
+  test('async component lifecycle', async () => {
+    const container = document.createElement('div')
+    const fn = jest.fn()
+    const App = FCA(async () => {
+      onBeforeMount(fn)
+      return createVNode('span', null, 0)
+    })
+    container.innerHTML = '<span>0</span>'
+    createSSRInstance(h(App)).render(container)
+    await sleep(0)
+    expect(fn).toHaveBeenCalled()
   })
 })
