@@ -25,7 +25,7 @@ export interface SSRInstance extends Instance {
  * })
  * ```
  * @api global
- * @param vnode VNode object
+ * @param vnode Virtual node
  * @returns return SSRInstance object
  * @deprecated createSSRInstance is deprecated and may be removed in a future version, please use createSSRContext instead
  */
@@ -42,6 +42,12 @@ export interface SSRContext {
   message: SSRMessage
 }
 
+/**
+ * When creating the server rendering context, you can obtain the props based on the component URI at the initial rendering to enable the client to hydrate.
+ * @api global
+ * @param context The initial state of the context
+ * @returns Returns an object, including the render function for "hydrate"
+ */
 export function createSSRContext(context: SSRContext) {
   return {
     render: (vnode: VNode, containerOrSelector: string | HTMLElement) => {

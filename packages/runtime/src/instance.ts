@@ -22,8 +22,8 @@ export function createContext() {
  * render(h('div', { id: 'gyron' }), document.body)
  * ```
  * @api global
- * @param vnode Virtual nodes.
- * @param container Browser nodes.
+ * @param vnode Virtual node
+ * @param container Browser nodes
  */
 export function render(vnode: VNode, container: Element) {
   patch(null, vnode, container)

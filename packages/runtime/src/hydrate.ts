@@ -79,7 +79,10 @@ function mismatch(node: RenderElement, vnode: VNode, isFragment: boolean) {
 }
 
 /**
- * hydrate static resources to ensure ssr client responsiveness
+ * Hydrate static resources to ensure ssr client responsiveness
+ * @api global
+ * @param node Node in a document
+ * @param vnode Virtual node
  */
 export function hydrate(
   node: RenderElement,
