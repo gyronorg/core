@@ -1,6 +1,6 @@
 {
   "name": "@gyron/reactivity",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "mini reactivity",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -21,6 +21,6 @@
     "test": "jest --config=../../jest.config.js"
   },
   "dependencies": {
-    "@gyron/shared": "^0.0.17"
+    "@gyron/shared": "^0.0.18"
   }
 }

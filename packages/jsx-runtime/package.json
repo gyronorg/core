@@ -3,7 +3,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -20,7 +20,7 @@
     "test": "jest --config=../../jest.config.js"
   },
   "dependencies": {
-    "@gyron/runtime": "^0.0.17",
-    "@gyron/shared": "^0.0.17"
+    "@gyron/runtime": "^0.0.18",
+    "@gyron/shared": "^0.0.18"
   }
 }
