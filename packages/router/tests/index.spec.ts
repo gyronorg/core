@@ -354,4 +354,10 @@ describe('next', () => {
     await router.extra.push('/foo?id=visitor')
     expect(container.innerHTML).toBe('<span>visitor</span>')
   })
+
+  test('router set base', async () => {
+    const router = createMemoryRouter({ base: '/console' })
+    await router.extra.push('/index')
+    expect(router.extra.path).toBe('/console/index')
+  })
 })

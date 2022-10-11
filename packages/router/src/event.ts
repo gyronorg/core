@@ -3,6 +3,7 @@ import {
   isBoolean,
   isFunction,
   isUndefined,
+  join,
   Noop,
   resolve,
 } from '@gyron/shared'
@@ -66,13 +67,13 @@ function isSkip(to: To | boolean) {
   return isBoolean(to) && !to
 }
 
-function getTargetPath(route: RouteRecord, to: To) {
+function getTargetPath(base: string, route: RouteRecord, to: To) {
   let path: To = to
   if (route && route.extra.matchFromRedirect) {
     // The regexpPath of the redirect route is the real url, not the regular
     path = route.extra.regexpPath
   }
-  return path
+  return join(base, useHref(path))
 }
 
 function resolveUrl(base: string, path: string) {
@@ -192,7 +193,7 @@ export class HistoryEvent {
     try {
       // when the destination route is redirected, the route after the redirect is used
       const fromPath = useHref(this.history.location)
-      const toPath = useHref(getTargetPath(to, payload.to))
+      const toPath = useHref(getTargetPath(this.base, to, payload.to))
       // verify that the current user action needs to be updated
       if (fromPath !== toPath) {
         await this.guards(from, to, () =>
@@ -209,7 +210,7 @@ export class HistoryEvent {
       actionHandler: (route) => {
         const base = this.history.location.pathname
         const back = this.state?.current
-        const path = getTargetPath(route, to)
+        const path = getTargetPath(this.base, route, to)
         const current = resolveUrl(base, useHref(path))
         this.history.push(
           path,
@@ -224,7 +225,7 @@ export class HistoryEvent {
     return this.wrapHookWithAction({
       actionHandler: (route) => {
         const base = this.history.location.pathname
-        const path = getTargetPath(route, to)
+        const path = getTargetPath(this.base, route, to)
         const current = resolveUrl(base, useHref(path))
         this.history.replace(path, extend({}, state, { current: current }))
       },
