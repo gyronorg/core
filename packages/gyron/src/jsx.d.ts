@@ -1657,6 +1657,7 @@ export type DefaultProps = {
   ref?: UserRef
   memo?: any[]
   children?: VNodeChildren | VNodeChildren[] | ((props: any) => JSX.Element)
+  _html?: string
 }
 
 export type ElementAttrs<T> = T & DefaultProps

@@ -97,7 +97,7 @@ function renderChildren(
   for (let i = 0; i < nodes.length; i++) {
     const nextNode = nodes[i + 1]
     const node = normalizeVNodeWithLink(nodes[i], parent)
-    nodes[i] = node
+
     render(buffer, node, parentComponent)
 
     // To turn the text nodes inside the fragment into separate dom nodes for easy hydration
@@ -114,7 +114,7 @@ function renderElement(
 ) {
   buffer.push(`<${vnode.tag}`)
 
-  renderProps(buffer, vnode.props)
+  renderProps(buffer, vnode.props, vnode.children)
 
   const isSelfCloseTag = selfTags.includes(vnode.tag)
   if (isSelfCloseTag) {

@@ -93,7 +93,6 @@ function mountChildren(
 ) {
   for (let i = start; i < nodes.length; i++) {
     const node = normalizeVNode(nodes[i])
-    nodes[i] = node
     patch(null, node, container, anchor, parentComponent, isSvg)
   }
 }
@@ -292,12 +291,12 @@ function mountElement(
 
   vnode.el = el
 
-  if (vnode.props && vnode.props.ref) {
+  if (vnode.props.ref) {
     setRef(el, vnode.props.ref)
   }
 
   const props = removeBuiltInProps(vnode.props)
-  if (keys(props).length > 0) {
+  if (shouldValue(keys(props))) {
     mountProps(el as HTMLElement, extend({}, vnode, { props: props }))
   }
 

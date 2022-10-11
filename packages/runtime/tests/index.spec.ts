@@ -67,8 +67,13 @@ describe('Runtime', () => {
     expect(container.innerHTML).toBe('Gyron')
     document.body.removeChild(container)
 
+    const fn = jest.fn()
+    const warn = console.warn
+    console.warn = fn
     const app = createInstance(createVNode('Gyron')).render('#app')
     expect(app).toBe(null)
+    expect(fn).toHaveBeenCalled()
+    console.warn = warn
   })
 
   test('rendering the same vnode repeatedly should use an existing DOM node', () => {
@@ -80,5 +85,22 @@ describe('Runtime', () => {
       createVNode('div', null, createVNode('div', null, 'Gyron.js'))
     ).render(container)
     expect(node).toBe(container.querySelector('div'))
+  })
+
+  test('should warn set html to vnode', () => {
+    const fn = jest.fn()
+    const warn = console.warn
+    console.warn = fn
+    createInstance(
+      h('div', { _html: '<span>Gyron</span>' }, h('span', 'Gyron2'))
+    ).render(container)
+    expect(container.innerHTML).toBe('<div><span>Gyron2</span></div>')
+    expect(fn).toHaveBeenCalled()
+    console.warn = warn
+  })
+
+  test('basic _html to vnode', () => {
+    createInstance(h('div', { _html: '<span>Gyron</span>' })).render(container)
+    expect(container.innerHTML).toBe('<div><span>Gyron</span></div>')
   })
 })

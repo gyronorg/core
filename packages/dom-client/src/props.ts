@@ -2,11 +2,11 @@ import {
   diffWord,
   isBoolean,
   isEventProps,
-  isNull,
   isObject,
   isString,
   keys,
   normalizeEventName,
+  shouldValue,
 } from '@gyron/shared'
 import { isControlledElementProp, controlledElementValue } from './controlled'
 import { NS } from './opt'
@@ -145,6 +145,16 @@ export function patchProp(
     patchStyle(el, oldValue, newValue, vnode)
   } else if (key === 'class' || key === 'className') {
     patchClass(el, oldValue, newValue)
+  } else if (key === '_html') {
+    if (shouldValue(vnode.children)) {
+      console.warn(
+        'Both the _html attribute and the child node exist in the node.\n',
+        vnode
+      )
+    } else {
+      // completely re-render the child element, throwing a warning when the child element is not empty.
+      el.innerHTML = newValue
+    }
   } else {
     try {
       setAttribute(el, key, newValue, vnode)

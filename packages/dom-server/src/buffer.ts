@@ -4,9 +4,18 @@ type SSRBufferItem = string | SSRBuffer | Promise<string | SSRBuffer>
 
 export class SSRBuffer {
   private _buffer: SSRBufferItem[] = []
+  private _children: string
 
   push(data: SSRBufferItem) {
     this._buffer.push(data)
+    if (data === '>' && this._children) {
+      this._buffer.push(this._children)
+      this._children = null
+    }
+  }
+
+  insert(_children: string) {
+    this._children = _children
   }
 
   get buffer() {

@@ -182,9 +182,9 @@ export function createVNode(
   props?: Partial<VNodeProps>,
   children?: VNodeChildren
 ): VNode {
-  let VNodeProps = props ? props : {}
+  let vnodeProps = props ? props : {}
 
-  const key = VNodeProps.key || null
+  const key = vnodeProps.key || null
   let type: VNodeType = Text
   let nodeType: NodeType = NodeType.Text
   let _uri: string
@@ -195,7 +195,7 @@ export function createVNode(
   } else if (isFunction(tag)) {
     type = tag
     nodeType = NodeType.Component
-    VNodeProps = omit(VNodeProps, 'key')
+    vnodeProps = omit(vnodeProps, 'key')
 
     // ssr mode merge context to props
     const __ssr_uri = (tag as ComponentSetupFunction).__ssr_uri
@@ -205,7 +205,7 @@ export function createVNode(
   } else if (isArray(tag)) {
     type = Fragment
     nodeType = NodeType.Fragment
-    children = mergeVNode(tag.map(normalizeVNode), VNodeProps)
+    children = mergeVNode(tag.map(normalizeVNode), vnodeProps)
   } else {
     children = tag as TextContent
   }
@@ -215,7 +215,7 @@ export function createVNode(
     nodeType: nodeType,
     key: key,
     flag: Gyron,
-    props: VNodeProps,
+    props: vnodeProps,
     children: children,
     __uri: _uri,
   }

@@ -1,5 +1,10 @@
-import { VNodeProps, removeBuiltInProps } from '@gyron/runtime'
-import { isEventProps, isString } from '@gyron/shared'
+import {
+  VNodeProps,
+  removeBuiltInProps,
+  VNodeChildren,
+  warn,
+} from '@gyron/runtime'
+import { isEventProps, isString, shouldValue } from '@gyron/shared'
 import { SSRBuffer } from './buffer'
 
 function renderStyle(buffer: SSRBuffer, styles: string | object) {
@@ -21,7 +26,11 @@ function renderStyle(buffer: SSRBuffer, styles: string | object) {
   }
 }
 
-export function renderProps(buffer: SSRBuffer, props: Partial<VNodeProps>) {
+export function renderProps(
+  buffer: SSRBuffer,
+  props: Partial<VNodeProps>,
+  children: VNodeChildren
+) {
   for (const k in removeBuiltInProps(props)) {
     switch (k) {
       case 'style':
@@ -29,6 +38,17 @@ export function renderProps(buffer: SSRBuffer, props: Partial<VNodeProps>) {
         break
       case 'className':
         buffer.push(` class="${props[k]}"`)
+        break
+      case '_html':
+        if (shouldValue(children)) {
+          warn(
+            'Both the _html attribute and the child node exist in the node.',
+            null,
+            'SSR Render Props'
+          )
+        } else {
+          buffer.insert(props['_html'])
+        }
         break
       default:
         if (!isEventProps(k)) {
