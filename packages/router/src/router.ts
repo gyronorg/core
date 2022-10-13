@@ -153,6 +153,7 @@ export function createHashRouter(option: Partial<RouterOption> = {}) {
 export function createMemoryRouter(option: Partial<RouterOption> = {}) {
   const history = createMemoryHistory() as History
   return createRouter({
+    isSSR: true,
     ...option,
     history: history,
   })

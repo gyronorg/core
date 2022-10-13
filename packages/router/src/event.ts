@@ -216,7 +216,7 @@ export class HistoryEvent {
         const path = getTargetPath(this.base, route, to)
         const current = resolveUrl(base, useHref(path))
         this.history.push(
-          path,
+          this.isSSR ? current : path,
           extend({}, state, { current: current, back: back })
         )
       },
@@ -230,7 +230,10 @@ export class HistoryEvent {
         const base = this.history.location.pathname
         const path = getTargetPath(this.base, route, to)
         const current = resolveUrl(base, useHref(path))
-        this.history.replace(path, extend({}, state, { current: current }))
+        this.history.replace(
+          this.isSSR ? current : path,
+          extend({}, state, { current: current })
+        )
       },
       to: to,
       type: 'replace',
@@ -251,15 +254,13 @@ export class HistoryEvent {
   }
 
   replaceState(to?: To, state?: Partial<State>) {
-    if (!this.isSSR) {
-      const nextState = extend<State>({}, this.state, state)
-      this.location = extend(
-        {},
-        this.location,
-        to ? useParsePath(useHref(to)) : null
-      )
-      this.history.replace(to ? useHref(to) : null, nextState)
-    }
+    const nextState = extend<State>({}, this.state, state)
+    this.location = extend(
+      {},
+      this.location,
+      to ? useParsePath(useHref(to)) : null
+    )
+    this.history.replace(to ? useHref(to) : null, nextState)
   }
 
   addHook<T extends keyof RouterHooks>(
