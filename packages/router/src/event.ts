@@ -73,7 +73,10 @@ function getTargetPath(base: string, route: RouteRecord, to: To) {
     // The regexpPath of the redirect route is the real url, not the regular
     path = route.extra.regexpPath
   }
-  return join(base, useHref(path))
+  if (base !== '/' && base !== '') {
+    return join(base, useHref(path))
+  }
+  return path
 }
 
 function resolveUrl(base: string, path: string) {

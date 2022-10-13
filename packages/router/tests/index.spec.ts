@@ -20,6 +20,7 @@ import {
   useParsePath,
   useRoute,
   useRoutes,
+  createBrowserRouter,
 } from '../src'
 
 describe('next', () => {
@@ -355,9 +356,18 @@ describe('next', () => {
     expect(container.innerHTML).toBe('<span>visitor</span>')
   })
 
+  test('router not set base', async () => {
+    const router = createBrowserRouter()
+    await router.extra.push('/console/index')
+    await router.extra.push('component')
+    expect(router.extra.path).toBe('/console/component')
+  })
+
   test('router set base', async () => {
     const router = createMemoryRouter({ base: '/console' })
     await router.extra.push('/index')
     expect(router.extra.path).toBe('/console/index')
+    await router.extra.push('component')
+    expect(router.extra.path).toBe('/console/component')
   })
 })
