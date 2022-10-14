@@ -1,13 +1,6 @@
-import {
-  extend,
-  isBoolean,
-  isFunction,
-  isUndefined,
-  join,
-  Noop,
-  resolve,
-} from '@gyron/shared'
+import { extend, isBoolean, isFunction, join, Noop } from '@gyron/shared'
 import { Blocker, Path, To } from 'history'
+import { resolveUrl } from './helper'
 import { useHref, useParsePath } from './hooks'
 import { generateRouteBranch, getTargetRoute } from './matches'
 import { RouteRecord } from './route'
@@ -77,16 +70,6 @@ function getTargetPath(base: string, route: RouteRecord, to: To) {
     return join(base, useHref(path))
   }
   return path
-}
-
-function resolveUrl(base: string, path: string) {
-  if (base.endsWith('/')) {
-    return resolve(base, path)
-  }
-  if (isUndefined(path) || path === '') {
-    return base
-  }
-  return resolve(base, '..', path)
 }
 
 export class HistoryEvent {

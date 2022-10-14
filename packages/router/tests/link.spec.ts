@@ -24,15 +24,13 @@ describe('Link', () => {
   })
 
   test('link base string', async () => {
-    const router = createMemoryRouter({ base: '/console' })
     app = createInstance(
       h(() => h(Router, { router: router }, [h(Link, { to: 'foo' })]))
     ).render(container)
-    expect(container.innerHTML).toBe('<a href="/console/foo"></a>')
+    expect(container.innerHTML).toBe('<a href="foo"></a>')
   })
 
   test('active class and style', async () => {
-    const router = createMemoryRouter()
     app = createInstance(
       h(() =>
         h(Router, { router: router }, [
@@ -64,7 +62,6 @@ describe('Link', () => {
   })
 
   test('Link component render and click push or replace', async () => {
-    const router = createMemoryRouter()
     const LinkRef = createRef()
     app = createInstance(
       h(() => {

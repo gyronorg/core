@@ -1,5 +1,5 @@
 import { createVNode, VNodeDefaultProps, FC } from '@gyron/runtime'
-import { extend, resolve } from '@gyron/shared'
+import { extend } from '@gyron/shared'
 import { To } from 'history'
 import { useHref, useRouter } from './hooks'
 
@@ -34,9 +34,9 @@ export const Link = FC<LinkProps>(function Link() {
     className,
     ...args
   }) {
-    const href = resolve(router.base, useHref(to))
+    const href = useHref(to)
     const props = {
-      onClick: (e: Event) => handleClick(e, { to: href, replace }),
+      onClick: (e: Event) => handleClick(e, { to, replace }),
       class: className || '',
       href: href,
       ...args,
