@@ -105,7 +105,7 @@ export class HistoryEvent {
   ) {
     this.location = this.history.location
 
-    this.replaceState(null, {
+    this.replaceState(this.location, {
       current: useHref(this.location),
     })
   }
@@ -188,7 +188,7 @@ export class HistoryEvent {
     const { from, to } = this.navigation(base, pathname)
 
     if (payload.type === 'push') {
-      this.replaceState(null, {
+      this.replaceState(this.location, {
         forward: resolveUrl(base, useHref(payload.to)),
       })
     }
@@ -253,14 +253,14 @@ export class HistoryEvent {
     this.history.block(blocker)
   }
 
-  replaceState(to?: To, state?: Partial<State>) {
+  replaceState(to: To, state?: Partial<State>) {
     const nextState = extend<State>({}, this.state, state)
     this.location = extend(
       {},
       this.location,
       to ? useParsePath(useHref(to)) : null
     )
-    this.history.replace(to ? useHref(to) : null, nextState)
+    this.history.replace(useHref(to), nextState)
   }
 
   addHook<T extends keyof RouterHooks>(

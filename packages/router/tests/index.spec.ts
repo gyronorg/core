@@ -20,6 +20,7 @@ import {
   useParsePath,
   useRoute,
   useRoutes,
+  createBrowserRouter,
 } from '../src'
 
 describe('next', () => {
@@ -368,5 +369,11 @@ describe('next', () => {
     expect(router.extra.path).toBe('/console/index')
     await router.extra.push('component')
     expect(router.extra.path).toBe('/console/component')
+  })
+
+  test('replace state default location', async () => {
+    location.hash = 'gyron'
+    const router = createBrowserRouter()
+    expect(router.extra.location.hash).toBe('#gyron')
   })
 })
