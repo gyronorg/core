@@ -18,25 +18,13 @@
 
 `Gyron` 是一款简单零依赖的响应式框架。核心代码大小: <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@gyron/runtime?style=flat-square">。
 
+它还拥有很好的性能表现，详情可以参见 [js-framework-benchmark](https://krausest.github.io/js-framework-benchmark/current.html#eyJmcmFtZXdvcmtzIjpbImtleWVkL2FuZ3VsYXIiLCJrZXllZC9neXJvbiIsImtleWVkL3JlYWN0Iiwibm9uLWtleWVkL2d5cm9uIiwibm9uLWtleWVkL3JlYWN0Il0sImJlbmNobWFya3MiOlsiMDFfcnVuMWsiLCIwMl9yZXBsYWNlMWsiLCIwM191cGRhdGUxMHRoMWtfeDE2IiwiMDRfc2VsZWN0MWsiLCIwNV9zd2FwMWsiLCIwNl9yZW1vdmUtb25lLTFrIiwiMDdfY3JlYXRlMTBrIiwiMDhfY3JlYXRlMWstYWZ0ZXIxa194MiIsIjA5X2NsZWFyMWtfeDgiLCIyMV9yZWFkeS1tZW1vcnkiLCIyMl9ydW4tbWVtb3J5IiwiMjNfdXBkYXRlNS1tZW1vcnkiLCIyNV9ydW4tY2xlYXItbWVtb3J5IiwiMjZfcnVuLTEway1tZW1vcnkiLCIzMV9zdGFydHVwLWNpIiwiMzRfc3RhcnR1cC10b3RhbGJ5dGVzIl0sImRpc3BsYXlNb2RlIjoxLCJjYXRlZ29yaWVzIjpbMSwyLDMsNF19) 提供的结果。
+
 ## 功能
 
-- [x] SSR
-- [x] HMR 热更新
-  - [x] 无依赖组件热更新
-  - [x] 多依赖组件热更新
-- [x] 响应数据变更
-- [x] 支持原生属性
-- [x] 最小化更新
-- [x] 错误边界处理
-- [x] 插件生态
-- [x] 函数式组件
-- [x] 上下文信息
-- [x] 生命周期
-  - [x] beforeMount
-  - [x] afterMount
-  - [x] beforeUpdate
-  - [x] afterUpdate
-  - [x] destroyed
+Gyron 已经完成了所有预期之内的功能，可以参考 [http://gyron.cc/](http://gyron.cc/) 查看所有功能说明。
+
+如果你想了解这些功能和社区其它框架有什么不同可以打开 Issues 一起沟通学习，或者 clone 代码后查看对应的模块。
 
 ### tsc 命令支持
 
@@ -83,7 +71,7 @@ const App = () => {
 | [cli](./packages/cli/)                           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/cli?style=flat-square)              | 可定制项目的脚手架                                                  |
 | [dom-client](./packages/dom-client/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/dom-client?style=flat-square)       | 对接浏览器 `document` 工具，可自定义接入支持 `ecma` 标准的应用程序  |
 | [dom-server](./packages/dom-server/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/dom-server?style=flat-square)       | 对接服务端 `node` 工具，用于服务端渲染                              |
-| [redux](./packages/redux/)                           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/redux?style=flat-square)              | 全局状态管理器                                                      |
+| [redux](./packages/redux/)                       | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/redux?style=flat-square)            | 全局状态管理器                                                      |
 | [jsx-runtime](./packages/jsx-runtime/)           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/jsx-runtime?style=flat-square)      | 支持 `jsx` 语法的运行时，比如 `babel` 的 `transform-react-jsx` 插件 |
 | [reactivity](./packages/reactivity/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/reactivity?style=flat-square)       | 响应式核心                                                          |
 | [router](./packages/router/)                     | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/router?style=flat-square)           | 路由管理器                                                          |
