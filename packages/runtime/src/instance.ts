@@ -1,7 +1,7 @@
+import type { RenderElement, VNode } from './vnode'
 import { patch, unmount } from './render'
 import { hydrate } from './hydrate'
 import { checkVersion } from './version'
-import type { RenderElement, VNode } from './vnode'
 import { getUserContainer } from './shared'
 
 export interface Instance {

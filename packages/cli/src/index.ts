@@ -1,7 +1,7 @@
+import type { Options } from './interface'
 import { Command } from 'commander'
 import { version } from '../package.json'
 import { exec } from './core'
-import type { Options } from './interface'
 
 const program = new Command()
 

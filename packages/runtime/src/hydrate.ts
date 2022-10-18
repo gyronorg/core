@@ -1,3 +1,5 @@
+import type { VNode, RenderElement } from './vnode'
+import type { SSRMessage } from './ssr'
 import { shouldValue, isComment, extend } from '@gyron/shared'
 import {
   createComment,
@@ -18,8 +20,6 @@ import {
 } from './vnode'
 import { mountComponent, patch } from './render'
 import { setRef } from './ref'
-import type { VNode, RenderElement } from './vnode'
-import { SSRMessage } from './ssr'
 
 /**
  * Find the tag at the end of the Fragment and return the first node after the end

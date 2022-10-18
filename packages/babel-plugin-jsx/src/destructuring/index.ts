@@ -1,10 +1,10 @@
+import type { NodePath, Visitor } from '@babel/core'
+import type { VisitNodeFunction } from '@babel/traverse'
 import { types as t } from '@babel/core'
 import { State } from '../transformJsx'
 import { isBodyContainJSX } from '../utils'
 import { addNamed } from '@babel/helper-module-imports'
 import { DestructuringTransformer } from './util'
-import type { NodePath, Visitor } from '@babel/core'
-import type { VisitNodeFunction } from '@babel/traverse'
 
 function transformParamsToUpdateExpression(
   node: t.ObjectPattern,

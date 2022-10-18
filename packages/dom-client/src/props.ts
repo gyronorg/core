@@ -1,3 +1,4 @@
+import type { VNode, VNodeProps } from 'packages/gyron/src'
 import {
   diffWord,
   isBoolean,
@@ -10,7 +11,6 @@ import {
 } from '@gyron/shared'
 import { isControlledElementProp, controlledElementValue } from './controlled'
 import { NS } from './opt'
-import type { VNode, VNodeProps } from 'packages/gyron/src'
 
 export type Listener = () => any
 export type Style = string | Record<string, string>

@@ -1,7 +1,7 @@
-import { types as t } from '@babel/core'
-import { addNamed } from '@babel/helper-module-imports'
 import type { Scope } from '@babel/traverse'
 import type { TraversalAncestors } from '@babel/types'
+import { types as t } from '@babel/core'
+import { addNamed } from '@babel/helper-module-imports'
 
 /**
  * Test if an ArrayPattern's elements contain any RestElements.
