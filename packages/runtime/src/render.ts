@@ -325,100 +325,99 @@ function patchElement(
   }
 }
 
+function patchSubTree(component: Component, prevTree: VNode, nextTree: VNode) {
+  component.subTree = nextTree
+  if (component.mounted) {
+    const { anchor } = prevTree
+    component.subTree.anchor = anchor
+    patch(prevTree, nextTree, component.$parent, anchor, component)
+    // onAfterUpdate
+    invokeLifecycle(component, 'afterUpdates')
+    component.$el = nextTree.el
+  } else {
+    // mount
+    patch(null, nextTree, component.$parent, component.vnode.anchor, component)
+    // after the render is complete, set el to the vnode for comparison
+    // dummy ? <componentA /> : <componentB />
+    component.vnode.el = nextTree.el
+    component.$el = nextTree.el
+    component.mounted = true
+    // onAfterMount
+    component.effect.allowEffect = true
+    invokeLifecycle(component, 'afterMounts')
+    component.effect.allowEffect = false
+  }
+}
+
+function updateComponentEffect(
+  component: Component,
+  ssrMessage: SSRMessage = null
+) {
+  if (component.mounted) {
+    // if the onBeforeUpdate callback function returns falsy
+    // no update of the component is performed
+    if (shouldUpdate(invokeLifecycle(component, 'beforeUpdates'))) {
+      if (__DEV__) {
+        refreshComponentType(component.vnode, component)
+      }
+
+      const prevTree = component.subTree
+      const nextTree = renderComponent(component)
+      if (isPromise(nextTree)) {
+        warn(
+          'Asynchronous components without wrapping are not supported, please use FCA wrapping',
+          component,
+          'UpdateComponent'
+        )
+      } else {
+        patchSubTree(component, prevTree, nextTree)
+      }
+    }
+  } else if (!component.destroyed) {
+    if (component.vnode.el) {
+      function hydrateSubTree() {
+        const nextTree = renderComponent(component)
+        component.subTree = nextTree as VNode
+        hydrate(component.vnode.el, component.subTree, component, ssrMessage)
+
+        component.mounted = true
+        // onAfterMount
+        invokeLifecycle(component, 'afterMounts')
+      }
+      // asynchronous component rendering in ssr mode
+      if (isAsyncComponent(component.vnode.type)) {
+        component.vnode.type.__loader(component.props, component).then(() => {
+          if (!component.destroyed) {
+            asyncTrackEffect(component.effect)
+            hydrateSubTree()
+            clearTrackEffect()
+          }
+        })
+      } else {
+        hydrateSubTree()
+      }
+    } else {
+      const nextTree = renderComponent(component)
+      if (isPromise(nextTree)) {
+        warn(
+          'Asynchronous components without wrapping are not supported, please use FCA wrapping',
+          component,
+          'SetupPatch'
+        )
+      } else {
+        patchSubTree(component, null, nextTree)
+      }
+    }
+  }
+}
+
 function renderComponentEffect(
   component: Component,
   ssrMessage: SSRMessage = null
 ) {
-  function patchSubTree(prevTree: VNode, nextTree: VNode) {
-    component.subTree = nextTree
-    if (component.mounted) {
-      const { anchor } = prevTree
-      component.subTree.anchor = anchor
-      patch(prevTree, nextTree, component.$parent, anchor, component)
-      // onAfterUpdate
-      invokeLifecycle(component, 'afterUpdates')
-      component.$el = nextTree.el
-    } else {
-      // mount
-      patch(
-        null,
-        nextTree,
-        component.$parent,
-        component.vnode.anchor,
-        component
-      )
-      // after the render is complete, set el to the vnode for comparison
-      // dummy ? <componentA /> : <componentB />
-      component.vnode.el = nextTree.el
-      component.$el = nextTree.el
-      component.mounted = true
-      // onAfterMount
-      component.effect.allowEffect = true
-      invokeLifecycle(component, 'afterMounts')
-      component.effect.allowEffect = false
-    }
-  }
-  function updateComponentEffect() {
-    if (component.mounted) {
-      // if the onBeforeUpdate callback function returns falsy
-      // no update of the component is performed
-      if (shouldUpdate(invokeLifecycle(component, 'beforeUpdates'))) {
-        if (__DEV__) {
-          refreshComponentType(component.vnode, component)
-        }
-
-        const prevTree = component.subTree
-        const nextTree = renderComponent(component)
-        if (isPromise(nextTree)) {
-          warn(
-            'Asynchronous components without wrapping are not supported, please use FCA wrapping',
-            component,
-            'UpdateComponent'
-          )
-        } else {
-          patchSubTree(prevTree, nextTree)
-        }
-      }
-    } else if (!component.destroyed) {
-      if (component.vnode.el) {
-        function hydrateSubTree() {
-          const nextTree = renderComponent(component)
-          component.subTree = nextTree as VNode
-          hydrate(component.vnode.el, component.subTree, component, ssrMessage)
-
-          component.mounted = true
-          // onAfterMount
-          invokeLifecycle(component, 'afterMounts')
-        }
-        // asynchronous component rendering in ssr mode
-        if (isAsyncComponent(component.vnode.type)) {
-          component.vnode.type.__loader(component.props, component).then(() => {
-            if (!component.destroyed) {
-              asyncTrackEffect(component.effect)
-              hydrateSubTree()
-              clearTrackEffect()
-            }
-          })
-        } else {
-          hydrateSubTree()
-        }
-      } else {
-        const nextTree = renderComponent(component)
-        if (isPromise(nextTree)) {
-          warn(
-            'Asynchronous components without wrapping are not supported, please use FCA wrapping',
-            component,
-            'SetupPatch'
-          )
-        } else {
-          patchSubTree(null, nextTree)
-        }
-      }
-    }
-  }
-
-  const effect = (component.effect = createEffect(updateComponentEffect, () =>
-    pushQueueJob(component.update)
+  const effect = (component.effect = createEffect(
+    updateComponentEffect.bind(null, component, ssrMessage),
+    () => pushQueueJob(component.update)
   ))
 
   const update = (component.update = effect.run.bind(effect) as SchedulerJob)

@@ -45,7 +45,7 @@ export enum JobPriority {
  * })
  *```
  * @param fn The next scale call function.
- * @returns
+ * @returns Returns a Promise that changes the state of a task only after all tasks have completed, regardless of how long the task has been executed.
  */
 export function nextRender(fn?: Noop) {
   const p = Promise.all(pendingJobPromise || [resolvedPromise]).finally(() => {
@@ -89,8 +89,9 @@ export function flushJobs() {
   }
 }
 
-export const now = () =>
-  typeof performance === 'object' ? performance.now() : Date.now()
+export const now = () => {
+  return typeof performance === 'object' ? performance.now() : Date.now()
+}
 
 const self = typeof global === 'object' ? global : window
 
