@@ -1,5 +1,3 @@
-# Gyron
-
 <p align="center">
   <img src="https://gyron.cc/assets/image/logo-sm.png" alt="Gyron Logo">
 </p>
@@ -15,6 +13,8 @@
     <img src="https://codecov.io/gh/gyronorg/core/branch/main/graph/badge.svg?token=5OTQPLZQQO"/>
   </a>
 </p>
+
+# Gyron
 
 `Gyron` 是一款简单零依赖的响应式框架。核心代码大小: <img alt="npm bundle size (scoped)" src="https://img.shields.io/bundlephobia/minzip/@gyron/runtime?style=flat-square">。
 
