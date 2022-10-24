@@ -13,6 +13,7 @@ import {
   HistoryEvent,
   RouterHookAfterEach,
   RouterHookBeforeEach,
+  RouterRender,
   State,
 } from './event'
 import { TypeRoute, TypeRouter } from './hooks'
@@ -38,6 +39,7 @@ export interface RouterOption {
   history: History
   beforeEach: RouterHookBeforeEach
   afterEach: RouterHookAfterEach
+  render: RouterRender
   base?: string
   isSSR?: boolean
 }
@@ -57,7 +59,8 @@ export class RouterBase extends HistoryEvent {
   constructor(
     public history: History,
     public base = '/',
-    public isSSR = false
+    public isSSR = false,
+    public render: RouterRender
   ) {
     super(history, base, isSSR)
 
@@ -160,7 +163,12 @@ export function createMemoryRouter(option: Partial<RouterOption> = {}) {
 }
 
 export function createRouter(option: Partial<RouterOption>) {
-  const router = new RouterBase(option.history, option.base, option.isSSR)
+  const router = new RouterBase(
+    option.history,
+    option.base,
+    option.isSSR,
+    option.render
+  )
 
   if (isFunction(option.beforeEach)) {
     router.addHook('beforeEach', option.beforeEach)

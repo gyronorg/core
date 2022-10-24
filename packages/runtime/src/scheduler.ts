@@ -18,11 +18,12 @@ let currentJobPromise: Promise<unknown>
 let startTime = -1
 
 /**
- * TODO Update tasks need to be prioritized, with those of higher priority being executed first, followed by those of lower priority.
+ * Update tasks need to be prioritized, with those of higher priority being executed first, followed by those of lower priority.
  */
 export enum JobPriority {
-  NORMAL_TIMEOUT = 0,
-  USER_TIMEOUT = 1,
+  DEFERRED = -1,
+  NORMAL = 0,
+  ACCRUED = 1,
 }
 
 /**
@@ -52,6 +53,14 @@ export function nextRender(fn?: Noop) {
     pendingJobPromise.length = 0
   })
   return fn ? p.then(fn) : p
+}
+
+export function useDeferred(fn: Noop) {
+  //
+}
+
+export function useAccrued(fn: Noop) {
+  //
 }
 
 export function pushQueueJob(job: SchedulerJob) {
@@ -135,6 +144,7 @@ function shouldYieldHost() {
 
 function workLoop(pendingJobs?: SchedulerJob[]) {
   return new Promise<void>((resolve) => {
+    // guaranteed top-down update order
     queue.sort((a, b) => a.id - b.id)
     const jobs = pendingJobs || queue
 

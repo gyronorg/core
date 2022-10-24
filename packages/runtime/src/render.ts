@@ -423,7 +423,7 @@ function renderComponentEffect(
   const update = (component.update = effect.run.bind(effect) as SchedulerJob)
   update.id = component.uid
   update.component = component
-  update.priority = JobPriority.NORMAL_TIMEOUT
+  update.priority = JobPriority.NORMAL
   update()
 }
 

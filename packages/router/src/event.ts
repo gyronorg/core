@@ -1,3 +1,4 @@
+import { VNode } from '@gyron/runtime'
 import { extend, isBoolean, isFunction, join, Noop } from '@gyron/shared'
 import { Blocker, Path, To } from 'history'
 import { resolveUrl } from './helper'
@@ -18,6 +19,7 @@ export type RouterHookBeforeUpdate = (
   from: RouteRecord,
   to: RouteRecord
 ) => void
+export type RouterRender = (route: RouteRecord) => VNode
 export type RouterHookAfterUpdate = (from: RouteRecord, to: RouteRecord) => void
 export type RouterHookListener = RouterHookBeforeEach | RouterHookAfterEach
 export type SetItem<T> = T extends Set<infer K> ? K : never

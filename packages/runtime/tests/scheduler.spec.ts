@@ -6,6 +6,8 @@ import {
   onAfterUpdate,
   onBeforeUpdate,
   useValue,
+  useDeferred,
+  useAccrued,
 } from '../src'
 import { nextRender, now } from '../src/scheduler'
 
@@ -72,5 +74,22 @@ describe('scheduler', () => {
     await nextRender()
     expect(fn).toHaveBeenCalledTimes(2)
     expect(isVNodeComponent(App)).toBe(true)
+  })
+
+  test('priority task', async () => {
+    const foo = useValue(0)
+    const bar = useValue(0)
+    const App = h(() => {
+      setTimeout(() => {
+        useDeferred(() => {
+          bar.value = 1
+        })
+        useAccrued(() => {
+          foo.value = 1
+        })
+      }, 1000)
+      return h('div', null, foo.value + bar.value)
+    })
+    createInstance(App).render(container)
   })
 })

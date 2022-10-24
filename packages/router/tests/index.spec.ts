@@ -376,4 +376,28 @@ describe('next', () => {
     const router = createBrowserRouter()
     expect(router.extra.location.hash).toBe('#gyron')
   })
+
+  test('router render', async () => {
+    const fn = jest.fn((route) => {
+      return route.extra.element
+    })
+    const router = createMemoryRouter({
+      render: fn,
+    })
+    createInstance(
+      h(
+        Router,
+        { router },
+        h(Routes, {}, [
+          h(Route, { path: '', strict: true, element: createVNode('gyron 1') }),
+          h(Route, { path: 'foo', element: createVNode('gyron 2') }),
+        ])
+      )
+    ).render(container)
+    expect(container.innerHTML).toBe('gyron 1')
+    expect(fn).toHaveBeenCalledTimes(1)
+    await router.extra.push('/foo')
+    expect(container.innerHTML).toBe('gyron 2')
+    expect(fn).toHaveBeenCalledTimes(2)
+  })
 })

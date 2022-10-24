@@ -120,6 +120,8 @@ export const Routes = FC<{
       } as RoutesRecord)
     }
 
-    return renderRoute(matchRouteBranch)
+    return router.render
+      ? router.render(router.currentRoute)
+      : renderRoute(matchRouteBranch)
   }
 })

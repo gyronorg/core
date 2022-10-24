@@ -42,7 +42,7 @@ export {
   Fragment,
 } from './vnode'
 export { h } from './h'
-export { nextRender } from './scheduler'
+export { nextRender, useAccrued, useDeferred } from './scheduler'
 export {
   onBeforeMount,
   onAfterMount,
