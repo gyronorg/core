@@ -20,6 +20,9 @@
 
 它还拥有很好的性能表现，详情可以参见 [js-framework-benchmark](https://krausest.github.io/js-framework-benchmark/current.html#eyJmcmFtZXdvcmtzIjpbImtleWVkL2FuZ3VsYXIiLCJrZXllZC9neXJvbiIsImtleWVkL3JlYWN0Iiwibm9uLWtleWVkL2d5cm9uIiwibm9uLWtleWVkL3JlYWN0Il0sImJlbmNobWFya3MiOlsiMDFfcnVuMWsiLCIwMl9yZXBsYWNlMWsiLCIwM191cGRhdGUxMHRoMWtfeDE2IiwiMDRfc2VsZWN0MWsiLCIwNV9zd2FwMWsiLCIwNl9yZW1vdmUtb25lLTFrIiwiMDdfY3JlYXRlMTBrIiwiMDhfY3JlYXRlMWstYWZ0ZXIxa194MiIsIjA5X2NsZWFyMWtfeDgiLCIyMV9yZWFkeS1tZW1vcnkiLCIyMl9ydW4tbWVtb3J5IiwiMjNfdXBkYXRlNS1tZW1vcnkiLCIyNV9ydW4tY2xlYXItbWVtb3J5IiwiMjZfcnVuLTEway1tZW1vcnkiLCIzMV9zdGFydHVwLWNpIiwiMzRfc3RhcnR1cC10b3RhbGJ5dGVzIl0sImRpc3BsYXlNb2RlIjoxLCJjYXRlZ29yaWVzIjpbMSwyLDMsNF19) 提供的结果。
 
+- 文档
+  - [English](./README_EN.md)
+
 ## 功能
 
 Gyron 已经完成了所有预期之内的功能，可以参考 [http://gyron.cc/](http://gyron.cc/) 查看所有功能说明。
@@ -110,6 +113,16 @@ const App = () => {
   }
   createInstance(h(App)).render('#root')
 </script>
+```
+
+### 附加说明
+
+本说明在 MIT 基础之上作为附加说明展示在本文档中展示。
+
+以下为附加说明：
+
+```
+任何情况任何人在未经过作者的授权不允许在公司作为 KPI 项目发布或推，保护开源项目的合法权益。
 ```
 
 ### SSR
