@@ -82,37 +82,19 @@ const App = () => {
 | [shared](./packages/shared/)                     | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/shared?style=flat-square)           | 公共工具函数                                                        |
 | [sync](./packages/sync/)                         | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/sync?style=flat-square)             | 同步第三方数据工具函数，让第三方数据具有反应性                      |
 
-### 例子
+### 快速使用
 
-- 浏览器中可以使用 `esm` 格式的静态资源，为什么组件返回一个函数可以阅读[组件](https://gyron.cc/docs/component#%E6%9C%89%E7%8A%B6%E6%80%81%E7%BB%84%E4%BB%B6%20%E5%92%8C%20%E6%97%A0%E7%8A%B6%E6%80%81%E7%BB%84%E4%BB%B6)文档
-
-```html
-<div id="root"></div>
-
-<script type="module">
-  import {
-    createInstance,
-    h,
-    useValue,
-  } from 'https://cdn.skypack.dev/@gyron/runtime'
-  const App = () => {
-    const content = useValue(0)
-    // 使用 babel-plugin-jsx 不需要返回一个函数，详情参考 https://gyron.cc/core/jsx/getting-started#%E5%8F%82%E6%95%B0
-    return () =>
-      h(
-        'button',
-        {
-          on: {
-            click() {
-              content.value++
-            },
-          },
-        },
-        content.value
-      )
-  }
-  createInstance(h(App)).render('#root')
-</script>
+``` sh
+# 全局安装 CLI
+npm install @gyron/cli -g
+# 创建项目
+gyron create <instance-name>
+# 进入项目
+cd <instance-name>
+# 安装依赖
+npm install
+# 运行
+npm run start
 ```
 
 ### 附加说明
