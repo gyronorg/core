@@ -82,38 +82,19 @@ Among them `router` and `redux` are also runtime code to solve complex projects 
 | [shared](./packages/shared/)                     | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/shared?style=flat-square)           | public utility functions                                                                                             |
 | [sync](./packages/sync/)                         | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/sync?style=flat-square)             | Sync third-party data tool functions to make third-party data responsive                                             | Translated with www.DeepL.com/Translator (free version) |
 
-### 例子
+### Getting Started 
 
-- Static resources in `esm` format are available in the browser, so why does the component return a function that can read [Component](https://gyron.cc/docs/component#%E6%9C%89%E7%8A%B6%E6%80%81%E7%BB%84%E4%BB%B6%20%E5%92%8C%20%E6%97%A0%E7%8A%B6%E6%80%81%E7%BB%84%E4%BB%B6)文档
-
-```html
-<div id="root"></div>
-
-<script type="module">
-  import {
-    createInstance,
-    h,
-    useValue,
-  } from 'https://cdn.skypack.dev/@gyron/runtime'
-  const App = () => {
-    const content = useValue(0)
-    // Using babel-plugin-jsx does not require returning a function, for details see
-    // https://gyron.cc/core/jsx/getting-started#%E5%8F%82%E6%95%B0
-    return () =>
-      h(
-        'button',
-        {
-          on: {
-            click() {
-              content.value++
-            },
-          },
-        },
-        content.value
-      )
-  }
-  createInstance(h(App)).render('#root')
-</script>
+``` sh
+# global install CLI
+npm install @gyron/cli -g
+# Create project
+gyron create <instance-name>
+# Enter the project
+cd <instance-name>
+# Install dependencies
+npm install
+# Run
+npm run start
 ```
 
 ### Additional Notes
