@@ -92,15 +92,15 @@ describe('Runtime', () => {
     const warn = console.warn
     console.warn = fn
     createInstance(
-      h('div', { _html: '<span>Gyron</span>' }, h('span', 'Gyron2'))
+      h('div', { html: '<span>Gyron</span>' }, h('span', 'Gyron2'))
     ).render(container)
     expect(container.innerHTML).toBe('<div><span>Gyron2</span></div>')
     expect(fn).toHaveBeenCalled()
     console.warn = warn
   })
 
-  test('basic _html to vnode', () => {
-    createInstance(h('div', { _html: '<span>Gyron</span>' })).render(container)
+  test('basic html to vnode', () => {
+    createInstance(h('div', { html: '<span>Gyron</span>' })).render(container)
     expect(container.innerHTML).toBe('<div><span>Gyron</span></div>')
   })
 })

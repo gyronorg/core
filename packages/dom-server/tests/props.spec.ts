@@ -70,17 +70,17 @@ describe('Props', () => {
     expect(html).toBe('<div class="container">text</div>')
   })
 
-  test('element _html attribute', async () => {
-    const html = await renderToString(createVNode('span', { _html: 'Gyron' }))
+  test('element html attribute', async () => {
+    const html = await renderToString(createVNode('span', { html: 'Gyron' }))
     expect(html).toBe('<span>Gyron</span>')
   })
 
-  test('should warn with _html and children', async () => {
+  test('should warn with html and children', async () => {
     const fn = jest.fn()
     const warn = console.warn
     console.warn = fn
     const html = await renderToString(
-      createVNode('span', { _html: 'Gyron1' }, 'Gyron2')
+      createVNode('span', { html: 'Gyron1' }, 'Gyron2')
     )
     expect(html).toBe('<span>Gyron2</span>')
     expect(fn).toHaveBeenCalled()

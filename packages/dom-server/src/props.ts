@@ -39,15 +39,15 @@ export function renderProps(
       case 'className':
         buffer.push(` class="${props[k]}"`)
         break
-      case '_html':
+      case 'html':
         if (shouldValue(children)) {
           warn(
-            'Both the _html attribute and the child node exist in the node.',
+            'Both the html attribute and the child node exist in the node.',
             null,
             'SSR Render Props'
           )
         } else {
-          buffer.insert(props['_html'])
+          buffer.insert(props['html'])
         }
         break
       default:

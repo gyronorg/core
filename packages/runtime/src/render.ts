@@ -356,7 +356,10 @@ function updateComponentEffect(
   if (component.mounted) {
     // if the onBeforeUpdate callback function returns falsy
     // no update of the component is performed
-    if (shouldUpdate(invokeLifecycle(component, 'beforeUpdates'))) {
+    if (
+      shouldUpdate(invokeLifecycle(component, 'beforeUpdates')) &&
+      shouldUpdate(!component.props.static)
+    ) {
       if (__DEV__) {
         refreshComponentType(component.vnode, component)
       }
@@ -525,7 +528,7 @@ function enterElement(
 
   if (n1 === null) {
     mountElement(n2, container, anchor, parentComponent, isSvg)
-  } else {
+  } else if (!n2.props.static) {
     patchElement(n1, n2, container, anchor, parentComponent, isSvg)
   }
 }

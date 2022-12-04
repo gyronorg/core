@@ -145,10 +145,10 @@ export function patchProp(
     patchStyle(el, oldValue, newValue, vnode)
   } else if (key === 'class' || key === 'className') {
     patchClass(el, oldValue, newValue)
-  } else if (key === '_html') {
+  } else if (key === 'html') {
     if (shouldValue(vnode.children)) {
       console.warn(
-        'Both the _html attribute and the child node exist in the node.\n',
+        'Both the html attribute and the child node exist in the node.\n',
         vnode
       )
     } else {

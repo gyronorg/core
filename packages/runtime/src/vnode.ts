@@ -12,7 +12,6 @@ import {
   Component,
   ComponentDefaultProps,
   ComponentFunction,
-  ComponentParentProps,
   ComponentSetupFunction,
 } from './component'
 import { UserRef } from './ref'
@@ -100,10 +99,7 @@ export interface VNode<T extends VNodeType = VNodeType> {
   __uri?: string
 }
 
-export interface VNodeProps
-  extends VNodeEvent,
-    Partial<ComponentDefaultProps>,
-    Partial<ComponentParentProps> {
+export interface VNodeProps extends VNodeEvent, ComponentDefaultProps {
   [k: string]: any
 }
 

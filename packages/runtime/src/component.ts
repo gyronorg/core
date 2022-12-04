@@ -31,26 +31,28 @@ import { UserRef } from './ref'
 export type UtilComponentProps<T extends VNodeType, D = never> = T extends
   | ComponentFunction<infer Props>
   | ComponentSetupFunction<infer Props>
-  ? Omit<Props, keyof ComponentDefaultProps> & Partial<ComponentParentProps>
+  ? Props & Omit<ComponentDefaultProps, 'isSSR'>
   : D
 
-export type ComponentDefaultProps = {
+export type ComponentDefaultProps = Partial<{
   readonly isSSR: boolean
   readonly children: VNodeChildren
-}
-
-export type ComponentParentProps = {
   readonly key: string | number | symbol
   readonly ref: UserRef
+  // Used in loop nodes to determine if updates to props occur and thus decide whether to skip updates to child nodes.
   readonly memo: any[]
-}
+  // The user can optionally mark a node as static and all subsequent updates will skip the marked node.
+  readonly static: boolean
+  // Used for server-side rendering and client-side rendering to render text as real nodes.
+  readonly html: string
+}>
 
 export type ComponentFunction<Props> = (
-  props?: Props & Partial<ComponentDefaultProps>
+  props?: Props & ComponentDefaultProps
 ) => VNodeChildren
 
 export interface ComponentSetupFunction<Props extends object = object> {
-  (props: Props & Partial<ComponentDefaultProps>, component: Component<Props>):
+  (props: Props & ComponentDefaultProps, component: Component<Props>):
     | (VNodeChildren | Promise<VNodeChildren>)
     | ComponentFunction<Props>
   __cache?: boolean
@@ -64,8 +66,7 @@ export type AsyncComponentFunction<Props extends object = object> = (
   props: AsyncProps<Props>
 ) => Promise<ComponentSetupFunction<Props> | VNode>
 
-type AsyncProps<Props> = Props &
-  Partial<ComponentDefaultProps & { fallback: VNode }>
+type AsyncProps<Props> = Props & ComponentDefaultProps & { fallback?: VNode }
 
 type AsyncComponentFunctionReturn<Props extends object = object> = {
   (): Promise<VNode>
@@ -96,8 +97,8 @@ export interface Component<T extends object = object> {
   update: SchedulerJob
   render: ComponentFunction<T>
   setup: ComponentSetupFunction
-  props: T & Partial<ComponentDefaultProps & ComponentParentProps>
-  prevProps: T & Partial<ComponentDefaultProps & ComponentParentProps>
+  props: T & ComponentDefaultProps
+  prevProps: T & ComponentDefaultProps
   ctx: Record<string | symbol, unknown>
   lifecycle: Lifecycle
   exposed: Exposed
@@ -586,9 +587,6 @@ export function normalizeComponentProps(
 }
 
 export function removeBuiltInProps(props: Partial<VNodeProps>) {
-  const propsClone: ComponentDefaultProps & ComponentParentProps = extend(
-    {},
-    props
-  )
-  return omit(propsClone, ['isSSR', 'children', 'ref', 'key', 'memo'])
+  const propsClone: ComponentDefaultProps = extend({}, props)
+  return omit(propsClone, ['isSSR', 'children', 'ref', 'key', 'memo', 'static'])
 }
