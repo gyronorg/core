@@ -74,4 +74,9 @@ describe('RenderToString', () => {
     const html = await renderToString(createVNode('img', { alt: 'logo' }))
     expect(html).toBe('<img alt="logo" />')
   })
+
+  test('static attribute', async () => {
+    const html = await renderToString(createVNode('div', { static: true }))
+    expect(html).toBe('<div></div>')
+  })
 })
