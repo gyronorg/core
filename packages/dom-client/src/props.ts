@@ -15,6 +15,10 @@ import { NS } from './opt'
 export type Listener = () => any
 export type Style = string | Record<string, string>
 
+interface DebugOption {
+  update: (type: string) => void
+}
+
 function setAttribute(
   el: HTMLElement | SVGElement,
   key: string,
@@ -69,12 +73,16 @@ function patchEvent(
   el: HTMLElement | SVGElement,
   key: string,
   oldEvent: Listener,
-  newEvent: Listener
+  newEvent: Listener,
+  debugOption?: DebugOption
 ) {
   if (newEvent) {
     if (newEvent !== oldEvent) {
       el.removeEventListener(key, oldEvent)
       el.addEventListener(key, newEvent)
+      if (__DEV__ && debugOption) {
+        debugOption.update('event')
+      }
     }
   }
 }
@@ -82,7 +90,8 @@ function patchEvent(
 function patchClass(
   el: HTMLElement | SVGElement,
   oldValue: string,
-  value: string
+  value: string,
+  debugOption?: DebugOption
 ) {
   if (oldValue === value) {
     return
@@ -100,13 +109,18 @@ function patchClass(
   } else {
     el.classList.add(...A)
   }
+
+  if (__DEV__ && debugOption && (D.length || A.length)) {
+    debugOption.update('class')
+  }
 }
 
 function patchStyle(
   el: HTMLElement | SVGElement,
   oldValue: Style | null,
   value: Style | null,
-  vnode: VNode
+  vnode: VNode,
+  debugOption?: DebugOption
 ) {
   if (isString(value)) {
     if (value !== oldValue) {
@@ -117,6 +131,9 @@ function patchStyle(
       for (const [css, cssValue] of Object.entries(value)) {
         if (!oldValue || oldValue[css] !== cssValue) {
           el.style[css] = cssValue
+          if (__DEV__ && debugOption) {
+            debugOption.update('style')
+          }
         }
       }
       if (isObject(oldValue)) {
@@ -137,14 +154,15 @@ export function patchProp(
   key: string,
   vnode: VNode,
   oldValue?: any,
-  newValue?: any
+  newValue?: any,
+  debugOption?: DebugOption
 ) {
   if (isEventProps(key)) {
-    patchEvent(el, normalizeEventName(key), oldValue, newValue)
+    patchEvent(el, normalizeEventName(key), oldValue, newValue, debugOption)
   } else if (key === 'style') {
-    patchStyle(el, oldValue, newValue, vnode)
+    patchStyle(el, oldValue, newValue, vnode, debugOption)
   } else if (key === 'class' || key === 'className') {
-    patchClass(el, oldValue, newValue)
+    patchClass(el, oldValue, newValue, debugOption)
   } else if (key === 'html') {
     if (shouldValue(vnode.children)) {
       console.warn(
