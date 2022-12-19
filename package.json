@@ -57,7 +57,7 @@
     "@typescript-eslint/parser": "^5.23.0",
     "conventional-changelog-cli": "^2.2.2",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.15.3",
+    "esbuild": "^0.16.9",
     "eslint": "^8.15.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^8.0.1",
