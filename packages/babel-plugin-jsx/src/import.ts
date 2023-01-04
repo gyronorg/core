@@ -3,6 +3,7 @@ import { Visitor, NodePath } from '@babel/core'
 import { hashIds } from './hmr'
 import { hashSSR } from './ssr'
 import { addNamed } from '@babel/helper-module-imports'
+import { State } from './transformJsx'
 
 const hasJSX = (parentPath: NodePath<t.Program>) => {
   let fileHasJSX = false
@@ -21,7 +22,7 @@ const hasJSX = (parentPath: NodePath<t.Program>) => {
   return fileHasJSX
 }
 
-export default {
+const visitor: Visitor<State> = {
   Program: {
     enter(path) {
       if (hasJSX(path)) {
@@ -37,4 +38,6 @@ export default {
       hashSSR.length = 0
     },
   },
-} as Visitor<t.Node>
+}
+
+export default visitor

@@ -28,7 +28,7 @@ function insertSSRCode(
   insert(path, ssrPath)
 }
 
-export default {
+const visitor: Visitor<State> = {
   JSXElement: {
     enter(path, state) {
       if (state.opts.ssr) {
@@ -41,4 +41,6 @@ export default {
       }
     },
   },
-} as Visitor<State>
+}
+
+export default visitor

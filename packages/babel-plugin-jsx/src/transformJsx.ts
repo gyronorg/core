@@ -150,7 +150,7 @@ function transformJSXFragment(path: NodePath<t.JSXFragment>, state: State) {
   return t.callExpression(h, args)
 }
 
-export default {
+const visitor: Visitor<State> = {
   JSXElement: {
     exit(path, state) {
       path.replaceWith(transformJSXElement(path, state))
@@ -161,4 +161,6 @@ export default {
       path.replaceWith(transformJSXFragment(path, state))
     },
   },
-} as Visitor<State>
+}
+
+export default visitor

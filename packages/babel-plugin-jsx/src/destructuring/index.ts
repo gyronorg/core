@@ -46,10 +46,10 @@ function transformParamsToUpdateExpression(
   }
 }
 
-const enter: VisitNodeFunction<
-  State,
-  t.FunctionExpression | t.ArrowFunctionExpression
-> = (path, state) => {
+function enterHook(
+  path: NodePath<t.FunctionExpression | t.ArrowFunctionExpression>,
+  state: State
+) {
   if (
     state.opts.setup &&
     path.parentPath.isCallExpression() &&
@@ -63,11 +63,18 @@ const enter: VisitNodeFunction<
   }
 }
 
-export default {
+const enterFunction: VisitNodeFunction<State, t.FunctionExpression> = enterHook
+
+const enterArrowFunction: VisitNodeFunction<State, t.ArrowFunctionExpression> =
+  enterHook
+
+const visitor: Visitor<State> = {
   FunctionExpression: {
-    enter: enter,
+    enter: enterFunction,
   },
   ArrowFunctionExpression: {
-    enter: enter,
+    enter: enterArrowFunction,
   },
-} as Visitor<State>
+}
+
+export default visitor

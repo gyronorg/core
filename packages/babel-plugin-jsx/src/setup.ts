@@ -2,7 +2,7 @@ import * as t from '@babel/types'
 import { Visitor } from '@babel/core'
 import { State } from './transformJsx'
 
-export default {
+const visitor: Visitor<State> = {
   CallExpression: {
     enter(path, state) {
       if (state.opts.setup) {
@@ -38,4 +38,6 @@ export default {
       }
     },
   },
-} as Visitor<State>
+}
+
+export default visitor

@@ -59,7 +59,7 @@ function transformDefaultCompHmr(
   path.scope.registerDeclaration(path)
 }
 
-export default {
+const visitor: Visitor<State> = {
   ExportDefaultDeclaration: {
     enter(path, state) {
       const declaration = path.get('declaration')
@@ -87,4 +87,6 @@ export default {
       }
     },
   },
-} as Visitor<State>
+}
+
+export default visitor
