@@ -4,9 +4,13 @@ import type { Noop } from '@gyron/shared'
 
 export function appEnv(s: any, f: Noop) {
   createInstance(
-    h(Provider, { store: s }, () => {
-      f()
-      return createVNodeComment()
-    })
+    h(
+      Provider,
+      { store: s },
+      h(() => {
+        f()
+        return createVNodeComment()
+      })
+    )
   ).render(document.createElement('div'))
 }

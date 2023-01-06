@@ -43,7 +43,7 @@ import { hydrate } from './hydrate'
 import { invokeLifecycle } from './lifecycle'
 import { setRef } from './ref'
 import { JobPriority, pushQueueJob, SchedulerJob } from './scheduler'
-import { isVNode, isVNodeComponent } from './shared'
+import { isVNode, isVNodeComponent, isVNodeFragment } from './shared'
 import { SSRMessage } from './ssr'
 import {
   Children,
@@ -62,7 +62,7 @@ function shouldUpdate(result: any) {
   return !(isBoolean(result) && !result)
 }
 
-function isSameVNodeType(n1: VNode, n2: VNode) {
+export function isSameVNodeType(n1: VNode, n2: VNode) {
   return n1.type === n2.type && n1.key === n2.key
 }
 
@@ -97,12 +97,38 @@ function mountChildren(
   }
 }
 
+function removeInvoke(_el: RenderElement, vnode: VNode) {
+  const { transition } = vnode
+  const el = _el as Element
+  const hasTransition = shouldValue(transition)
+  if (hasTransition) {
+    // if (transition.delayLeave) {
+    //   transition.delayLeave(el, () => {
+    //     transition.onLeave(el, () => {
+    //       remove(el as Element)
+    //     })
+    //   })
+    // } else {
+    //   transition.onBeforeLeave(el)
+    //   transition.onLeave(el, () => {
+    //     remove(el as Element)
+    //   })
+    // }
+    transition.onBeforeLeave(el)
+    transition.onLeave(el, () => {
+      remove(el as Element)
+    })
+  } else {
+    remove(el as Element)
+  }
+}
+
 export function unmount(vnode: VNode) {
   if (!isVNode(vnode)) {
     return null
   }
 
-  const { el, component, children } = vnode
+  const { el, component, children, transition } = vnode
 
   if (component) {
     if (!isCacheComponent(component.type)) {
@@ -113,7 +139,7 @@ export function unmount(vnode: VNode) {
     }
     invokeLifecycle(component, 'destroyed')
     if (component.$el) {
-      remove(component.$el as Element)
+      removeInvoke(component.$el, vnode)
       if (!isCacheComponent(component.type)) {
         component.$el = null
       }
@@ -121,13 +147,15 @@ export function unmount(vnode: VNode) {
     component.destroyed = true
     component.mounted = false
   } else {
-    if (isArray(children) && children.length > 0) {
-      unmountChildren(children as VNode[])
-    } else {
-      unmount(children as VNode)
+    if (!shouldValue(transition)) {
+      if (isArray(children) && children.length > 0) {
+        unmountChildren(children as VNode[])
+      } else {
+        unmount(children as VNode)
+      }
     }
     if (isElement(el)) {
-      remove(el as Element)
+      removeInvoke(el, vnode)
     }
   }
   vnode.el = null
@@ -285,9 +313,9 @@ function mountElement(
   parentComponent: Component,
   isSvg: boolean
 ) {
-  const { tag, is } = vnode
-  const el = createElement(tag, isSvg, is) as RenderElement
-  el.__vnode__ = vnode
+  const { tag, is, transition } = vnode
+  const el = createElement(tag, isSvg, is)
+  ;(el as RenderElement).__vnode__ = vnode
 
   vnode.el = el
 
@@ -305,7 +333,14 @@ function mountElement(
     mountChildren(vnode.children, vnode.el, anchor, 0, parentComponent, isSvg)
   }
 
+  const hasTransition = shouldValue(transition)
+
   insert(el, container, anchor)
+
+  if (hasTransition) {
+    transition.onBeforeActive(el)
+    transition.onActive(el)
+  }
 }
 
 function patchElement(
@@ -316,7 +351,7 @@ function patchElement(
   parentComponent: Component,
   isSvg: boolean
 ) {
-  const el = (n2.el = n1.el) as HTMLElement
+  const el = (n2.el = n1.el) as Element
   if (!isEqual(n1.props, n2.props) || isSelectElement(n2)) {
     patchProps(el, n1, extend({}, n2, { props: removeBuiltInProps(n2.props) }))
   }
@@ -512,6 +547,7 @@ function enterComponent(
       mountComponent(n2, container, anchor, parentComponent)
     }
   } else {
+    n2.anchor ||= n1.anchor
     patchComponent(n1, n2, container, anchor, parentComponent)
   }
 }
@@ -529,7 +565,13 @@ function enterElement(
   if (n1 === null) {
     mountElement(n2, container, anchor, parentComponent, isSvg)
   } else if (!n2.props.static) {
-    patchElement(n1, n2, container, anchor, parentComponent, isSvg)
+    if (n1.transition) {
+      const _anchor = anchor || nextSibling(n1.el)
+      unmount(n1)
+      patch(null, n2, container, _anchor, parentComponent, isSvg)
+    } else {
+      patchElement(n1, n2, container, anchor, parentComponent, isSvg)
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 import { createInstance, h, nextRender, useValue } from '@gyron/runtime'
 import { createElement } from '../src'
 
-describe('Controlled element', () => {
+describe('controlled element', () => {
   const container = createElement('div') as HTMLDivElement
   const options = [
     h(

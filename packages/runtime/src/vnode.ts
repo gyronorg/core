@@ -15,6 +15,7 @@ import {
   ComponentSetupFunction,
 } from './component'
 import { UserRef } from './ref'
+import { TransitionHooks } from './Transition'
 
 export const Gyron = Symbol.for('gyron')
 export const Text = Symbol.for('gyron.text')
@@ -54,9 +55,9 @@ export enum NodeType {
   Text = 3,
   Comment = 8,
 }
-export type FunctionChildren = (...args: any) => any
+
 export type TextContent = string | number | boolean | null | undefined
-export type Children = VNode | TextContent | FunctionChildren
+export type Children = VNode | TextContent
 export type VNodeChildren = Children | Children[]
 
 export interface VNodeDefaultProps {
@@ -79,11 +80,14 @@ export type VNodeType =
   | typeof Comment
   | typeof Fragment
 
-export interface VNode<T extends VNodeType = VNodeType> {
+export interface VNode<
+  T extends VNodeType = VNodeType,
+  P extends VNodeProps = VNodeProps
+> {
   flag: symbol
   type: T
   nodeType: NodeType
-  props: Partial<VNodeProps>
+  props: Partial<P>
   el?: RenderElement
   // true flag bits to ensure accurate position when inserting elements
   anchor?: RenderElement
@@ -95,6 +99,7 @@ export interface VNode<T extends VNodeType = VNodeType> {
   component?: Component
   // children node
   children?: VNodeChildren
+  transition?: TransitionHooks
   // development hydrate component uri
   __uri?: string
 }

@@ -19,12 +19,7 @@ interface DebugOption {
   update: (type: string) => void
 }
 
-function setAttribute(
-  el: HTMLElement | SVGElement,
-  key: string,
-  value: any,
-  vnode: VNode
-) {
+function setAttribute(el: Element, key: string, value: any, vnode: VNode) {
   if (el.nodeName === 'SVG') {
     el.setAttributeNS(NS, key, value)
   } else {
@@ -47,7 +42,7 @@ function setAttribute(
   }
 }
 
-function removeAttribute(el: HTMLElement | SVGElement, key: string) {
+function removeAttribute(el: Element, key: string) {
   if (el.nodeName === 'SVG') {
     el.removeAttributeNS(NS, key)
   } else {
@@ -56,7 +51,7 @@ function removeAttribute(el: HTMLElement | SVGElement, key: string) {
 }
 
 function unmountProps(
-  el: HTMLElement | SVGElement,
+  el: Element,
   unmounts: string[],
   props: Partial<VNodeProps>
 ) {
@@ -70,7 +65,7 @@ function unmountProps(
 }
 
 function patchEvent(
-  el: HTMLElement | SVGElement,
+  el: Element,
   key: string,
   oldEvent: Listener,
   newEvent: Listener,
@@ -88,7 +83,7 @@ function patchEvent(
 }
 
 function patchClass(
-  el: HTMLElement | SVGElement,
+  el: Element,
   oldValue: string,
   value: string,
   debugOption?: DebugOption
@@ -116,7 +111,7 @@ function patchClass(
 }
 
 function patchStyle(
-  el: HTMLElement | SVGElement,
+  el: Element,
   oldValue: Style | null,
   value: Style | null,
   vnode: VNode,
@@ -130,7 +125,7 @@ function patchStyle(
     if (isObject(value)) {
       for (const [css, cssValue] of Object.entries(value)) {
         if (!oldValue || oldValue[css] !== cssValue) {
-          el.style[css] = cssValue
+          ;(el as HTMLElement).style[css] = cssValue
           if (__DEV__ && debugOption) {
             debugOption.update('style')
           }
@@ -139,7 +134,7 @@ function patchStyle(
       if (isObject(oldValue)) {
         for (const css in oldValue) {
           if (!value[css]) {
-            el.style[css] = null
+            ;(el as HTMLElement).style[css] = null
           }
         }
       }
@@ -150,7 +145,7 @@ function patchStyle(
 }
 
 export function patchProp(
-  el: HTMLElement | SVGElement,
+  el: Element,
   key: string,
   vnode: VNode,
   oldValue?: any,
@@ -182,13 +177,13 @@ export function patchProp(
   }
 }
 
-export function mountProps(el: HTMLElement | SVGElement, vnode: VNode) {
+export function mountProps(el: Element, vnode: VNode) {
   for (const key in vnode.props) {
     patchProp(el, key, vnode, null, vnode.props[key])
   }
 }
 
-export function patchProps(el: HTMLElement | SVGElement, n1: VNode, n2: VNode) {
+export function patchProps(el: Element, n1: VNode, n2: VNode) {
   const unmounts = []
   for (const key in n2.props) {
     unmounts.push(key)

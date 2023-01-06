@@ -7,7 +7,7 @@ import {
 } from './component'
 
 type LifecycleCallback = (component: Component) => any
-type LifecycleUpdateCallback<T extends object = object> = (
+type LifecycleUpdateCallback<T = any> = (
   prevProps: T,
   props?: T
 ) => void | boolean

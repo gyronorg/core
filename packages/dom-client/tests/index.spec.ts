@@ -2,7 +2,7 @@ import { mountProps, patchProps, createElement } from '../src'
 import { createVNode } from '@gyron/runtime'
 import { NS } from '../src/opt'
 
-describe('Mount Props', () => {
+describe('mount Props', () => {
   const container = createElement('div') as HTMLDivElement
 
   beforeEach(() => {

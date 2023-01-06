@@ -332,6 +332,19 @@ export function sleep<T = any>(ms: number, value?: T): Promise<T> {
   })
 }
 
+export function sleepWithRequestFrame() {
+  return new Promise((resolve) => {
+    requestAnimationFrame(resolve)
+  })
+}
+
+export function removeWithString(target: string, values: string[]) {
+  return target
+    .split(' ')
+    .filter((item) => !values.includes(item))
+    .join(' ')
+}
+
 export function escape(string: unknown) {
   const escapeRE = /["'&<>]/
   const str = String(string)
