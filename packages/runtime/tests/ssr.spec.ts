@@ -163,11 +163,7 @@ describe('SSR', () => {
     const { container } = ssr(
       '<div><!--[-->b<!--|-->2022<!--|-->a<!--]--></div>',
       createVNode(() =>
-        createVNode(
-          'div',
-          null,
-          createVNode(['b', new Date().getFullYear(), 'a'])
-        )
+        createVNode('div', null, createVNode(['b', '2022', 'a']))
       )
     )
 
