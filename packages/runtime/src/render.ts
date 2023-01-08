@@ -24,6 +24,7 @@ import {
   isObject,
   isPromise,
   keys,
+  Noop,
   shouldValue,
 } from '@gyron/shared'
 import { warn } from './assert'
@@ -43,7 +44,7 @@ import { hydrate } from './hydrate'
 import { invokeLifecycle } from './lifecycle'
 import { setRef } from './ref'
 import { JobPriority, pushQueueJob, SchedulerJob } from './scheduler'
-import { isVNode, isVNodeComponent, isVNodeFragment } from './shared'
+import { isVNode, isVNodeComponent } from './shared'
 import { SSRMessage } from './ssr'
 import {
   Children,
@@ -77,8 +78,8 @@ function getNextSibling(vnode: VNode) {
   if (vnode.component) {
     return getNextSibling(vnode.component.subTree)
   }
-  if (vnode.anchor || vnode.el) {
-    return nextSibling(vnode.anchor || vnode.el)
+  if (vnode.el || vnode.anchor) {
+    return nextSibling(vnode.el || vnode.anchor)
   }
   return null
 }
@@ -97,29 +98,17 @@ function mountChildren(
   }
 }
 
-function removeInvoke(_el: RenderElement, vnode: VNode) {
+function removeInvoke(_el: RenderElement, vnode: VNode, done: Noop) {
   const { transition } = vnode
   const el = _el as Element
-  const hasTransition = shouldValue(transition)
-  if (hasTransition) {
-    // if (transition.delayLeave) {
-    //   transition.delayLeave(el, () => {
-    //     transition.onLeave(el, () => {
-    //       remove(el as Element)
-    //     })
-    //   })
-    // } else {
-    //   transition.onBeforeLeave(el)
-    //   transition.onLeave(el, () => {
-    //     remove(el as Element)
-    //   })
-    // }
-    transition.onBeforeLeave(el)
+  if (transition) {
     transition.onLeave(el, () => {
       remove(el as Element)
+      done()
     })
   } else {
     remove(el as Element)
+    done()
   }
 }
 
@@ -128,6 +117,9 @@ export function unmount(vnode: VNode) {
     return null
   }
 
+  function reset() {
+    vnode.el = null
+  }
   const { el, component, children, transition } = vnode
 
   if (component) {
@@ -139,7 +131,7 @@ export function unmount(vnode: VNode) {
     }
     invokeLifecycle(component, 'destroyed')
     if (component.$el) {
-      removeInvoke(component.$el, vnode)
+      removeInvoke(component.$el, vnode, reset)
       if (!isCacheComponent(component.type)) {
         component.$el = null
       }
@@ -147,7 +139,7 @@ export function unmount(vnode: VNode) {
     component.destroyed = true
     component.mounted = false
   } else {
-    if (!shouldValue(transition)) {
+    if (!transition) {
       if (isArray(children) && children.length > 0) {
         unmountChildren(children as VNode[])
       } else {
@@ -155,10 +147,9 @@ export function unmount(vnode: VNode) {
       }
     }
     if (isElement(el)) {
-      removeInvoke(el, vnode)
+      removeInvoke(el, vnode, reset)
     }
   }
-  vnode.el = null
 }
 
 function unmountChildren(c1: VNode[], start = 0) {
@@ -314,8 +305,12 @@ function mountElement(
   isSvg: boolean
 ) {
   const { tag, is, transition } = vnode
-  const el = createElement(tag, isSvg, is)
-  ;(el as RenderElement).__vnode__ = vnode
+  const el = createElement(tag, isSvg, is) as RenderElement
+  el.__vnode__ = vnode
+
+  if (vnode.el) {
+    el.__uid__ = vnode.el.__uid__
+  }
 
   vnode.el = el
 
@@ -333,13 +328,10 @@ function mountElement(
     mountChildren(vnode.children, vnode.el, anchor, 0, parentComponent, isSvg)
   }
 
-  const hasTransition = shouldValue(transition)
-
   insert(el, container, anchor)
 
-  if (hasTransition) {
-    transition.onBeforeActive(el)
-    transition.onActive(el)
+  if (transition) {
+    transition.onActive(el as Element)
   }
 }
 
@@ -443,6 +435,7 @@ function updateComponentEffect(
           'SetupPatch'
         )
       } else {
+        nextTree.transition ||= component.vnode.transition
         patchSubTree(component, null, nextTree)
       }
     }
@@ -479,6 +472,17 @@ export function mountComponent(
     parentComponent
   ))
   component.$parent = container
+
+  // if (vnode.transition) {
+  //   const { innerCache, transitionLeaving } = vnode.transition.state
+  //   const innerVNode = innerCache.get(vnode.type)
+  //   if (innerVNode && transitionLeaving) {
+  //     const subTree = getVNodeWithComponent(innerVNode)
+  //     // when a component is wrapped by a Transition, mark the component as active
+  //     component.mounted = true
+  //     component.subTree = subTree
+  //   }
+  // }
 
   if (__DEV__ && (component.type as any).__hmr_id) {
     refreshComponentType(vnode, component)
@@ -565,10 +569,23 @@ function enterElement(
   if (n1 === null) {
     mountElement(n2, container, anchor, parentComponent, isSvg)
   } else if (!n2.props.static) {
-    if (n1.transition) {
-      const _anchor = anchor || nextSibling(n1.el)
-      unmount(n1)
-      patch(null, n2, container, _anchor, parentComponent, isSvg)
+    const { transition } = n1
+    if (transition) {
+      const _anchor = (n1.anchor ||= nextSibling(n1.el))
+      const el = n1.el as Element
+      if (transition.state.transitionLeaving) {
+        transition.onLeaveFinish(el)
+        transition.onActive(el)
+      } else {
+        if (isSameVNodeType(n1, n2)) {
+          transition.onActiveFinish(el)
+          patchElement(n1, n2, container, anchor, parentComponent, isSvg)
+          transition.onActive(el)
+        } else {
+          unmount(n1)
+          patch(null, n2, container, _anchor, parentComponent, isSvg)
+        }
+      }
     } else {
       patchElement(n1, n2, container, anchor, parentComponent, isSvg)
     }

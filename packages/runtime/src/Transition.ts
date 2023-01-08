@@ -4,7 +4,7 @@ import { isNumber } from '@gyron/shared'
 import { isVNode, isVNodeComment } from '.'
 import { Noop } from '@gyron/shared'
 
-interface NormalizeTransitionProps {
+interface TransitionPropsNormalize {
   cls: {
     activeBefore: string
     active: string
@@ -15,12 +15,15 @@ interface NormalizeTransitionProps {
 }
 
 export interface TransitionHooks {
-  onBeforeActive: (el: Element) => void
+  state: ReturnType<typeof useTransitionState>
+
+  __uid__?: number
+
   onActive: (el: Element) => void
-  onActiveCancel: (el: Element) => void
-  onBeforeLeave: (el: Element) => void
+  onActiveFinish: (el: Element) => void
   onLeave: (el: Element, done: Noop) => void
-  onLeaveCancel: (el: Element) => void
+  onLeaveFinish: (el: Element) => void
+  // TODO for transition group
   delayLeave?: (el: Element, done?: Noop) => void
 }
 
@@ -72,16 +75,18 @@ function whenTransitionEnd(
 ) {
   const id = (el.__uid__ = ++_uid)
 
+  function onEnd() {
+    el.removeEventListener('transitionend', onEnd)
+    if (el.__uid__ === id) {
+      // No less than 1 animation execution of the element occurs, and no callbacks are executed before
+      done()
+    }
+  }
+
   if (isNumber(duration)) {
     return setTimeout(onEnd, duration)
   }
   el.addEventListener('transitionend', onEnd)
-  function onEnd() {
-    el.removeEventListener('transitionend', onEnd)
-    if (el.__uid__ === id) {
-      done()
-    }
-  }
 }
 function onAddClassName(el: Element, name: string) {
   el.classList.add(name)
@@ -89,25 +94,30 @@ function onAddClassName(el: Element, name: string) {
 function onRemoveClassName(el: Element, name: string) {
   el.classList.remove(name)
 }
-function onBeforeActive(el: Element, props: NormalizeTransitionProps) {
+function onBeforeActiveHook(el: Element, props: TransitionPropsNormalize) {
   onAddClassName(el, props.cls.activeBefore)
 }
-function onActive(el: Element, props: NormalizeTransitionProps) {
+function onActiveHook(
+  el: Element,
+  props: TransitionPropsNormalize,
+  done: Noop
+) {
   return requestAnimationFrame(() => {
     whenTransitionEnd(el, props.duration?.active, () => {
       onRemoveClassName(el, props.cls.active)
+      done()
     })
     onRemoveClassName(el, props.cls.activeBefore)
     onAddClassName(el, props.cls.active)
   })
 }
-function onActiveCancel(el: Element, props: NormalizeTransitionProps) {
+function onActiveCancelHook(el: Element, props: TransitionPropsNormalize) {
   onRemoveClassName(el, props.cls.active)
 }
-function onBeforeLeave(el: Element, props: NormalizeTransitionProps) {
+function onBeforeLeaveHook(el: Element, props: TransitionPropsNormalize) {
   onAddClassName(el, props.cls.leaveBefore)
 }
-function onLeave(el: Element, props: NormalizeTransitionProps, done: Noop) {
+function onLeaveHook(el: Element, props: TransitionPropsNormalize, done: Noop) {
   return requestAnimationFrame(() => {
     whenTransitionEnd(el, props.duration?.leave, () => {
       onRemoveClassName(el, props.cls.leave)
@@ -117,13 +127,13 @@ function onLeave(el: Element, props: NormalizeTransitionProps, done: Noop) {
     onAddClassName(el, props.cls.leave)
   })
 }
-function onLeaveCancel(el: Element, props: NormalizeTransitionProps) {
+function onLeaveCancelHook(el: Element, props: TransitionPropsNormalize) {
   onRemoveClassName(el, props.cls.leave)
 }
 
 function normalizeTransitionProps(
   props: TransitionProps
-): NormalizeTransitionProps {
+): TransitionPropsNormalize {
   function normalizeDuration(duration: Duration) {
     if (isNumber(duration)) {
       return {
@@ -143,33 +153,56 @@ function useTransitionState() {
   const innerCache = new Map<any, VNode>()
   return {
     innerCache,
+    transitionActivating: false,
+    transitionLeaving: false,
   }
 }
 
 function generateTransitionHook(
   vnode: VNode,
-  props: NormalizeTransitionProps
+  state: ReturnType<typeof useTransitionState>,
+  props: TransitionPropsNormalize
 ): TransitionHooks {
   return {
-    onBeforeActive(el) {
-      onBeforeActive(el, props)
-    },
+    state: state,
     onActive(el) {
-      onActive(el, props)
+      state.transitionActivating = true
+      if (state.transitionLeaving) {
+        onLeaveCancelHook(el, props)
+      }
+      onBeforeActiveHook(el, props)
+      onActiveHook(el, props, () => {
+        state.transitionActivating = false
+        state.innerCache.set(vnode.type, vnode)
+      })
     },
-    onActiveCancel(el) {
-      onActiveCancel(el, props)
+    onActiveFinish(el) {
+      onRemoveClassName(el, props.cls.activeBefore)
+      onRemoveClassName(el, props.cls.active)
+      state.transitionActivating = false
     },
-    onBeforeLeave(el) {
-      onBeforeLeave(el, props)
+    onLeave(el, remove) {
+      state.transitionLeaving = true
+      if (state.transitionActivating) {
+        onActiveCancelHook(el, props)
+      }
+      onBeforeLeaveHook(el, props)
+      onLeaveHook(el, props, () => {
+        state.transitionLeaving = false
+        state.innerCache.delete(vnode.type)
+        remove()
+      })
     },
-    onLeave(el, done) {
-      onLeave(el, props, done)
-    },
-    onLeaveCancel(el) {
-      onLeaveCancel(el, props)
+    onLeaveFinish(el) {
+      onRemoveClassName(el, props.cls.leaveBefore)
+      onRemoveClassName(el, props.cls.leave)
+      state.transitionLeaving = false
     },
   }
+}
+
+function setTransition(vnode: VNode, hooks: TransitionHooks) {
+  vnode.transition = hooks
 }
 
 export const Transition = FC<TransitionProps>(function Transition() {
@@ -179,28 +212,16 @@ export const Transition = FC<TransitionProps>(function Transition() {
     const oldChild = component.subTree
 
     const normalizeProps = normalizeTransitionProps(props)
-    // 实现
-    // 1，将hook装填到VNode上
-    // 2，在render周期里面调用VNode上的装填的hook
-    // 3，有延迟删除的VNode需要实现 delayLeave
     if (isVNode(child) && !isVNodeComment(child)) {
-      child.transition = generateTransitionHook(child, normalizeProps)
+      setTransition(child, generateTransitionHook(child, state, normalizeProps))
     }
 
     if (isVNode(oldChild) && !isVNodeComment(oldChild)) {
-      oldChild.transition = generateTransitionHook(oldChild, normalizeProps)
+      setTransition(
+        oldChild,
+        generateTransitionHook(oldChild, state, normalizeProps)
+      )
     }
-
-    // if (
-    //   isVNode(child) &&
-    //   isVNode(oldChild) &&
-    //   !isSameVNodeType(child, oldChild)
-    // ) {
-    //   oldChild.transition.delayLeave = (el, done) => {
-    //     oldChild.transition.onBeforeLeave(el)
-    //     done()
-    //   }
-    // }
 
     return child
   }

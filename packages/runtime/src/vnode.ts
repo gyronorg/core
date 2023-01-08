@@ -67,6 +67,7 @@ export interface VNodeDefaultProps {
 
 export interface RenderElement extends Node {
   __vnode__?: VNode
+  [x: string]: any
 }
 
 export type VNodeType =
