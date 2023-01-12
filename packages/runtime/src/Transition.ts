@@ -1,8 +1,9 @@
 import { VNode } from './vnode'
 import { FC } from './component'
-import { isNumber } from '@gyron/shared'
-import { isVNode, isVNodeComment } from '.'
+import { isFunction, isNumber, shouldValue } from '@gyron/shared'
+import { isVNode, isVNodeComment, RenderElement, warn } from '.'
 import { Noop } from '@gyron/shared'
+import { InnerCode } from './assert'
 
 interface TransitionPropsNormalize {
   cls: {
@@ -16,11 +17,7 @@ interface TransitionPropsNormalize {
 
 export interface TransitionHooks {
   state: ReturnType<typeof useTransitionState>
-
-  __uid__?: number
-
   onActive: (el: Element) => void
-  onActiveFinish: (el: Element) => void
   onLeave: (el: Element, done: Noop) => void
   onLeaveFinish: (el: Element) => void
   // TODO for transition group
@@ -28,6 +25,10 @@ export interface TransitionHooks {
 }
 
 type Duration = number | { active: number; leave: number }
+
+type TransitionState = ReturnType<typeof useTransitionState>
+
+type TransitionElementMethod = '__remove__' | '__active__'
 
 export interface TransitionProps {
   name: string
@@ -47,26 +48,6 @@ function normalizedClassName(props: TransitionProps) {
   }
 }
 
-// 动画的不同状态
-// 1，进入前的动画
-// 2，进入中的动画 requestAnimationFrame -> requestAnimationFrame
-// 3，离开前的动画
-// 4，离开中的动画 requestAnimationFrame -> requestAnimationFrame
-// 通过 render scope 将状态 set 到真实元素中，然后再进入到合适的时机将状态取出
-
-// 用户节点的状态（适应普通节点和组件节点）
-// 1，节点更换（从A到B 或者 从B到A）
-// 2，节点删除（从A到空 或者 从空到A）
-// beforeActive - active
-// beforeLeave - leave
-
-// 取消机制
-// 1，取消当状态发生变更时，上一次任务还未执行的情况
-
-// 实现
-// 1，一些事件应该挂载到元素上，发生变更时执行对应的事件。
-//   比如A离开，B进入，那么应该执行A的 beforeLeave 和 leave ，同时执行B的 beforeActive 和 active 事件。
-
 let _uid = 0
 function whenTransitionEnd(
   el: Element & { __uid__?: number },
@@ -78,7 +59,7 @@ function whenTransitionEnd(
   function onEnd() {
     el.removeEventListener('transitionend', onEnd)
     if (el.__uid__ === id) {
-      // No less than 1 animation execution of the element occurs, and no callbacks are executed before
+      // no less than 1 animation execution of the element occurs, and no callbacks are executed before
       done()
     }
   }
@@ -103,31 +84,27 @@ function onActiveHook(
   done: Noop
 ) {
   return requestAnimationFrame(() => {
-    whenTransitionEnd(el, props.duration?.active, () => {
-      onRemoveClassName(el, props.cls.active)
-      done()
-    })
+    whenTransitionEnd(el, props.duration?.active, done)
     onRemoveClassName(el, props.cls.activeBefore)
     onAddClassName(el, props.cls.active)
   })
-}
-function onActiveCancelHook(el: Element, props: TransitionPropsNormalize) {
-  onRemoveClassName(el, props.cls.active)
 }
 function onBeforeLeaveHook(el: Element, props: TransitionPropsNormalize) {
   onAddClassName(el, props.cls.leaveBefore)
 }
 function onLeaveHook(el: Element, props: TransitionPropsNormalize, done: Noop) {
   return requestAnimationFrame(() => {
-    whenTransitionEnd(el, props.duration?.leave, () => {
-      onRemoveClassName(el, props.cls.leave)
-      done()
-    })
+    whenTransitionEnd(el, props.duration?.leave, done)
     onRemoveClassName(el, props.cls.leaveBefore)
     onAddClassName(el, props.cls.leave)
   })
 }
-function onLeaveCancelHook(el: Element, props: TransitionPropsNormalize) {
+function onActiveFinish(el: Element, props: TransitionPropsNormalize) {
+  onRemoveClassName(el, props.cls.activeBefore)
+  onRemoveClassName(el, props.cls.active)
+}
+function onLeaveFinish(el: Element, props: TransitionPropsNormalize) {
+  onRemoveClassName(el, props.cls.leaveBefore)
   onRemoveClassName(el, props.cls.leave)
 }
 
@@ -150,11 +127,57 @@ function normalizeTransitionProps(
 }
 
 function useTransitionState() {
-  const innerCache = new Map<any, VNode>()
+  const leaveInnerNodes = new Map<
+    any,
+    Record<number | string | symbol, VNode>
+  >()
+  const activeInnerNodes = new Map<
+    any,
+    Record<number | string | symbol, VNode>
+  >()
   return {
-    innerCache,
-    transitionActivating: false,
-    transitionLeaving: false,
+    leaveInnerNodes,
+    activeInnerNodes,
+  }
+}
+
+function processFinish(
+  state: TransitionState,
+  vnode: VNode,
+  type: keyof TransitionState,
+  method: TransitionElementMethod
+) {
+  const n = state[type].get(vnode.type)
+  const n1 = n && n[vnode.key]
+  if (n1 && n1.el && n1.el[method]) {
+    const f = n1.el[method]
+    n1.el[method] = undefined
+    isFunction(f) && f()
+    delete n[vnode.key]
+  }
+}
+
+function setInnerVNode(
+  state: TransitionState,
+  vnode: VNode,
+  type: keyof TransitionState
+) {
+  const cache = state[type]
+  if (shouldValue(vnode.key)) {
+    if (cache.has(vnode.type)) {
+      const n = cache.get(vnode.type)
+      n[vnode.key] = vnode
+    } else {
+      cache.set(vnode.type, {
+        [vnode.key]: vnode,
+      })
+    }
+  } else if (__DEV__) {
+    warn(
+      `An exception has occurred, please submit error code ${InnerCode.Transition} to issue`,
+      vnode.component,
+      'Transition'
+    )
   }
 }
 
@@ -166,37 +189,30 @@ function generateTransitionHook(
   return {
     state: state,
     onActive(el) {
-      state.transitionActivating = true
-      if (state.transitionLeaving) {
-        onLeaveCancelHook(el, props)
-      }
-      onBeforeActiveHook(el, props)
-      onActiveHook(el, props, () => {
-        state.transitionActivating = false
-        state.innerCache.set(vnode.type, vnode)
+      processFinish(state, vnode, 'leaveInnerNodes', '__remove__')
+      setInnerVNode(state, vnode, 'activeInnerNodes')
+
+      const done = ((el as RenderElement).__active__ = () => {
+        onActiveFinish(el, props)
       })
-    },
-    onActiveFinish(el) {
-      onRemoveClassName(el, props.cls.activeBefore)
-      onRemoveClassName(el, props.cls.active)
-      state.transitionActivating = false
+
+      onBeforeActiveHook(el, props)
+      onActiveHook(el, props, done)
     },
     onLeave(el, remove) {
-      state.transitionLeaving = true
-      if (state.transitionActivating) {
-        onActiveCancelHook(el, props)
-      }
-      onBeforeLeaveHook(el, props)
-      onLeaveHook(el, props, () => {
-        state.transitionLeaving = false
-        state.innerCache.delete(vnode.type)
+      processFinish(state, vnode, 'activeInnerNodes', '__active__')
+      setInnerVNode(state, vnode, 'leaveInnerNodes')
+
+      const done = ((el as RenderElement).__remove__ = () => {
+        onLeaveFinish(el, props)
         remove()
       })
+
+      onBeforeLeaveHook(el, props)
+      onLeaveHook(el, props, done)
     },
     onLeaveFinish(el) {
-      onRemoveClassName(el, props.cls.leaveBefore)
-      onRemoveClassName(el, props.cls.leave)
-      state.transitionLeaving = false
+      onLeaveFinish(el, props)
     },
   }
 }
@@ -208,21 +224,18 @@ function setTransition(vnode: VNode, hooks: TransitionHooks) {
 export const Transition = FC<TransitionProps>(function Transition() {
   const state = useTransitionState()
   return function TransitionChildren(props, component) {
-    const child = props.children
-    const oldChild = component.subTree
+    const n1 = component.subTree
+    const n2 = props.children
 
     const normalizeProps = normalizeTransitionProps(props)
-    if (isVNode(child) && !isVNodeComment(child)) {
-      setTransition(child, generateTransitionHook(child, state, normalizeProps))
+    if (isVNode(n2) && !isVNodeComment(n2)) {
+      setTransition(n2, generateTransitionHook(n2, state, normalizeProps))
     }
 
-    if (isVNode(oldChild) && !isVNodeComment(oldChild)) {
-      setTransition(
-        oldChild,
-        generateTransitionHook(oldChild, state, normalizeProps)
-      )
+    if (isVNode(n1) && !isVNodeComment(n1)) {
+      setTransition(n1, generateTransitionHook(n1, state, normalizeProps))
     }
 
-    return child
+    return n2
   }
 })

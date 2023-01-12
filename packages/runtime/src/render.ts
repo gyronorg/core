@@ -103,11 +103,11 @@ function removeInvoke(_el: RenderElement, vnode: VNode, done: Noop) {
   const el = _el as Element
   if (transition) {
     transition.onLeave(el, () => {
-      remove(el as Element)
+      remove(el)
       done()
     })
   } else {
-    remove(el as Element)
+    remove(el)
     done()
   }
 }
@@ -305,14 +305,8 @@ function mountElement(
   isSvg: boolean
 ) {
   const { tag, is, transition } = vnode
-  const el = createElement(tag, isSvg, is) as RenderElement
+  const el = (vnode.el = createElement(tag, isSvg, is) as RenderElement)
   el.__vnode__ = vnode
-
-  if (vnode.el) {
-    el.__uid__ = vnode.el.__uid__
-  }
-
-  vnode.el = el
 
   if (vnode.props.ref) {
     setRef(el, vnode.props.ref)
@@ -556,6 +550,28 @@ function enterComponent(
   }
 }
 
+function transitionMove(
+  n1: VNode,
+  n2: VNode,
+  container: RenderElement,
+  anchor: RenderElement,
+  parentComponent: Component,
+  isSvg: boolean
+) {
+  const { transition } = n1
+  const el = n1.el as Element
+  transition.onLeaveFinish(el)
+  unmount(n1)
+  patch(
+    null,
+    n2,
+    container,
+    anchor || getNextSibling(n1),
+    parentComponent,
+    isSvg
+  )
+}
+
 function enterElement(
   n1: VNode | null,
   n2: VNode,
@@ -569,23 +585,8 @@ function enterElement(
   if (n1 === null) {
     mountElement(n2, container, anchor, parentComponent, isSvg)
   } else if (!n2.props.static) {
-    const { transition } = n1
-    if (transition) {
-      const _anchor = (n1.anchor ||= nextSibling(n1.el))
-      const el = n1.el as Element
-      if (transition.state.transitionLeaving) {
-        transition.onLeaveFinish(el)
-        transition.onActive(el)
-      } else {
-        if (isSameVNodeType(n1, n2)) {
-          transition.onActiveFinish(el)
-          patchElement(n1, n2, container, anchor, parentComponent, isSvg)
-          transition.onActive(el)
-        } else {
-          unmount(n1)
-          patch(null, n2, container, _anchor, parentComponent, isSvg)
-        }
-      }
+    if (n1.transition) {
+      transitionMove(n1, n2, container, anchor, parentComponent, isSvg)
     } else {
       patchElement(n1, n2, container, anchor, parentComponent, isSvg)
     }

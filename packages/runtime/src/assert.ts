@@ -2,6 +2,10 @@ import { Component } from './component'
 import { getErrorBoundaryCtx } from './ErrorBoundary'
 import { ErrorType, WarnType, BoundariesHandler } from './boundaries'
 
+export enum InnerCode {
+  Transition = 1000,
+}
+
 export function warn(
   err: Error | string,
   component: Component | null,

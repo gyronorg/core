@@ -17,11 +17,11 @@ import {
 import { UserRef } from './ref'
 import { TransitionHooks } from './Transition'
 
-export const Gyron = Symbol.for('gyron')
-export const Text = Symbol.for('gyron.text')
-export const Element = Symbol.for('gyron.element')
-export const Comment = Symbol.for('gyron.comment')
-export const Fragment = Symbol.for('gyron.fragment')
+export const Gyron = Symbol('gyron')
+export const Text = Symbol('gyron.text')
+export const Element = Symbol('gyron.element')
+export const Comment = Symbol('gyron.comment')
+export const Fragment = Symbol('gyron.fragment')
 
 type ToUpper<T extends string> = T extends `${infer F}${infer Rest}`
   ? `${Uppercase<F>}${Rest}`
@@ -66,8 +66,8 @@ export interface VNodeDefaultProps {
 }
 
 export interface RenderElement extends Node {
+  [key: string]: any
   __vnode__?: VNode
-  [x: string]: any
 }
 
 export type VNodeType =
@@ -186,7 +186,7 @@ export function createVNode(
 ): VNode {
   let vnodeProps = props ? props : {}
 
-  const key = vnodeProps.key || null
+  const key = shouldValue(vnodeProps.key) ? vnodeProps.key : null
   let type: VNodeType = Text
   let nodeType: NodeType = NodeType.Text
   let _uri: string
