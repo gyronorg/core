@@ -7,6 +7,7 @@ import transformJsx from './transformJsx'
 import transformSetup from './setup'
 import transformProps from './destructuring'
 import transformSSR from './ssr'
+import transformTransition from './transition'
 
 export type { State } from './transformJsx'
 
@@ -17,7 +18,8 @@ export const visitor = createVisitor(
     transformHmr,
     transformSetup,
     transformProps,
-    transformSSR
+    transformSSR,
+    transformTransition
   )
 )
 

@@ -186,4 +186,10 @@ describe('JSX', () => {
       expect(enter).toHaveBeenCalledTimes(2)
     }
   })
+
+  test('transition children must key', () => {
+    const file = `<Transition><A /></Transition>`
+    const { code } = transform(file)
+    expect(code).toContain('"key": "0"')
+  })
 })
