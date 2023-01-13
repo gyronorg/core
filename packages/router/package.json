@@ -4,7 +4,7 @@
   "module": "dist/esm/index.js",
   "browser": "dist/umd/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -21,13 +21,13 @@
     "test": "jest --config=../../jest.config.js"
   },
   "dependencies": {
-    "@gyron/runtime": "^0.0.21",
-    "@gyron/shared": "^0.0.21",
-    "@gyron/sync": "^0.0.21",
+    "@gyron/runtime": "^0.0.22",
+    "@gyron/shared": "^0.0.22",
+    "@gyron/sync": "^0.0.22",
     "history": "^5.3.0",
     "path-to-regexp": "^6.2.0"
   },
   "devDependencies": {
-    "@gyron/dom-server": "^0.0.21"
+    "@gyron/dom-server": "^0.0.22"
   }
 }
