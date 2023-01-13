@@ -1,10 +1,9 @@
 {
   "name": "@gyron/reactivity",
-  "version": "0.0.22",
-  "description": "mini reactivity",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
+  "version": "0.0.22",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
