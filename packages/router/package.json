@@ -3,7 +3,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -20,13 +20,13 @@
     "test": "jest --config=../../jest.config.js"
   },
   "dependencies": {
-    "@gyron/runtime": "^0.0.22",
-    "@gyron/shared": "^0.0.22",
-    "@gyron/sync": "^0.0.22",
+    "@gyron/runtime": "^0.0.23",
+    "@gyron/shared": "^0.0.23",
+    "@gyron/sync": "^0.0.23",
     "history": "^5.3.0",
     "path-to-regexp": "^6.2.0"
   },
   "devDependencies": {
-    "@gyron/dom-server": "^0.0.22"
+    "@gyron/dom-server": "^0.0.23"
   }
 }
