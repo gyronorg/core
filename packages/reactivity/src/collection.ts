@@ -1,4 +1,4 @@
-import { hasChanged, hasOwn, isMap } from '@gyron/shared'
+import { hasChanged, hasOwn, isMap, Noop } from '@gyron/shared'
 import {
   ITERATE_KEY,
   MAP_KEY_ITERATE_KEY,
@@ -130,7 +130,7 @@ function clear(this: IterableCollections) {
 function createForEach() {
   return function forEach(
     this: IterableCollections,
-    callback: () => void,
+    callback: Noop,
     thisArg?: unknown
   ) {
     const observed = this as any

@@ -47,8 +47,9 @@ export type ComponentDefaultProps = Partial<{
   readonly html: string
 }>
 
-export type ComponentFunction<Props> = (
-  props?: Props & ComponentDefaultProps
+export type ComponentFunction<Props extends object = object> = (
+  props?: Props & ComponentDefaultProps,
+  component?: Component<Props>
 ) => VNodeChildren
 
 export interface ComponentSetupFunction<Props extends object = object> {
@@ -171,13 +172,13 @@ function renderComponentSubTree(
   renderTree: ReturnType<ComponentSetupFunction<VNodeProps>>
 ) {
   if (isFunction(renderTree)) {
-    component.render = renderTree as ComponentFunction<VNodeProps>
+    component.render = renderTree
     renderTree = callWithErrorHandling(
       renderTree,
       component,
       ErrorHandlingType.Setup,
       [props, component]
-    )
+    ) as VNodeChildren
   }
   if (isPromise(renderTree)) {
     return renderTree.then((subTree: VNodeChildren) => {

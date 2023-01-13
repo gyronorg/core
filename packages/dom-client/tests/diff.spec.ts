@@ -7,7 +7,7 @@ import {
 } from '@gyron/runtime'
 import { patchProp } from '../src/props'
 
-describe('Diff', () => {
+describe('diff', () => {
   const container = document.createElement('div')
 
   beforeEach(() => {

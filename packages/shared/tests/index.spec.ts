@@ -36,6 +36,7 @@ import {
   isIntegerKey,
   isEventProps,
   normalizeEventName,
+  removeWithString,
 } from '../src'
 
 describe('Common function', () => {
@@ -264,5 +265,9 @@ describe('Common function', () => {
     expect(isEventProps('onclick')).toBe(false)
     expect(isEventProps('on')).toBe(false)
     expect(normalizeEventName('onClick')).toBe('click')
+  })
+
+  test('removeWithString', () => {
+    expect(removeWithString('foo bar', ['bar'])).toBe('foo')
   })
 })

@@ -15,12 +15,13 @@ import {
   ComponentSetupFunction,
 } from './component'
 import { UserRef } from './ref'
+import { TransitionHooks } from './Transition'
 
-export const Gyron = Symbol.for('gyron')
-export const Text = Symbol.for('gyron.text')
-export const Element = Symbol.for('gyron.element')
-export const Comment = Symbol.for('gyron.comment')
-export const Fragment = Symbol.for('gyron.fragment')
+export const Gyron = Symbol('gyron')
+export const Text = Symbol('gyron.text')
+export const Element = Symbol('gyron.element')
+export const Comment = Symbol('gyron.comment')
+export const Fragment = Symbol('gyron.fragment')
 
 type ToUpper<T extends string> = T extends `${infer F}${infer Rest}`
   ? `${Uppercase<F>}${Rest}`
@@ -54,9 +55,9 @@ export enum NodeType {
   Text = 3,
   Comment = 8,
 }
-export type FunctionChildren = (...args: any) => any
+
 export type TextContent = string | number | boolean | null | undefined
-export type Children = VNode | TextContent | FunctionChildren
+export type Children = VNode | TextContent
 export type VNodeChildren = Children | Children[]
 
 export interface VNodeDefaultProps {
@@ -65,6 +66,7 @@ export interface VNodeDefaultProps {
 }
 
 export interface RenderElement extends Node {
+  [key: string]: any
   __vnode__?: VNode
 }
 
@@ -79,11 +81,14 @@ export type VNodeType =
   | typeof Comment
   | typeof Fragment
 
-export interface VNode<T extends VNodeType = VNodeType> {
+export interface VNode<
+  T extends VNodeType = VNodeType,
+  P extends VNodeProps = VNodeProps
+> {
   flag: symbol
   type: T
   nodeType: NodeType
-  props: Partial<VNodeProps>
+  props: Partial<P>
   el?: RenderElement
   // true flag bits to ensure accurate position when inserting elements
   anchor?: RenderElement
@@ -95,6 +100,7 @@ export interface VNode<T extends VNodeType = VNodeType> {
   component?: Component
   // children node
   children?: VNodeChildren
+  transition?: TransitionHooks
   // development hydrate component uri
   __uri?: string
 }
@@ -180,7 +186,7 @@ export function createVNode(
 ): VNode {
   let vnodeProps = props ? props : {}
 
-  const key = vnodeProps.key || null
+  const key = shouldValue(vnodeProps.key) ? vnodeProps.key : null
   let type: VNodeType = Text
   let nodeType: NodeType = NodeType.Text
   let _uri: string

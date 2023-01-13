@@ -28,7 +28,7 @@ export type HProps = VNodeProps | string
  * @returns VNode
  */
 export function h<T extends VNodeType>(
-  type: T,
+  type: T | T[],
   props?: UtilComponentProps<T, HProps>,
   children?: VNodeChildren
 ): VNode {

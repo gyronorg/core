@@ -13,6 +13,7 @@ export {
   toRaw,
 } from '@gyron/reactivity'
 export { ErrorBoundary } from './ErrorBoundary'
+export { Transition } from './Transition'
 export {
   useWatch,
   createComponentInstance,

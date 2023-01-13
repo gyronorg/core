@@ -116,7 +116,7 @@ const isInputPending: () => boolean =
     ? navigator.scheduling.isInputPending.bind(navigator.scheduling)
     : null
 
-const timeout = (callback: () => void, ms: number) => {
+const timeout = (callback: Noop, ms: number) => {
   if (self.requestIdleCallback) {
     requestIdleCallback(callback, { timeout: ms })
   } else {

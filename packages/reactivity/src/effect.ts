@@ -1,4 +1,4 @@
-import { isArray, isIntegerKey, isMap } from '@gyron/shared'
+import { isArray, isIntegerKey, isMap, Noop } from '@gyron/shared'
 import { ReactiveFlags } from './reactive'
 
 let activeEffect: Effect | undefined
@@ -55,13 +55,13 @@ export interface Effect {
   deps: Dep[]
   allowEffect: boolean
   scheduler: EffectScheduler | null
-  wrapper: () => void
+  wrapper: Noop
   run: () => any
-  stop: () => void
+  stop: Noop
 }
 
 export function createEffect(
-  fn: () => void,
+  fn: Noop,
   scheduler: EffectScheduler | null = null,
   dependency: Dependency[] = []
 ) {
