@@ -8,6 +8,7 @@ const visitor: Visitor<State> = {
       const openElement = path.get('openingElement').node
       if (t.isJSXIdentifier(openElement.name)) {
         const { name } = openElement.name
+        // TODO need cover scope identifier for gyron or @gyron/runtime
         if (name === 'Transition') {
           const children = path.get('children')
           children.forEach((path, index) => {

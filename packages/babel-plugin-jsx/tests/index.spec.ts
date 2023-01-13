@@ -192,4 +192,10 @@ describe('JSX', () => {
     const { code } = transform(file)
     expect(code).toContain('"key": "0"')
   })
+
+  test('transition merge children props', () => {
+    const file = `<Transition><A key={1} /></Transition>`
+    const { code } = transform(file)
+    expect(code).toContain('"key": 1')
+  })
 })
