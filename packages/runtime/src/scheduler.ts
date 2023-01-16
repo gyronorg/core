@@ -29,11 +29,11 @@ export enum JobPriority {
 /**
  * Wait for the data to finish rendering and the updated DOM node will be available in the next tick.
  * ```js
- * import { h, useValue, nextRender, useRef, onAfterMount } from 'gyron'
+ * import { h, useValue, nextRender, createRef, onAfterMount } from 'gyron'
  *
  * const App = h(() => {
  *   const count = useValue(0)
- *   const ref = useRef()
+ *   const ref = createRef()
  *
  *   onAfterMount(() => {
  *     count.value++
