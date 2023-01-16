@@ -338,11 +338,20 @@ function patchElement(
   isSvg: boolean
 ) {
   const el = (n2.el = n1.el) as Element
-  if (!isEqual(n1.props, n2.props) || isSelectElement(n2)) {
-    patchProps(el, n1, extend({}, n2, { props: removeBuiltInProps(n2.props) }))
-  }
-  if (n1.children || n2.children) {
-    patchChildren(n1, n2, container, anchor, parentComponent, isSvg)
+  if (el.nodeName === n2.tag.toLocaleUpperCase()) {
+    if (!isEqual(n1.props, n2.props) || isSelectElement(n2)) {
+      patchProps(
+        el,
+        n1,
+        extend({}, n2, { props: removeBuiltInProps(n2.props) })
+      )
+    }
+    if (n1.children || n2.children) {
+      patchChildren(n1, n2, container, anchor, parentComponent, isSvg)
+    }
+  } else {
+    unmount(n1)
+    patch(null, n2, container, anchor, parentComponent, isSvg)
   }
 }
 

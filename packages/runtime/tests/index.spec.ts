@@ -116,4 +116,17 @@ describe('Runtime', () => {
       '<div><div>hello</div><div>gyron!</div></div>'
     )
   })
+
+  test('patch diff nodeName', async () => {
+    let foo = true
+    const App = h(() => {
+      return foo ? h('div', null, []) : h('input', null, [])
+    })
+    createInstance(App).render(container)
+    expect(container.innerHTML).toBe('<div></div>')
+    foo = false
+    App.component.update()
+    await nextRender()
+    expect(container.innerHTML).toBe('<input>')
+  })
 })
