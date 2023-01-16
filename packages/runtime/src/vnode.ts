@@ -194,9 +194,6 @@ export function createVNode(
   if (isString(tag) && (!isUndefined(props) || !isUndefined(children))) {
     type = Element
     nodeType = NodeType.Element
-    if (isArray(children)) {
-      children = children.flat(Infinity)
-    }
   } else if (isFunction(tag)) {
     type = tag
     nodeType = NodeType.Component
@@ -213,6 +210,10 @@ export function createVNode(
     children = mergeVNode(tag.map(normalizeVNode), vnodeProps)
   } else {
     children = tag as TextContent
+  }
+
+  if (isArray(children)) {
+    children = children.flat(Infinity)
   }
 
   const vnode: VNode = {
