@@ -1,4 +1,5 @@
-import { transform, trim } from './util'
+import { transform } from '../src'
+import { trim } from './util'
 
 describe('Setup', () => {
   test('render helper setup opt', () => {
@@ -7,7 +8,7 @@ describe('Setup', () => {
       return <span>{value}</span>
     })
   `
-    const { code } = transform(file, true)
+    const { code } = transform(file)
     expect(code).toContain(
       'return ({\n    value\n  }) => _h("span", {}, value)'
     )
@@ -17,7 +18,7 @@ describe('Setup', () => {
     const file = `FC(({ value }) => {
       return <span>{value}</span>
     })`
-    const { code } = transform(file, true)
+    const { code } = transform(file)
     expect(code).toContain(
       'return ({\n    value\n  }) => _h("span", {}, value)'
     )
@@ -25,7 +26,7 @@ describe('Setup', () => {
 
   test('render helper setup arrow function(no block statement)', () => {
     const file = `FC(({ value }) => <span>{value}</span>)`
-    const { code } = transform(file, true)
+    const { code } = transform(file)
     expect(code).toContain('({\n  value\n}) => _h("span", {}, value)')
   })
 
@@ -36,7 +37,7 @@ describe('Setup', () => {
       return <span>{value}</span>
     })
   `
-    const { code } = transform(file, true)
+    const { code } = transform(file)
     expect(code).toContain('list.map(x => _h("a", {}, x));')
   })
 
@@ -46,7 +47,7 @@ describe('Setup', () => {
       return <span>{value}</span>
     })
   `
-    const { code } = transform(file, true)
+    const { code } = transform(file)
     expect(code).toContain(
       'import { onBeforeUpdate as _onBeforeUpdate } from "gyron"'
     )
@@ -62,7 +63,7 @@ describe('Setup', () => {
       return <span>{value}</span>
     })
   `
-    const { code } = transform(file, true)
+    const { code } = transform(file)
     expect(code).toContain('value = _props$a[0]')
   })
 
@@ -72,7 +73,7 @@ describe('Setup', () => {
       return <span>{value}</span>
     })
   `
-    const { code } = transform(file, true)
+    const { code } = transform(file)
     expect(code).toContain('value = _props.a.value')
   })
 
@@ -82,7 +83,7 @@ describe('Setup', () => {
       return <span>{value}</span>
     })
   `
-    const { code } = transform(file, true)
+    const { code } = transform(file)
     expect(code).toContain('value = _props$a$b[0]')
   })
 
@@ -92,7 +93,7 @@ describe('Setup', () => {
       return <span>{rest.value}</span>
     })
   `
-    const { code } = transform(file, true)
+    const { code } = transform(file)
     expect(code).toContain(
       'import { objectWithoutPropertiesLoose as _objectWithoutPropertiesLoose } from "gyron"'
     )

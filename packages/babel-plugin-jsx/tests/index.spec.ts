@@ -1,6 +1,7 @@
 import { isFunction } from '@gyron/shared'
+import { transform } from '../src'
 import { createVisitor, initialVisitor } from '../src/utils'
-import { transform, trim } from './util'
+import { trim } from './util'
 
 describe('JSX', () => {
   test('import h', () => {

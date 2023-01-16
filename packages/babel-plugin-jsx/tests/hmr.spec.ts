@@ -1,4 +1,4 @@
-import { transform } from './util'
+import { transform } from '../src'
 
 describe('HMR', () => {
   test('functionDeclaration insert hmr code', () => {

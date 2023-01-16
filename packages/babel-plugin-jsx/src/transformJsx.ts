@@ -8,6 +8,8 @@ export interface Options {
   setup: boolean
   hmr: boolean
   ssr: boolean
+  importSourceMap: Record<string, string>
+  transformLocalImportHelper?: (path: NodePath<t.ImportDeclaration>) => string
 }
 
 export type State = t.Node & {

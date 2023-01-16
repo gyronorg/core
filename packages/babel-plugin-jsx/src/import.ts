@@ -1,9 +1,9 @@
-import * as t from '@babel/types'
 import { Visitor, NodePath } from '@babel/core'
 import { hashIds } from './hmr'
 import { hashSSR } from './ssr'
 import { addNamed } from '@babel/helper-module-imports'
 import { State } from './transformJsx'
+import * as t from '@babel/types'
 
 const hasJSX = (parentPath: NodePath<t.Program>) => {
   let fileHasJSX = false
@@ -36,6 +36,17 @@ const visitor: Visitor<State> = {
       // clean up the cached hash values in the module so that the next hmr update will update them properly
       hashIds.length = 0
       hashSSR.length = 0
+    },
+  },
+  ImportDeclaration: {
+    enter(path, state) {
+      const { source } = path.node
+      if (state.opts.importSourceMap) {
+        const target = state.opts.importSourceMap[source.value]
+        if (target) {
+          path.get('source').replaceWith(t.stringLiteral(target))
+        }
+      }
     },
   },
 }

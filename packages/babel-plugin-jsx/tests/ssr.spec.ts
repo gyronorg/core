@@ -1,4 +1,4 @@
-import { transform } from './util'
+import { transform } from '../src'
 
 test('ssr basic', () => {
   const file = `
@@ -6,6 +6,6 @@ test('ssr basic', () => {
       return <span>{content}</span>
     }
   `
-  const { code } = transform(file, true)
+  const { code } = transform(file)
   expect(code).toContain('app.__ssr_uri = "876f2fe4?name=app"')
 })

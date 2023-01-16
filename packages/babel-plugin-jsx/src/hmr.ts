@@ -1,7 +1,7 @@
-import * as t from '@babel/types'
 import { NodePath, Visitor } from '@babel/core'
 import { State } from './transformJsx'
 import { generateHash, insert, isBodyContainJSX } from './utils'
+import * as t from '@babel/types'
 
 // pass enter JSXElement multiple timing
 export const hashIds = []

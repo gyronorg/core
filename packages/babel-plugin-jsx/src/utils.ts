@@ -154,3 +154,8 @@ export function insert(path: NodePath<any>, expression: Node) {
     path.parentPath.insertAfter(expression)
   }
 }
+
+export function isLocalPath(path: NodePath<t.ImportDeclaration>) {
+  const source = path.get('source')
+  return source.node.value.startsWith('./')
+}

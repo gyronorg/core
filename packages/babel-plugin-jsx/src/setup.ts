@@ -1,6 +1,6 @@
-import * as t from '@babel/types'
 import { Visitor } from '@babel/core'
 import { State } from './transformJsx'
+import * as t from '@babel/types'
 
 const visitor: Visitor<State> = {
   CallExpression: {
