@@ -194,6 +194,9 @@ export function createVNode(
   if (isString(tag) && (!isUndefined(props) || !isUndefined(children))) {
     type = Element
     nodeType = NodeType.Element
+    if (isArray(children)) {
+      children = children.flat(Infinity)
+    }
   } else if (isFunction(tag)) {
     type = tag
     nodeType = NodeType.Component

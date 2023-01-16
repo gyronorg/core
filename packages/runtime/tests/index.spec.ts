@@ -103,4 +103,17 @@ describe('Runtime', () => {
     createInstance(h('div', { html: '<span>Gyron</span>' })).render(container)
     expect(container.innerHTML).toBe('<div><span>Gyron</span></div>')
   })
+
+  test('flat children', () => {
+    const App = createVNode('div', null, [
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      [h('div', 'hello')],
+      h('div', 'gyron!'),
+    ])
+    createInstance(App).render(container)
+    expect(container.innerHTML).toBe(
+      '<div><div>hello</div><div>gyron!</div></div>'
+    )
+  })
 })
