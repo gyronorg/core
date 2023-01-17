@@ -1,5 +1,6 @@
 import { sleep, sleepWithRequestFrame } from '@gyron/shared'
 import { createInstance, h, nextRender, Transition } from '../src'
+import { whenTransitionEnd } from '../src/Transition'
 
 describe('transition component', () => {
   const container = document.createElement('div')
@@ -42,5 +43,13 @@ describe('transition component', () => {
     expect(foo.className).toBe('')
     expect(container.contains(bar)).toBe(false)
     expect(container.contains(foo)).toBe(true)
+  })
+
+  test('no transition css', async () => {
+    const done = jest.fn()
+    whenTransitionEnd(container, null, done, {
+      transition: 'all 0s ease 0s',
+    })
+    expect(done).toHaveBeenCalled()
   })
 })

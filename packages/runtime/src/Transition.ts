@@ -49,10 +49,13 @@ function normalizedClassName(props: TransitionProps) {
 }
 
 let _uid = 0
-function whenTransitionEnd(
+export function whenTransitionEnd(
   el: Element & { __uid__?: number },
   duration: number | null,
-  done: Noop
+  done: Noop,
+  debugOptions?: {
+    transition: string
+  }
 ) {
   const id = (el.__uid__ = ++_uid)
 
@@ -67,7 +70,18 @@ function whenTransitionEnd(
   if (isNumber(duration)) {
     return setTimeout(onEnd, duration)
   }
-  el.addEventListener('transitionend', onEnd)
+
+  // check is element has transition
+  const transition = debugOptions
+    ? debugOptions.transition
+    : window.getComputedStyle(el).getPropertyValue('transition')
+  const hasTransition = transition !== 'all 0s ease 0s'
+
+  if (hasTransition) {
+    el.addEventListener('transitionend', onEnd)
+  } else {
+    onEnd()
+  }
 }
 function onAddClassName(el: Element, name: string) {
   el.classList.add(name)
@@ -84,9 +98,9 @@ function onActiveHook(
   done: Noop
 ) {
   return requestAnimationFrame(() => {
-    whenTransitionEnd(el, props.duration?.active, done)
     onRemoveClassName(el, props.cls.activeBefore)
     onAddClassName(el, props.cls.active)
+    whenTransitionEnd(el, props.duration?.active, done)
   })
 }
 function onBeforeLeaveHook(el: Element, props: TransitionPropsNormalize) {
@@ -94,9 +108,9 @@ function onBeforeLeaveHook(el: Element, props: TransitionPropsNormalize) {
 }
 function onLeaveHook(el: Element, props: TransitionPropsNormalize, done: Noop) {
   return requestAnimationFrame(() => {
-    whenTransitionEnd(el, props.duration?.leave, done)
     onRemoveClassName(el, props.cls.leaveBefore)
     onAddClassName(el, props.cls.leave)
+    whenTransitionEnd(el, props.duration?.leave, done)
   })
 }
 function onActiveFinish(el: Element, props: TransitionPropsNormalize) {
