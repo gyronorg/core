@@ -15,7 +15,10 @@ describe('browser code editor', () => {
     `
     const { code } = transform(file, null, {
       transformLocalImportHelper(path) {
-        return path.node.source.value === './foo.js' ? foo : ''
+        return {
+          code: path.node.source.value === './foo.js' ? foo : '',
+          shouldTransform: true,
+        }
       },
     })
     expect(code).toContain('const Foo = FC')

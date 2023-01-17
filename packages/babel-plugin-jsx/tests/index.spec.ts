@@ -1,5 +1,5 @@
 import { isFunction } from '@gyron/shared'
-import { transform } from '../src'
+import { parse, transform } from '../src'
 import { createVisitor, initialVisitor } from '../src/utils'
 import { trim } from './util'
 
@@ -198,5 +198,11 @@ describe('JSX', () => {
     const file = `<Transition><A key={1} /></Transition>`
     const { code } = transform(file)
     expect(code).toContain('"key": 1')
+  })
+
+  test('parse code by babel', () => {
+    const ret = parse('const a;\nconst a')
+    expect(ret.errors.length).toBe(3)
+    expect(ret.errors[0].code).toBe('BABEL_PARSER_SYNTAX_ERROR')
   })
 })

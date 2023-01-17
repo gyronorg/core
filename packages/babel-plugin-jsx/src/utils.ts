@@ -106,7 +106,7 @@ export type IVisitor = {
   }
 }
 export function initialVisitor(...visitors: Visitor<t.Node>[]): IVisitor {
-  return visitors.reduce((prev, visitor) => {
+  return visitors.filter(Boolean).reduce((prev, visitor) => {
     for (const [key, value] of Object.entries(visitor)) {
       if (!prev[key]) {
         prev[key] = {}

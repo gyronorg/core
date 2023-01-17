@@ -9,7 +9,7 @@ import transformSSR from './ssr'
 import transformTransition from './transition'
 import transformBrowser from './browser'
 
-export function insertVisitor(visitor: Visitor<State>) {
+export function insertVisitor(visitor?: Visitor<State>) {
   return createVisitor(
     initialVisitor(
       transformImport,
@@ -25,15 +25,4 @@ export function insertVisitor(visitor: Visitor<State>) {
   )
 }
 
-export const visitor = createVisitor(
-  initialVisitor(
-    transformImport,
-    transformJsx,
-    transformHmr,
-    transformSetup,
-    transformProps,
-    transformSSR,
-    transformTransition,
-    transformBrowser
-  )
-)
+export const visitor = insertVisitor()
