@@ -49,8 +49,8 @@ const visitor: Visitor<State> = {
         // const specifiers = path.node.specifiers
         const transformLocalImportHelper = state.opts.transformLocalImportHelper
 
-        const code = transformLocalImportHelper(path)
-        if (code) {
+        const { code, shouldTransform } = transformLocalImportHelper(path)
+        if (code && shouldTransform) {
           const ret = normalizedLocalSource(code, transformLocalImportHelper)
           if (ret.ast) {
             t.addComment(
@@ -60,6 +60,8 @@ const visitor: Visitor<State> = {
             )
             path.replaceWith(ret.ast.program)
           }
+        } else {
+          path.remove()
         }
       }
     },

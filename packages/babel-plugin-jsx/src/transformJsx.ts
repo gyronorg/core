@@ -4,12 +4,19 @@ import { transformJSXMemberExpression } from './utils'
 import htmlTags from 'html-tags'
 import * as t from '@babel/types'
 
+export type TransformLocalImportHelper = (
+  path: NodePath<t.ImportDeclaration>
+) => {
+  shouldTransform: boolean
+  code: string
+}
+
 export interface Options {
   setup: boolean
   hmr: boolean
   ssr: boolean
   importSourceMap: Record<string, string>
-  transformLocalImportHelper?: (path: NodePath<t.ImportDeclaration>) => string
+  transformLocalImportHelper?: TransformLocalImportHelper
 }
 
 export type State = t.Node & {
