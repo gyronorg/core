@@ -3,7 +3,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -20,9 +20,9 @@
     "test": "jest --config=../../jest.config.js"
   },
   "dependencies": {
-    "@gyron/runtime": "^0.0.25",
-    "@gyron/shared": "^0.0.25",
-    "@gyron/sync": "^0.0.25",
+    "@gyron/runtime": "^0.0.26",
+    "@gyron/shared": "^0.0.26",
+    "@gyron/sync": "^0.0.26",
     "@reduxjs/toolkit": "^1.8.1"
   },
   "devDependencies": {
