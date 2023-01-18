@@ -5,7 +5,8 @@ import htmlTags from 'html-tags'
 import * as t from '@babel/types'
 
 export type TransformLocalImportHelper = (
-  path: NodePath<t.ImportDeclaration>
+  path: NodePath<t.ImportDeclaration>,
+  parentModule: string
 ) => {
   shouldTransform: boolean
   code: string
@@ -16,6 +17,8 @@ export interface Options {
   hmr: boolean
   ssr: boolean
   importSourceMap: Record<string, string>
+  root: string
+  parentModule: string
   transformLocalImportHelper?: TransformLocalImportHelper
 }
 

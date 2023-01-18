@@ -1,21 +1,25 @@
 import { Visitor } from '@babel/core'
-import { State } from './transformJsx'
+import { State, TransformLocalImportHelper } from './transformJsx'
 import { isLocalPath } from './utils'
 import { transform } from './transform'
 import { insertVisitor } from './visitor'
 import * as t from '@babel/types'
 
-function normalizedLocalSource(code: string, transformLocalImportHelper) {
+function normalizedLocalSource(
+  code: string,
+  parent: string,
+  transformLocalImportHelper: TransformLocalImportHelper
+) {
   return transform(
     code,
     insertVisitor({
       ExportNamedDeclaration: {
-        exit(path) {
+        enter(path) {
           path.replaceWith(path.node.declaration)
         },
       },
       ImportDeclaration: {
-        exit(path) {
+        enter(path) {
           const { source, specifiers } = path.node
           if (source.value === 'gyron' && specifiers.length === 1) {
             const specifier = specifiers[0]
@@ -34,8 +38,7 @@ function normalizedLocalSource(code: string, transformLocalImportHelper) {
     }),
     {
       setup: true,
-      hmr: false,
-      ssr: false,
+      parentModule: parent,
       transformLocalImportHelper: transformLocalImportHelper,
     }
   )
@@ -49,9 +52,17 @@ const visitor: Visitor<State> = {
         // const specifiers = path.node.specifiers
         const transformLocalImportHelper = state.opts.transformLocalImportHelper
 
-        const { code, shouldTransform } = transformLocalImportHelper(path)
+        const parent = state.opts.parentModule || state.opts.root
+        const { code, shouldTransform } = transformLocalImportHelper(
+          path,
+          parent
+        )
         if (code && shouldTransform) {
-          const ret = normalizedLocalSource(code, transformLocalImportHelper)
+          const ret = normalizedLocalSource(
+            code,
+            path.node.source.value,
+            transformLocalImportHelper
+          )
           if (ret.ast) {
             t.addComment(
               path.node,
