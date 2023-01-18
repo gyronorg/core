@@ -45,7 +45,7 @@ function transform(path: NodePath<t.JSXElement>, children: any) {
   if (t.isJSXIdentifier(openElement.name)) {
     const { name } = openElement.name
     const h = t.identifier('_h')
-    if (htmlTags.includes(name as any) || /^[a-z]+$/.test(name)) {
+    if (htmlTags.includes(name as any) || /^[a-z]/.test(name)) {
       args.unshift(t.stringLiteral(name))
       return t.callExpression(h, args)
     } else {

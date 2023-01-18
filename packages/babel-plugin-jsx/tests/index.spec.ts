@@ -117,6 +117,13 @@ describe('JSX', () => {
     expect(code).toContain('_h(A, {}, _h(B, {}, "child"))')
   })
 
+  test('unknown component name', () => {
+    const file = `
+    const app = () => <animateTransform />`
+    const { code } = transform(file)
+    expect(code).toContain('_h("animateTransform", {}, [])')
+  })
+
   test('component JSXExpressionContainer', () => {
     const file = `const app = <div>{x ? 1: 2}</div>`
     const { code } = transform(file)
