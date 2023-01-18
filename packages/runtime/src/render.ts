@@ -350,6 +350,7 @@ function patchElement(
       patchChildren(n1, n2, container, anchor, parentComponent, isSvg)
     }
   } else {
+    anchor = getNextSibling(n1)
     unmount(n1)
     patch(null, n2, container, anchor, parentComponent, isSvg)
   }
