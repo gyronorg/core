@@ -1,6 +1,6 @@
 import type { VNode, RenderElement } from './vnode'
 import type { SSRMessage } from './ssr'
-import { shouldValue, isComment, extend } from '@gyron/shared'
+import { shouldValue, isComment, extend, keys } from '@gyron/shared'
 import {
   createComment,
   insert,
@@ -8,7 +8,11 @@ import {
   nextSibling,
   remove,
 } from '@gyron/dom-client'
-import { Component, ComponentSetupFunction } from './component'
+import {
+  Component,
+  ComponentSetupFunction,
+  removeBuiltInProps,
+} from './component'
 import {
   Text,
   Comment,
@@ -202,14 +206,15 @@ function hydrateElement(
   parentComponent: Component = null,
   ssrMessage: SSRMessage = null
 ) {
-  const { props, children, el } = vnode
+  const { children, el } = vnode
 
-  if (props && props.ref) {
-    setRef(el, props.ref)
+  if (vnode.props.ref) {
+    setRef(el, vnode.props.ref)
   }
 
-  if (props) {
-    mountProps(el as HTMLElement, vnode)
+  const props = removeBuiltInProps(vnode.props)
+  if (shouldValue(keys(props))) {
+    mountProps(el as HTMLElement, extend({}, vnode, { props: props }))
   }
 
   if (shouldValue(children)) {
