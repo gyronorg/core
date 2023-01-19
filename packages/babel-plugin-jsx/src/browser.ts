@@ -38,7 +38,7 @@ function normalizedLocalSource(
     }),
     {
       setup: true,
-      parentModule: parent,
+      parentFileName: parent,
       transformLocalImportHelper: transformLocalImportHelper,
     }
   )
@@ -52,10 +52,11 @@ const visitor: Visitor<State> = {
         // const specifiers = path.node.specifiers
         const transformLocalImportHelper = state.opts.transformLocalImportHelper
 
-        const parent = state.opts.parentModule || state.opts.root
+        const parentFileName =
+          state.opts.parentFileName || state.opts.rootFileName
         const { code, shouldTransform } = transformLocalImportHelper(
           path,
-          parent
+          parentFileName
         )
         if (code && shouldTransform) {
           const ret = normalizedLocalSource(

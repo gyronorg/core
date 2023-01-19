@@ -1,8 +1,8 @@
 import babelJsx from './core'
 
 export { babelESBuildJsx, babelViteJsx } from './plugin'
-export { transform } from './transform'
+export { transform, ts2js } from './transform'
 export { parse } from './parse'
-export { visitor } from './visitor'
+export { visitor, insertVisitor } from './visitor'
 
 export default babelJsx

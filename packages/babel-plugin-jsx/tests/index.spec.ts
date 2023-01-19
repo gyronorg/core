@@ -1,5 +1,5 @@
 import { isFunction } from '@gyron/shared'
-import { parse, transform } from '../src'
+import { parse, transform, ts2js } from '../src'
 import { createVisitor, initialVisitor } from '../src/utils'
 import { trim } from './util'
 
@@ -211,5 +211,11 @@ describe('JSX', () => {
     const ret = parse('const a;\nconst a')
     expect(ret.errors.length).toBe(3)
     expect(ret.errors[0].code).toBe('BABEL_PARSER_SYNTAX_ERROR')
+  })
+
+  test('ts to js', () => {
+    const file = `const foo: number = 1`
+    const ret = ts2js(file)
+    expect(ret.code).toContain('foo = 1;')
   })
 })

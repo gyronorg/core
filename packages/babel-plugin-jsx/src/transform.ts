@@ -1,10 +1,21 @@
-import { traverse, Visitor } from '@babel/core'
+import {
+  traverse,
+  Visitor,
+  transform as babelTransform,
+  PluginItem,
+} from '@babel/core'
 import { parse } from '@babel/parser'
 import { Options } from './transformJsx'
 import { visitor } from './visitor'
 import generate, { GeneratorResult } from '@babel/generator'
 import hash from 'hash-sum'
 import * as t from '@babel/types'
+
+export function ts2js(code: string, origin?: PluginItem) {
+  return babelTransform(code, {
+    plugins: [origin || '@babel/transform-typescript'],
+  })
+}
 
 export function transform(
   file: string,
@@ -26,6 +37,9 @@ export function transform(
       file: {
         opts: {
           filename: hash(file),
+        },
+        ast: {
+          program: ast.program,
         },
       },
     })

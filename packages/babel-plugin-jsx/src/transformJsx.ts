@@ -17,8 +17,9 @@ export interface Options {
   hmr: boolean
   ssr: boolean
   importSourceMap: Record<string, string>
-  root: string
-  parentModule: string
+  rootFileName: string
+  parentFileName: string
+  fileName: string
   transformLocalImportHelper?: TransformLocalImportHelper
 }
 
