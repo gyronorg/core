@@ -7,7 +7,6 @@ import transformSetup from './setup'
 import transformProps from './destructuring'
 import transformSSR from './ssr'
 import transformTransition from './transition'
-import transformBrowser from './browser'
 
 export function insertVisitor(visitor?: Visitor<State>) {
   return createVisitor(
@@ -19,10 +18,7 @@ export function insertVisitor(visitor?: Visitor<State>) {
       transformProps,
       transformSSR,
       transformTransition,
-      transformBrowser,
       visitor
     )
   )
 }
-
-export const visitor = insertVisitor()

@@ -6,6 +6,34 @@ import babelJsx from './core'
 import path from 'path'
 import fs from 'fs'
 
+export async function transformWithBabel(
+  code: string,
+  filename: string,
+  options: Partial<Options>,
+  onlyRemoveTypeImports = false
+) {
+  const plugins = [[babelJsx, options]]
+  if (filename.endsWith('.tsx')) {
+    plugins.push([
+      require('@babel/plugin-transform-typescript'),
+      {
+        isTSX: true,
+        allowExtensions: true,
+        onlyRemoveTypeImports: onlyRemoveTypeImports,
+      },
+    ])
+  }
+  return transformAsync(code, {
+    babelrc: false,
+    ast: true,
+    plugins,
+    sourceMaps: true,
+    sourceFileName: filename,
+    filename: filename,
+    configFile: false,
+  })
+}
+
 export function babelESBuildJsx(options: Partial<Options> = {}): Plugin {
   return {
     name: 'esbuild:gyron-jsx',
@@ -15,22 +43,7 @@ export function babelESBuildJsx(options: Partial<Options> = {}): Plugin {
         const filename = path.relative(process.cwd(), args.path)
 
         try {
-          const plugins = [[babelJsx, options]]
-          if (filename.endsWith('.tsx')) {
-            plugins.push([
-              require('@babel/plugin-transform-typescript'),
-              { isTSX: true, allowExtensions: true },
-            ])
-          }
-          const result = await transformAsync(source, {
-            babelrc: false,
-            ast: true,
-            plugins,
-            sourceMaps: true,
-            sourceFileName: filename,
-            filename: filename,
-            configFile: false,
-          })
+          const result = await transformWithBabel(source, filename, options)
           return { contents: result.code }
         } catch (e) {
           return {
@@ -69,24 +82,9 @@ export function babelViteJsx(options: Partial<Options> = {}): VitePlugin {
         },
       }
     },
-    async transform(code, id) {
-      const plugins = [[babelJsx, options]]
-      if (id.endsWith('.tsx')) {
-        plugins.push([
-          require('@babel/plugin-transform-typescript'),
-          { isTSX: true, allowExtensions: true },
-        ])
-      }
-      if (/\.(t|j)sx$/.test(id)) {
-        const result = await transformAsync(code, {
-          babelrc: false,
-          ast: true,
-          plugins,
-          sourceMaps: true,
-          sourceFileName: id,
-          filename: id,
-          configFile: false,
-        })
+    async transform(source, filename) {
+      if (/\.(t|j)sx$/.test(filename)) {
+        const result = await transformWithBabel(source, filename, options)
 
         if (options.hmr) {
           const componentHmr = [],

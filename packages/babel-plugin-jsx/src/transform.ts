@@ -6,7 +6,7 @@ import {
 } from '@babel/core'
 import { parse } from '@babel/parser'
 import { Options } from './transformJsx'
-import { visitor } from './visitor'
+import { insertVisitor } from './visitor'
 import generate, { GeneratorResult } from '@babel/generator'
 import hash from 'hash-sum'
 import * as t from '@babel/types'
@@ -28,7 +28,7 @@ export function transform(
   })
 
   if (ast) {
-    traverse(ast, localVisitor || visitor, null, {
+    traverse(ast, localVisitor || insertVisitor(), null, {
       opts: options || {
         hmr: true,
         ssr: true,

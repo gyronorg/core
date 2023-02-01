@@ -20,7 +20,6 @@ export interface Options {
   rootFileName: string
   parentFileName: string
   fileName: string
-  transformLocalImportHelper?: TransformLocalImportHelper
 }
 
 export type State = t.Node & {

@@ -10,7 +10,7 @@ esbuild.build({
   format: 'esm',
   outdir: 'dist/browser',
   platform: 'browser',
-  // external: ['@babel/*'],
+  external: ['esbuild-wasm', '@gyron/*', '@babel/*'],
   inject: [
     require.resolve(
       process.env.NX_WORKSPACE_ROOT +

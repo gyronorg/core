@@ -1,29 +1,45 @@
-import { transform } from '../src'
+import { initialBabelBundle, transform } from '../src'
 
 describe('browser code editor', () => {
-  test('transform', () => {
+  test('build bundle with browser', async () => {
+    const build = await initialBabelBundle(null)
     const foo = `
       export const Foo = FC(() => {
-        return <div></div>
+        return <div>gyron</div>
       })
     `
-    const file = `
-      import { Foo } from './foo.js'
-      function App() {
+    const app = `
+      import { Foo } from './foo'
+      export function App(): any {
         return <Foo />
       }
     `
-    const { code } = transform(file, null, {
-      transformLocalImportHelper(path) {
-        return {
-          code: path.node.source.value === './foo.js' ? foo : '',
-          shouldTransform: true,
-        }
+    const bundle = await build(
+      {
+        loader: 'tsx',
+        code: 'import { App } from "./app"\nApp()',
+        name: 'app.tsx',
+        external: [],
       },
-    })
-    expect(code).toContain('const Foo = FC')
-    expect(code).toContain(
-      '/* The import statement has been parsed and the bundle has been executed. source: ./foo.js */'
+      {
+        sources: [
+          {
+            loader: 'tsx',
+            code: app,
+            name: 'app.tsx',
+          },
+          {
+            loader: 'tsx',
+            code: foo,
+            name: 'foo.tsx',
+          },
+        ],
+      }
+    )
+    expect(bundle.outputFiles[0].text).toContain('var Foo = FC')
+    expect(bundle.outputFiles[0].text).toContain('function App()')
+    expect(bundle.outputFiles[0].text).toContain(
+      'import { h as _h2 } from "gyron"'
     )
   })
 

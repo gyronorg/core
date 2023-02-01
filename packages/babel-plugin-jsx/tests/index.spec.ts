@@ -1,5 +1,6 @@
 import { isFunction } from '@gyron/shared'
 import { parse, transform, ts2js } from '../src'
+import { transformWithBabel } from '../src/plugin'
 import { createVisitor, initialVisitor } from '../src/utils'
 import { trim } from './util'
 
@@ -217,5 +218,11 @@ describe('JSX', () => {
     const file = `const foo: number = 1`
     const ret = ts2js(file)
     expect(ret.code).toContain('foo = 1;')
+  })
+
+  test('remove only type import', async () => {
+    const file = `import { App } from './index'`
+    const ret = await transformWithBabel(file, 'app.tsx', {}, true)
+    expect(ret.code).toBe(`import { App } from './index';`)
   })
 })

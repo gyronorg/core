@@ -1,83 +1,128 @@
-import { Visitor } from '@babel/core'
-import { State, TransformLocalImportHelper } from './transformJsx'
-import { isLocalPath } from './utils'
-import { transform } from './transform'
-import { insertVisitor } from './visitor'
-import * as t from '@babel/types'
+import {
+  Plugin,
+  BuildOptions,
+  build,
+  Loader,
+  OnLoadArgs,
+  initialize,
+} from 'esbuild-wasm'
+import { Options } from './transformJsx'
+import { last, merge } from 'lodash-es'
+import { transformWithBabel } from './plugin'
+import { isString } from '@gyron/shared'
 
-function normalizedLocalSource(
-  code: string,
-  parent: string,
-  transformLocalImportHelper: TransformLocalImportHelper
-) {
-  return transform(
-    code,
-    insertVisitor({
-      ExportNamedDeclaration: {
-        enter(path) {
-          path.replaceWith(path.node.declaration)
-        },
-      },
-      ImportDeclaration: {
-        enter(path) {
-          const { source, specifiers } = path.node
-          if (source.value === 'gyron' && specifiers.length === 1) {
-            const specifier = specifiers[0]
-            if (
-              t.isImportSpecifier(specifier) &&
-              t.isIdentifier(specifier.imported) &&
-              specifier.imported.name === 'h' &&
-              specifier.local.name === '_h'
-            ) {
-              // remove target source import { h as _h } from "gyron";
-              path.remove()
+export interface ConfigSource extends Partial<Options> {
+  code: string
+  name: string
+  loader: Loader
+  external?: string[]
+}
+
+export interface Config {
+  sources: ConfigSource[]
+  options?: BuildOptions
+}
+
+export async function initialBabelBundle(wasmURL: string) {
+  const loaderMap = {
+    less: 'css',
+    sass: 'css',
+  }
+  function getFileName(args: OnLoadArgs, loader: Loader) {
+    const source = last(args.path.split('/'))
+    const suffix = last(source.split('.'))
+    if (['tsx', 'ts', 'js', 'jsx', 'css', 'json'].includes(suffix)) {
+      return source
+    }
+    return source + '.' + loader
+  }
+
+  function findSourceCode(sources: ConfigSource[], path: string) {
+    let loader: Loader = path.match(
+      /\.(js|jsx|ts|tsx|less|sass)$/
+    )?.[1] as Loader
+    loader = loaderMap[loader] || loader
+    if (!loader) {
+      loader = 'tsx'
+    }
+
+    const normalizedName = (name: string) =>
+      name.replace(/^\.\//, '').replace(/\.(js|jsx|ts|tsx|less|sass)$/, '')
+
+    if (loader === 'css') {
+      path += '.ts'
+    }
+
+    const source = sources
+      .filter((source) => source.loader === loader)
+      .find((source) => normalizedName(source.name) === normalizedName(path))
+    return source
+  }
+
+  if (isString(wasmURL)) {
+    await initialize({
+      wasmURL: wasmURL,
+    })
+  }
+
+  return async (main: ConfigSource, config: Config) => {
+    const buildModuleRuntime: Plugin = {
+      name: 'buildModuleRuntime',
+      setup(build) {
+        build.onResolve({ filter: /\.\// }, (args) => {
+          return {
+            path: args.path,
+            namespace: 'localModule',
+          }
+        })
+        build.onLoad(
+          { filter: /\.\//, namespace: 'localModule' },
+          async (args) => {
+            const source = findSourceCode(config.sources, args.path)
+
+            if (source) {
+              const filename = getFileName(args, source.loader)
+              const result = await transformWithBabel(
+                source.code,
+                filename,
+                main,
+                true
+              )
+              return {
+                contents: result.code,
+              }
+            }
+            return {
+              contents: '',
+              loader: 'text',
+              warnings: [
+                {
+                  pluginName: 'buildModuleRuntime',
+                  text: `Module "${args.path}" is not defined in the local editor`,
+                },
+              ],
             }
           }
-        },
-      },
-    }),
-    {
-      setup: true,
-      parentFileName: parent,
-      transformLocalImportHelper: transformLocalImportHelper,
-    }
-  )
-}
-
-const visitor: Visitor<State> = {
-  ImportDeclaration: {
-    exit(path, state) {
-      if (state.opts.transformLocalImportHelper && isLocalPath(path)) {
-        // import { D as P } from './a' not support
-        // const specifiers = path.node.specifiers
-        const transformLocalImportHelper = state.opts.transformLocalImportHelper
-
-        const parentFileName =
-          state.opts.parentFileName || state.opts.rootFileName
-        const { code, shouldTransform } = transformLocalImportHelper(
-          path,
-          parentFileName
         )
-        if (code && shouldTransform) {
-          const ret = normalizedLocalSource(
-            code,
-            path.node.source.value,
-            transformLocalImportHelper
-          )
-          if (ret.ast) {
-            t.addComment(
-              path.node,
-              'leading',
-              ` The import statement has been parsed and the bundle has been executed. source: ${path.node.source.value} `
-            )
-            path.replaceWith(ret.ast.program)
-          }
-        } else {
-          path.remove()
-        }
-      }
-    },
-  },
-}
+      },
+    }
 
-export default visitor
+    const content = await transformWithBabel(main.code, main.name, main, true)
+    return build(
+      merge<BuildOptions, BuildOptions>(
+        {
+          stdin: {
+            contents: content.code,
+            sourcefile: main.name,
+          },
+          bundle: true,
+          write: false,
+          format: 'esm',
+          plugins: [buildModuleRuntime],
+          external: ['gyron', '@gyron'].concat(main.external),
+        },
+        config.options
+      )
+    )
+  }
+}
