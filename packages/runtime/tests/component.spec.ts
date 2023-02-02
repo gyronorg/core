@@ -21,9 +21,11 @@ import {
   registerErrorHandler,
   useWatch,
   keepComponent,
+  Component,
 } from '../src'
 import { effectTracks } from '@gyron/reactivity'
 import { Gyron } from '../src/vnode'
+import { isAsyncComponent } from '../src/component'
 
 describe('Component', () => {
   const container = document.createElement('div')
@@ -386,6 +388,27 @@ describe('Component', () => {
     createInstance(h(App)).render(container)
     await sleep(0)
     expect(fn).toHaveBeenCalled()
+  })
+
+  test('async component wrapper getCurrentComponent', async () => {
+    let component: Component
+    const Foo = FC(() => {
+      return createVNode('div', null, 'foo')
+    })
+    const Bar = FC(() => {
+      return createVNode('div', null, 'bar')
+    })
+    const App = FCA(async () => {
+      await sleep(0)
+      return () => {
+        component = getCurrentComponent()
+        return h(Foo)
+      }
+    })
+    createInstance(h(() => [h(App), h(Bar)])).render(container)
+    await sleep(0)
+    expect(container.innerHTML).toBe('<div>foo</div><div>bar</div>')
+    expect(isAsyncComponent(component.vnode.type)).toBe(true)
   })
 
   test('deep component', async () => {

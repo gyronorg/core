@@ -343,21 +343,34 @@ export function FCA<
   let resolveComp: VNode
   let setup: ComponentFunction<Props>
   let loadedRet = false
+  let __component: Component
 
   const state = useReactive({
     loaded: false,
   })
 
+  function setComponent(component: Component) {
+    _component = __component = component
+  }
+
+  function clearComponent() {
+    _component = null
+  }
+
   const load = (props: AsyncProps<Props>, component: Component) => {
-    _component = component
+    setComponent(component)
     return componentAsyncFunction(props)
       .then((value) => {
         loadedRet = true
         const subtree = ((value as { default?: ComponentFunction<Props> })
           .default || value) as ComponentFunction<Props>
+
+        setComponent(component)
         if (isFunction(subtree)) {
           setup = subtree
-          resolveComp = normalizeVNode(subtree(props))
+          resolveComp = normalizeVNode(
+            subtree(props, component as Component<Props>)
+          )
         } else {
           resolveComp = normalizeVNode(subtree as VNode)
           if (__DEV__ && __WARN__) {
@@ -368,6 +381,7 @@ export function FCA<
             )
           }
         }
+        clearComponent()
         return resolveComp
       })
       .catch((e) => {
@@ -399,6 +413,7 @@ export function FCA<
     })
 
     return function AsyncComponentWrapperSetup() {
+      _component = __component
       return state.loaded && resolveComp
         ? setup
           ? setup(props)
