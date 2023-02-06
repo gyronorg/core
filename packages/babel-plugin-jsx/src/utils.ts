@@ -86,7 +86,9 @@ export function generateHash(
     if (id.isIdentifier()) {
       identifier = id.node
     } else {
-      return null
+      return {
+        error: true,
+      }
     }
   }
 

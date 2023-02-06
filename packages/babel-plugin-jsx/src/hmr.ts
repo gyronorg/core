@@ -10,7 +10,11 @@ function insertHMRCode(
   path: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
   state: State
 ) {
-  const { hashId, identifier } = generateHash(path, state)
+  const { hashId, identifier, error } = generateHash(path, state) || {}
+
+  if (error) {
+    return
+  }
 
   if (hashIds.includes(hashId)) {
     return null

@@ -11,6 +11,19 @@ describe('HMR', () => {
     expect(code).toContain('app.__hmr_id = "3abd7699"')
   })
 
+  test('function nest jsx', () => {
+    const file = `
+    function app() {
+      const { Foo } = a(<div>foo</div>)
+      const Bar = FC(() => <div>bar</div>)
+      return <span>{Foo}</span>
+    }
+  `
+    const { code } = transform(file)
+    expect(code).toContain('app.__hmr_id = "29631b34"')
+    expect(code).toContain('Bar.__hmr_id = "2962a506"')
+  })
+
   test('variableDeclarator insert hmr code', () => {
     const file = `
     const app = () => {

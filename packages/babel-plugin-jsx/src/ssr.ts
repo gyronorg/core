@@ -9,7 +9,11 @@ function insertSSRCode(
   path: NodePath<t.FunctionDeclaration | t.VariableDeclarator>,
   state: State
 ) {
-  const { identifier, filepath } = generateHash(path, state)
+  const { identifier, filepath, error } = generateHash(path, state)
+
+  if (error) {
+    return
+  }
 
   if (hashSSR.includes(filepath + identifier.name)) {
     return null
