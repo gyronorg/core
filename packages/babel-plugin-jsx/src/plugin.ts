@@ -2,6 +2,7 @@ import { transformAsync } from '@babel/core'
 import { Plugin } from 'esbuild'
 import { Plugin as VitePlugin } from 'vite'
 import { Options } from './transformJsx'
+import type { LoaderDefinitionFunction } from 'webpack'
 import babelJsx from './core'
 import path from 'path'
 import fs from 'fs'
@@ -127,4 +128,14 @@ export function babelViteJsx(options: Partial<Options> = {}): VitePlugin {
       }
     },
   }
+}
+
+export const babelWebpack: LoaderDefinitionFunction<Options> = async function (
+  source: string
+) {
+  const options = this.getOptions()
+
+  const result = await transformWithBabel(source, this.resourcePath, options)
+
+  return result.code
 }

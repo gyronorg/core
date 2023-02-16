@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/hash-sum": "^1.0.0",
     "@types/lodash-es": "^4.17.6",
+    "@types/webpack": "^5.28.0",
     "babel-jest": "^29.1.2",
     "esbuild-wasm": "^0.17.4",
     "hash-sum": "^2.0.0",
