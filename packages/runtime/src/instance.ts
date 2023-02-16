@@ -1,7 +1,6 @@
 import type { RenderElement, VNode } from './vnode'
 import { patch, unmount } from './render'
 import { hydrate } from './hydrate'
-import { checkVersion } from './version'
 import { getUserContainer } from './shared'
 
 export interface Instance {
@@ -46,10 +45,6 @@ export function render(vnode: VNode, container: Element) {
  * @returns Application examples.
  */
 export function createInstance(root: VNode, isHydrate?: boolean) {
-  if (__DEV__) {
-    checkVersion()
-  }
-
   const instance: Instance = {
     container: null,
     render(containerOrSelector) {
