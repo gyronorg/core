@@ -17,7 +17,7 @@
     "build:esm": "esbuild src/index.ts --bundle --sourcemap --outfile=dist/esm/index.js --format=esm --platform=node",
     "build:cjs": "esbuild src/index.ts --bundle --sourcemap --outfile=dist/cjs/index.js --format=cjs --platform=node",
     "build:dts": "cross-env RESPECT_EXTERNAL=runtime rollup -c ../../rollup.config.js",
-    "test": "jest --config=../../jest.config.js"
+    "test": "cross-env PACKAGES=runtime jest --config=../../jest.config.js"
   },
   "devDependencies": {
     "@gyron/dom-client": "^0.0.29",

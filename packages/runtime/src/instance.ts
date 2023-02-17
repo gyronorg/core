@@ -1,5 +1,5 @@
 import type { RenderElement, VNode } from './vnode'
-import { patch, unmount } from './render'
+import { patch, unmount } from './renderer'
 import { hydrate } from './hydrate'
 import { getUserContainer } from './shared'
 

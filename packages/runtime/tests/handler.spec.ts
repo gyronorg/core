@@ -9,7 +9,7 @@ import {
   getCurrentComponent,
   manualWarnHandler,
 } from '../src'
-import { ErrorBoundary } from '../src/ErrorBoundary'
+import { ErrorBoundary } from '../src/internal'
 
 describe('Handler Error', () => {
   const container = document.createElement('div')

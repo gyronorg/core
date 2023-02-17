@@ -10,7 +10,7 @@ module.exports = {
     : [`${process.cwd()}/tests/**/(*.)+(spec|test).[jt]s?(x)`],
   testEnvironment: 'jsdom',
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: '<rootDir>../../',
+    prefix: process.env.PACKAGES ? '<rootDir>../../' : '<rootDir>',
   }),
   collectCoverageFrom: [`./src/**/*.ts`],
   globals: {

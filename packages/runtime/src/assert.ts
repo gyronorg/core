@@ -1,5 +1,5 @@
 import { Component } from './component'
-import { getErrorBoundaryCtx } from './ErrorBoundary'
+import { getErrorBoundaryCtx } from './internal'
 import { ErrorType, WarnType, BoundariesHandler } from './boundaries'
 
 export enum InnerCode {

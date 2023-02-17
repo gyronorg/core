@@ -22,7 +22,7 @@ import {
   normalizeChildrenVNode,
   normalizeVNodeWithLink,
 } from './vnode'
-import { mountComponent, patch } from './render'
+import { mountComponent, patch } from './renderer'
 import { setRef } from './ref'
 
 /**

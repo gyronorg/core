@@ -24,16 +24,16 @@ function test(files) {
   )
   const other = Object.entries(packages)
     .filter(([key]) => key !== 'babel-plugin-jsx')
-    .map(([_, v]) => v)
+    .map(([_, file]) => file).flat(Infinity)
 
   return [
     plugin.length
-      ? `jest --config packages/${plugin[0][0]}/jest.config.js ${plugin[0][1].join(
+      ? `jest --showConfig --config packages/${plugin[0][0]}/jest.config.js ${plugin[0][1].join(
           ' '
         )}`
       : null,
     other.length
-      ? `jest --config jest.config.js --colors ${other.join(' ')}`
+      ? `jest --showConfig --config jest.config.js --colors ${other.join(' ')}`
       : null,
   ].filter(Boolean)
 }

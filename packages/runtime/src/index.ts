@@ -12,8 +12,7 @@ export {
   isResponsive,
   toRaw,
 } from '@gyron/reactivity'
-export { ErrorBoundary } from './ErrorBoundary'
-export { Transition } from './Transition'
+export { Transition, ErrorBoundary } from './internal'
 export {
   useWatch,
   createComponentInstance,
@@ -29,6 +28,7 @@ export {
   FC,
 } from './component'
 export { createInstance, render, createContext } from './instance'
+export { createInstance as createGyron } from './instance'
 export {
   createVNode,
   createVNodeComment,

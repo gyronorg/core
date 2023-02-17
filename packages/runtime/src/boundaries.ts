@@ -1,5 +1,5 @@
 import { Component, getCurrentComponent } from './component'
-import { getErrorBoundaryCtx } from './ErrorBoundary'
+import { getErrorBoundaryCtx } from './internal'
 
 export type BoundariesHandlerParamsType = 'Error' | 'Warn'
 export type BoundariesHandlerParams = Partial<{

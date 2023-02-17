@@ -15,7 +15,7 @@ import {
   ComponentSetupFunction,
 } from './component'
 import { UserRef } from './ref'
-import { TransitionHooks } from './Transition'
+import { TransitionHooks } from './internal'
 
 export const Gyron = Symbol('gyron')
 export const Text = Symbol('gyron.text')

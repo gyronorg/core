@@ -17,7 +17,7 @@
     "build:esm": "esbuild src/index.ts --bundle --sourcemap --minify --outfile=dist/esm/index.js --format=esm --external:@gyron/* --platform=node",
     "build:cjs": "esbuild src/index.ts --bundle --sourcemap --minify --outfile=dist/cjs/index.js --format=cjs --external:@gyron/* --platform=node",
     "build:dts": "rollup -c ../../rollup.config.js",
-    "test": "jest --config=../../jest.config.js"
+    "test": "cross-env PACKAGES=sync jest --config=../../jest.config.js"
   },
   "devDependencies": {
     "@gyron/shared": "^0.0.29",

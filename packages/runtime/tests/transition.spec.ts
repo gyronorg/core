@@ -1,6 +1,6 @@
 import { sleep, sleepWithRequestFrame } from '@gyron/shared'
 import { createInstance, h, nextRender, Transition } from '../src'
-import { whenTransitionEnd } from '../src/Transition'
+import { whenTransitionEnd } from '../src/internal'
 
 describe('transition component', () => {
   const container = document.createElement('div')

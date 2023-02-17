@@ -1,10 +1,10 @@
 import { useReactive } from '@gyron/reactivity'
 import { isFunction } from '@gyron/shared'
-import { Component, FC } from './component'
-import { VNode } from './vnode'
-import { h } from './h'
-import { inject, useProvide } from './context'
-import { BoundariesHandler, BoundariesHandlerParams } from './boundaries'
+import { Component, FC } from '../component'
+import { VNode } from '../vnode'
+import { h } from '../h'
+import { inject, useProvide } from '../context'
+import { BoundariesHandler, BoundariesHandlerParams } from '../boundaries'
 
 export interface ErrorBoundaryProps {
   fallback: VNode

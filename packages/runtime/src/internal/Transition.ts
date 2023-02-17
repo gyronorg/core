@@ -1,9 +1,9 @@
-import { VNode } from './vnode'
-import { FC } from './component'
+import { RenderElement, VNode } from '../vnode'
+import { FC } from '../component'
 import { isFunction, isNumber, shouldValue } from '@gyron/shared'
-import { isVNode, isVNodeComment, RenderElement, warn } from '.'
 import { Noop } from '@gyron/shared'
-import { InnerCode } from './assert'
+import { InnerCode, warn } from '../assert'
+import { isVNode, isVNodeComment } from '../shared'
 
 interface TransitionPropsNormalize {
   cls: {
