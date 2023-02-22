@@ -55,7 +55,7 @@ function enterHook(
     path.parentPath.isCallExpression() &&
     isBodyContainJSX(path.parentPath.node)
   ) {
-    // FC or FCA
+    // FC or FCA or FCD
     const params = path.node.params
     if (t.isObjectPattern(params[0]) && t.isBlockStatement(path.node.body)) {
       transformParamsToUpdateExpression(params[0], path)

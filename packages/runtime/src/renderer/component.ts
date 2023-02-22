@@ -119,6 +119,14 @@ function updateComponentEffect(
   }
 }
 
+function updateComponent(component: Component) {
+  if (component.update.priority === JobPriority.DEFERRED) {
+    pushQueueJob(component.update)
+  } else {
+    component.update()
+  }
+}
+
 function renderComponentEffect(
   component: Component,
   ssrMessage: SSRMessage = null
@@ -178,10 +186,10 @@ export function patchComponent(
     normalizeComponent(n2, component, parentComponent)
     if (isCacheComponent(n1.component.type)) {
       if (!isEqual(n1.props, n2.props)) {
-        component.update()
+        updateComponent(component)
       }
     } else {
-      component.update()
+      updateComponent(component)
     }
   } else {
     if (__WARN__) {

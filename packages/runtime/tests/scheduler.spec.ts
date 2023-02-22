@@ -6,8 +6,7 @@ import {
   onAfterUpdate,
   onBeforeUpdate,
   useValue,
-  useDeferred,
-  useAccrued,
+  FCD,
 } from '../src'
 import { nextRender, now } from '../src/scheduler'
 
@@ -77,19 +76,17 @@ describe('scheduler', () => {
   })
 
   test('priority task', async () => {
-    const foo = useValue(0)
-    const bar = useValue(0)
+    const Foo = FCD(() => {
+      const startTime = performance.now()
+      while (performance.now() - startTime < 10) {
+        // anything
+      }
+      return h('span', 'foo')
+    })
     const App = h(() => {
-      setTimeout(() => {
-        useDeferred(() => {
-          bar.value = 1
-        })
-        useAccrued(() => {
-          foo.value = 1
-        })
-      }, 1000)
-      return h('div', null, foo.value + bar.value)
+      return h('div', null, h(Foo))
     })
     createInstance(App).render(container)
+    expect(container.innerHTML).toBe('<div><span>foo</span></div>')
   })
 })

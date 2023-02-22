@@ -1,5 +1,6 @@
 import { Visitor } from '@babel/core'
 import { State } from './transformJsx'
+import { isWrapperFunction } from './utils'
 import * as t from '@babel/types'
 
 const visitor: Visitor<State> = {
@@ -7,10 +8,7 @@ const visitor: Visitor<State> = {
     enter(path, state) {
       if (state.opts.setup) {
         const callee = path.get('callee')
-        if (
-          callee.isIdentifier() &&
-          (callee.node.name === 'FC' || callee.node.name === 'FCA')
-        ) {
+        if (callee.isIdentifier() && isWrapperFunction(callee.node.name)) {
           const fn = path.get('arguments')[0]
           if (fn.isArrowFunctionExpression() || fn.isFunctionExpression()) {
             const params = fn.node.params

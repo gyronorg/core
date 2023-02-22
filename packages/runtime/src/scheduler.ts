@@ -23,7 +23,6 @@ let startTime = -1
 export enum JobPriority {
   DEFERRED = -1,
   NORMAL = 0,
-  ACCRUED = 1,
 }
 
 /**
@@ -53,14 +52,6 @@ export function nextRender(fn?: Noop) {
     pendingJobPromise.length = 0
   })
   return fn ? p.then(fn) : p
-}
-
-export function useDeferred(fn: Noop) {
-  //
-}
-
-export function useAccrued(fn: Noop) {
-  //
 }
 
 export function pushQueueJob(job: SchedulerJob) {

@@ -24,6 +24,7 @@ export {
   clearCacheComponent,
   keepComponent,
   removeBuiltInProps,
+  FCD,
   FCA,
   FC,
 } from './component'
@@ -43,7 +44,7 @@ export {
   Fragment,
 } from './vnode'
 export { h } from './h'
-export { nextRender, useAccrued, useDeferred } from './scheduler'
+export { nextRender } from './scheduler'
 export {
   onBeforeMount,
   onAfterMount,

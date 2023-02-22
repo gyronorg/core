@@ -23,10 +23,11 @@ import {
   cloneVNode,
   VNodeChildren,
 } from './vnode'
-import { SchedulerJob } from './scheduler'
+import { JobPriority, SchedulerJob } from './scheduler'
 import { invokeLifecycle, Lifecycle, onDestroyed } from './lifecycle'
 import { error, warn } from './assert'
 import { UserRef } from './ref'
+import { h } from './h'
 
 export type UtilComponentProps<T extends VNodeType, D = never> = T extends
   | ComponentFunction<infer Props>
@@ -151,7 +152,7 @@ export function createComponentInstance(
  * @api component
  * @returns Component
  */
-export function getCurrentComponent() {
+export function getCurrentComponent<T extends object>() {
   if (!_component) {
     warn(
       'Failed to get component instance, please submit issues to us at https://github.com/gyronorg/core',
@@ -159,7 +160,7 @@ export function getCurrentComponent() {
       'getCurrentComponent'
     )
   }
-  return _component
+  return _component as Component<T>
 }
 
 export function forceUpdate(component: Component) {
@@ -452,6 +453,17 @@ export function FC<
   T extends ComponentSetupFunction<Props> = ComponentSetupFunction<Props>
 >(componentFunction: T) {
   return componentFunction as WrapperFunction<Props>
+}
+
+export function FCD<
+  Props extends object = object,
+  T extends ComponentSetupFunction<Props> = ComponentSetupFunction<Props>
+>(componentFunction: T): WrapperFunction<Props> {
+  return (props: Props) => {
+    const component = getCurrentComponent<Props>()
+    component.update.priority = JobPriority.DEFERRED
+    return h(componentFunction, props)
+  }
 }
 
 /**

@@ -39,13 +39,13 @@ export function isBodyContainJSX(
 
   if (t.isCallExpression(node)) {
     if (t.isIdentifier(node.callee)) {
-      return node.callee.name === 'FC' || node.callee.name === 'FCA'
+      return isWrapperFunction(node.callee.name)
     }
     return false
   }
   if (t.isVariableDeclarator(node)) {
     if (t.isCallExpression(node.init) && t.isIdentifier(node.init.callee)) {
-      return node.init.callee.name === 'FC' || node.init.callee.name === 'FCA'
+      return isWrapperFunction(node.init.callee.name)
     }
     if (
       t.isArrowFunctionExpression(node.init) ||
@@ -160,4 +160,8 @@ export function insert(path: NodePath<any>, expression: Node) {
 export function isLocalPath(path: NodePath<t.ImportDeclaration>) {
   const source = path.get('source')
   return source.node.value.startsWith('./')
+}
+
+export function isWrapperFunction(name: string) {
+  return ['FC', 'FCA', 'FCD'].includes(name)
 }
