@@ -23,7 +23,6 @@
     "@types/lodash-es": "^4.17.6",
     "@types/webpack": "^5.28.0",
     "babel-jest": "^29.1.2",
-    "esbuild-wasm": "^0.17.4",
     "hash-sum": "^2.0.0",
     "html-tags": "^3.1.0",
     "lodash-es": "^4.17.21",
@@ -36,6 +35,7 @@
     "@babel/plugin-transform-typescript": "^7.17.12",
     "@gyron/runtime": "^0.0.29",
     "@gyron/shared": "^0.0.29",
+    "esbuild-wasm": "^0.17.4",
     "gyron": "^0.0.29"
   }
 }
