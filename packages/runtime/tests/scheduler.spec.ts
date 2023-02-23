@@ -7,6 +7,8 @@ import {
   onBeforeUpdate,
   useValue,
   FCD,
+  exposeComponent,
+  createRef,
 } from '../src'
 import { nextRender, now } from '../src/scheduler'
 
@@ -81,12 +83,17 @@ describe('scheduler', () => {
       while (performance.now() - startTime < 10) {
         // anything
       }
+      exposeComponent({
+        foo: 'foo',
+      })
       return h('span', 'foo')
     })
+    const ref = createRef()
     const App = h(() => {
-      return h('div', null, h(Foo))
+      return h('div', null, h(Foo, { ref }))
     })
     createInstance(App).render(container)
     expect(container.innerHTML).toBe('<div><span>foo</span></div>')
+    expect(ref.current.foo).toBe('foo')
   })
 })

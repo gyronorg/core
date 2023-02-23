@@ -445,8 +445,8 @@ export function FCA<
  * })
  * ```
  * @api component
- * @param componentFunction function
- * @returns function
+ * @param componentFunction component function
+ * @returns VNode<Component>
  */
 export function FC<
   Props extends object = object,
@@ -455,6 +455,11 @@ export function FC<
   return componentFunction as WrapperFunction<Props>
 }
 
+/**
+ * Define a delayed update component that renders without interrupting user behavior
+ * @param componentFunction component function
+ * @returns VNode<Component>
+ */
 export function FCD<
   Props extends object = object,
   T extends ComponentSetupFunction<Props> = ComponentSetupFunction<Props>
@@ -462,6 +467,8 @@ export function FCD<
   return (props: Props) => {
     const component = getCurrentComponent<Props>()
     component.update.priority = JobPriority.DEFERRED
+    // All data is passed downwards to ensure that the behavior is consistent
+    // For example <Foo ref={} visible={} />
     return h(componentFunction, props)
   }
 }
