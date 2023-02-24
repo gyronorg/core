@@ -3,7 +3,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -20,8 +20,8 @@
     "test": "cross-env PACKAGES=runtime jest --config=../../jest.config.js"
   },
   "devDependencies": {
-    "@gyron/dom-client": "^0.0.29",
-    "@gyron/reactivity": "^0.0.29",
-    "@gyron/shared": "^0.0.29"
+    "@gyron/dom-client": "^0.0.30",
+    "@gyron/reactivity": "^0.0.30",
+    "@gyron/shared": "^0.0.30"
   }
 }
