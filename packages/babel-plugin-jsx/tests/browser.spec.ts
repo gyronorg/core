@@ -1,8 +1,12 @@
-import { initialBabelBundle, transform } from '../src'
+import {
+  buildBrowserEsmWithEsbuild,
+  transform,
+  transformWithBabel,
+} from '../src'
+import { build } from 'esbuild'
 
 describe('browser code editor', () => {
   test('build bundle with browser', async () => {
-    const build = await initialBabelBundle(null)
     const foo = `
       export const Foo = FC(() => {
         return <div>gyron</div>
@@ -14,7 +18,7 @@ describe('browser code editor', () => {
         return <Foo />
       }
     `
-    const bundle = await build(
+    const { plugin, main } = buildBrowserEsmWithEsbuild(
       {
         loader: 'tsx',
         code: 'import { App } from "./app"\nApp()',
@@ -36,6 +40,18 @@ describe('browser code editor', () => {
         ],
       }
     )
+    const content = await transformWithBabel(main.code, main.name, main, true)
+    const bundle = await build({
+      stdin: {
+        contents: content.code,
+        sourcefile: main.name,
+      },
+      bundle: true,
+      write: false,
+      format: 'esm',
+      plugins: [plugin],
+      external: ['gyron', '@gyron'].concat(main.external),
+    })
     expect(bundle.outputFiles[0].text).toContain('var Foo = FC')
     expect(bundle.outputFiles[0].text).toContain('function App()')
     expect(bundle.outputFiles[0].text).toContain(

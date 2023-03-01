@@ -35,7 +35,6 @@
     "@babel/plugin-transform-typescript": "^7.17.12",
     "@gyron/runtime": "^0.0.30",
     "@gyron/shared": "^0.0.30",
-    "esbuild-wasm": "^0.17.4",
     "gyron": "^0.0.30"
   }
 }
