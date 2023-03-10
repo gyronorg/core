@@ -29,7 +29,7 @@ export function warn(
       })
     }
   } else {
-    console.warn(`[${type}]`, err, '\n', component)
+    console.warn(`[Gyron ${type}]`, err, '\n', component)
   }
 }
 
@@ -52,5 +52,5 @@ export function error(err: Error, component: Component | null, type: string) {
       return null
     }
   }
-  console.error(`[${type}]`, err, '\n', component)
+  console.error(`[Gyron ${type}]`, err, '\n', component)
 }

@@ -35,7 +35,12 @@ export async function transformWithBabel(
   })
 }
 
+const defaultOptions: Partial<Options> = {
+  setup: true,
+}
+
 export function babelESBuildJsx(options: Partial<Options> = {}): Plugin {
+  options = Object.assign({}, defaultOptions, options)
   return {
     name: 'esbuild:gyron-jsx',
     setup(build) {
@@ -61,6 +66,7 @@ export function babelESBuildJsx(options: Partial<Options> = {}): Plugin {
 }
 
 export function babelViteJsx(options: Partial<Options> = {}): VitePlugin {
+  options = Object.assign({}, defaultOptions, options)
   return {
     name: 'vite:gyron-jsx',
     config(config) {
