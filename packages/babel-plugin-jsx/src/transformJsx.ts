@@ -1,5 +1,6 @@
 import { Visitor, NodePath } from '@babel/core'
 import { isArray, isNull } from '@gyron/shared'
+import { warn } from '@gyron/logger'
 import { transformJSXMemberExpression } from './utils'
 import htmlTags from 'html-tags'
 import * as t from '@babel/types'
@@ -96,7 +97,11 @@ function transformAttr(
         return t.spreadElement(attribute.argument)
       }
 
-      console.warn('Syntax conversions not yet supported', attribute)
+      warn(
+        'babel-plugin-jsx',
+        'Syntax conversions not yet supported',
+        attribute
+      )
       return null
     })
     .filter((x) => Boolean(x)) as t.ObjectProperty[]

@@ -22,6 +22,7 @@
     "build:cjs": "esbuild src/index.ts --bundle --sourcemap --outdir=dist --format=cjs --platform=node --external:download-git-repo --banner:js=\"#!/usr/bin/env node\""
   },
   "devDependencies": {
+    "@gyron/logger": "^0.0.31",
     "commander": "^9.2.0",
     "ora": "^6.1.0"
   },

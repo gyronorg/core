@@ -1,3 +1,4 @@
+import { warn } from '@gyron/logger'
 import { h, Primitive, useInject, getPlugins } from '@gyron/runtime'
 import { isString, isUndefined } from '@gyron/shared'
 import { createPath, parsePath, To } from 'history'
@@ -84,7 +85,8 @@ export function useRoute() {
   const context = getPlugins()
   const route: Primitive<RouteRecord> = context.get(TypeRoute)
   if (!route.value) {
-    console.warn(
+    warn(
+      'router',
       "No matching route is found, and it could also be the cause of useRoute's scope."
     )
   }

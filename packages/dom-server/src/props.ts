@@ -1,9 +1,5 @@
-import {
-  VNodeProps,
-  removeBuiltInProps,
-  VNodeChildren,
-  warn,
-} from '@gyron/runtime'
+import { warn } from '@gyron/logger'
+import { VNodeProps, VNodeChildren, removeBuiltInProps } from '@gyron/runtime'
 import { isEventProps, isString, shouldValue } from '@gyron/shared'
 import { SSRBuffer } from './buffer'
 
@@ -42,6 +38,7 @@ export function renderProps(
       case 'html':
         if (shouldValue(children)) {
           warn(
+            'dom-server',
             'Both the html attribute and the child node exist in the node.',
             null,
             'SSR Render Props'

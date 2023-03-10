@@ -1,4 +1,4 @@
-import { warn } from './assert'
+import { assertWarn } from './assert'
 import { Component, getCurrentComponent } from './component'
 
 export function provide(
@@ -20,7 +20,7 @@ export function inject<T = unknown>(
   }
   if (!parentComponent) {
     if (shouldWarn) {
-      warn(
+      assertWarn(
         'Contextual information not obtained, key: ' + String(name),
         component,
         'inject'

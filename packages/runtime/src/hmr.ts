@@ -1,5 +1,6 @@
 import type { Component } from './component'
 import { extend, isString } from '@gyron/shared'
+import { warn } from '@gyron/logger'
 import { VNode } from './vnode'
 import { ComponentSetupFunction, normalizeComponent } from './component'
 
@@ -71,7 +72,8 @@ export function rerender(id: string, type: ComponentSetupFunction) {
     rerenderParent(id)
   } else {
     if (__WARN__) {
-      console.warn(
+      warn(
+        'runtime',
         'An exception occurs during the hot update collection task, please submit issues to us at https://github.com/gyronorg/core',
         id,
         type

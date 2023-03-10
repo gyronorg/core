@@ -5,6 +5,7 @@ import {
   PluginItem,
 } from '@babel/core'
 import { parse } from '@babel/parser'
+import { warn } from '@gyron/logger'
 import { Options } from './transformJsx'
 import { insertVisitor } from './visitor'
 import generate, { GeneratorResult } from '@babel/generator'
@@ -48,7 +49,7 @@ export function transform(
       ast,
     }
   } else {
-    console.warn('[babel-plugin-jsx]: Transform invalid syntax')
+    warn('babel-plugin-jsx', 'Transform invalid syntax')
     return {
       ast: null,
       map: null,

@@ -9,6 +9,7 @@ import {
   normalizeEventName,
   shouldValue,
 } from '@gyron/shared'
+import { warn } from '@gyron/logger'
 import { isControlledElementProp, controlledElementValue } from './controlled'
 import { NS } from './opt'
 
@@ -160,7 +161,8 @@ export function patchProp(
     patchClass(el, oldValue, newValue, debugOption)
   } else if (key === 'html') {
     if (shouldValue(vnode.children)) {
-      console.warn(
+      warn(
+        'dom-client',
         'Both the html attribute and the child node exist in the node.\n',
         vnode
       )
@@ -172,7 +174,7 @@ export function patchProp(
     try {
       setAttribute(el, key, newValue, vnode)
     } catch (e) {
-      console.warn(e)
+      warn('dom-client', e)
     }
   }
 }

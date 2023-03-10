@@ -22,6 +22,7 @@
   "devDependencies": {
     "@gyron/dom-client": "^0.0.31",
     "@gyron/reactivity": "^0.0.31",
+    "@gyron/logger": "^0.0.31",
     "@gyron/shared": "^0.0.31"
   }
 }

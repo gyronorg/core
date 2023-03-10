@@ -1,6 +1,7 @@
 import type { VNode, RenderElement } from './vnode'
 import type { SSRMessage } from './ssr'
 import { shouldValue, isComment, extend, keys } from '@gyron/shared'
+import { warn } from '@gyron/logger'
 import {
   createComment,
   insert,
@@ -50,8 +51,9 @@ function locateClosingAsyncAnchor(node: Node): Node {
 
 function mismatch(node: RenderElement, vnode: VNode, isFragment: boolean) {
   if (__DEV__) {
-    console.warn(
-      `[hydrate] server render mismatch.\nClient Type: `,
+    warn(
+      'hydrate',
+      `server render mismatch.\nClient Type: `,
       node,
       `\nServer Type: `,
       vnode
@@ -108,8 +110,9 @@ export function hydrate(
       } else {
         if (textNode.data !== children) {
           if (__DEV__) {
-            console.warn(
-              `[hydrate] text data mismatch.\nserver text: ${textNode.data}\nclient text: ${children}`
+            warn(
+              'hydrate',
+              `text data mismatch.\nserver text: ${textNode.data}\nclient text: ${children}`
             )
           }
           textNode.data = children as string
@@ -191,8 +194,9 @@ function hydrateFragment(
     return nextSibling((vnode.anchor = next))
   } else {
     if (__DEV__) {
-      console.warn(
-        '[hydrate] RenderToString did not handle the fragment correctly, no terminator found'
+      warn(
+        'hydrate',
+        'RenderToString did not handle the fragment correctly, no terminator found'
       )
     }
     insert((vnode.anchor = createComment(`]`)), container, next)

@@ -21,7 +21,7 @@ import {
   createEffect,
 } from '@gyron/reactivity'
 import { JobPriority, pushQueueJob, SchedulerJob } from '../scheduler'
-import { warn } from '../assert'
+import { assertWarn } from '../assert'
 import { hydrate } from '../hydrate'
 import { invokeLifecycle } from '../lifecycle'
 
@@ -71,7 +71,7 @@ function updateComponentEffect(
       const prevTree = component.subTree
       const nextTree = renderComponent(component)
       if (isPromise(nextTree)) {
-        warn(
+        assertWarn(
           'Asynchronous components without wrapping are not supported, please use FCA wrapping',
           component,
           'UpdateComponent'
@@ -106,7 +106,7 @@ function updateComponentEffect(
     } else {
       const nextTree = renderComponent(component)
       if (isPromise(nextTree)) {
-        warn(
+        assertWarn(
           'Asynchronous components without wrapping are not supported, please use FCA wrapping',
           component,
           'SetupPatch'
@@ -193,7 +193,7 @@ export function patchComponent(
     }
   } else {
     if (__WARN__) {
-      console.warn('Component update exception', n1)
+      assertWarn('Component update exception', n1.component, 'PatchComponent')
     }
     mountComponent(n2, container, anchor, parentComponent)
   }

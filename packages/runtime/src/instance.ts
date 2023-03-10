@@ -1,4 +1,5 @@
 import type { RenderElement, VNode } from './vnode'
+import { warn } from '@gyron/logger'
 import { patch, unmount } from './renderer'
 import { hydrate } from './hydrate'
 import { getUserContainer } from './shared'
@@ -51,7 +52,8 @@ export function createInstance(root: VNode, isHydrate?: boolean) {
       instance.container = getUserContainer(containerOrSelector)
 
       if (!instance.container) {
-        console.warn(
+        warn(
+          'runtime',
           'Node not found in the document. The parameter is',
           containerOrSelector
         )

@@ -1,3 +1,4 @@
+import { warn } from '@gyron/logger'
 import { VNode, isVNodeComponent } from '@gyron/runtime'
 import { extend, isArray, isObject, omit, resolve } from '@gyron/shared'
 import { match, parse, pathToRegexp } from 'path-to-regexp'
@@ -124,8 +125,9 @@ export function generateNestedRoutes(
       }
       routeRecords.push(route)
     } else {
-      console.warn(
-        `Only the <Route> component is allowed under the <Routes> component.\nbut you have used the`,
+      warn(
+        'router',
+        'Only the <Route> component is allowed under the <Routes> component.\nbut you have used the',
         isVNodeComponent(component) ? component.type : String(component.type)
       )
     }

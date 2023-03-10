@@ -1,4 +1,3 @@
-import { isVNode, isVNodeComponent } from './shared'
 import {
   extend,
   isArray,
@@ -8,6 +7,8 @@ import {
   omit,
   shouldValue,
 } from '@gyron/shared'
+import { warn } from '@gyron/logger'
+import { isVNode, isVNodeComponent } from './shared'
 import {
   Component,
   ComponentDefaultProps,
@@ -259,7 +260,8 @@ export function normalizeChildrenVNode(vnode: VNode) {
   const parent: VNode = vnode
 
   if (!parent) {
-    console.warn(
+    warn(
+      'runtime',
       'The parent node was not found when formatting the child node, this will raise a PROVIDE error, please check.'
     )
   }

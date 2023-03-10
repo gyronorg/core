@@ -1,3 +1,4 @@
+import { error } from '@gyron/logger'
 import { VNode } from '@gyron/runtime'
 import { extend, isBoolean, isFunction, join, Noop } from '@gyron/shared'
 import { Blocker, Path, To } from 'history'
@@ -53,7 +54,7 @@ function callWithErrorHandling(
   try {
     res = args ? fn(...args) : fn()
   } catch (err) {
-    console.error(type, err)
+    error('router', type, err)
   }
   return res
 }

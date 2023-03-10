@@ -1,3 +1,4 @@
+import { warn } from '@gyron/logger'
 import { Component, getCurrentComponent } from './component'
 import { getErrorBoundaryCtx } from './internal'
 
@@ -61,7 +62,8 @@ function manualHandlerBase(
   component: Component
 ) {
   if (!component) {
-    console.warn(
+    warn(
+      'runtime',
       'No component instance found, you can get { component } on the component parameter'
     )
     return null
@@ -70,7 +72,8 @@ function manualHandlerBase(
   const handler = (componentHandle ||
     getErrorBoundaryCtx(component)) as BoundariesHandler
   if (!handler) {
-    console.warn(
+    warn(
+      'runtime',
       'No ErrorBoundary component was found in the upper level component, please register the ErrorBoundary component and try again.'
     )
     return null

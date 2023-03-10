@@ -1,10 +1,12 @@
 import type { Component, VNode, RenderElement } from 'packages/gyron/src'
 import { initialLifecycle, isArray, isSet } from '@gyron/shared'
+import { warn } from '@gyron/logger'
 
 function setSelectValue(el: HTMLSelectElement, value: any) {
   const isMultiple = el.multiple
   if (isMultiple && !isArray(value) && !isSet(value)) {
-    console.warn(
+    warn(
+      'dom-client',
       'There is a multiple attribute in select, so the value of the value attribute must be an array'
     )
     return null
@@ -38,7 +40,8 @@ function getComponentByVNode(vnode: VNode): void | Component {
     parent = parent.parent
   }
   if (!parent) {
-    console.warn(
+    warn(
+      'dom-client',
       'No vnode found in the vnode chain containing component attributes',
       vnode
     )

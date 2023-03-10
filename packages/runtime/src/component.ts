@@ -13,6 +13,7 @@ import {
   isUndefined,
   omit,
 } from '@gyron/shared'
+import { warn } from '@gyron/logger'
 import {
   createVNodeComment,
   VNode,
@@ -25,7 +26,7 @@ import {
 } from './vnode'
 import { JobPriority, SchedulerJob } from './scheduler'
 import { invokeLifecycle, Lifecycle, onDestroyed } from './lifecycle'
-import { error, warn } from './assert'
+import { assertError } from './assert'
 import { UserRef } from './ref'
 import { h } from './h'
 
@@ -375,7 +376,8 @@ export function FCA<
         } else {
           resolveComp = normalizeVNode(subtree as VNode)
           if (__DEV__ && __WARN__) {
-            console.warn(
+            warn(
+              'runtime',
               'Async components are recommended to return a function that updates local state.\n' +
                 'It is different from normal components, normal components are called again, ' +
                 'while asynchronous components are called only once'
@@ -386,7 +388,7 @@ export function FCA<
         return resolveComp
       })
       .catch((e) => {
-        error(e, component, 'AsyncComponent')
+        assertError(e, component, 'AsyncComponent')
         return createVNodeComment('AsyncComponentError')
       })
   }
@@ -566,7 +568,7 @@ export function callWithErrorHandling(
   try {
     res = args ? fn(...args) : fn()
   } catch (err) {
-    error(err, instance, type)
+    assertError(err, instance, type)
   }
   return res
 }
@@ -579,7 +581,11 @@ export function normalizeComponent(
   const { type } = vnode
 
   if (!type) {
-    console.warn('Failed to format component, "type" not found. node: ', vnode)
+    warn(
+      'runtime',
+      'Failed to format component, "type" not found. node: ',
+      vnode
+    )
     return
   }
 

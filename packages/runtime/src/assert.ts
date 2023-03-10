@@ -1,3 +1,4 @@
+import { error, warn } from '@gyron/logger'
 import { Component } from './component'
 import { getErrorBoundaryCtx } from './internal'
 import { ErrorType, WarnType, BoundariesHandler } from './boundaries'
@@ -6,7 +7,7 @@ export enum InnerCode {
   Transition = 1000,
 }
 
-export function warn(
+export function assertWarn(
   err: Error | string,
   component: Component | null,
   type: string
@@ -29,11 +30,15 @@ export function warn(
       })
     }
   } else {
-    console.warn(`[Gyron ${type}]`, err, '\n', component)
+    warn(`Gyron ${type}`, err, '\n', component)
   }
 }
 
-export function error(err: Error, component: Component | null, type: string) {
+export function assertError(
+  err: Error,
+  component: Component | null,
+  type: string
+) {
   if (component) {
     let errorHandler: BoundariesHandler
     if (component.ctx[ErrorType]) {
@@ -52,5 +57,5 @@ export function error(err: Error, component: Component | null, type: string) {
       return null
     }
   }
-  console.error(`[Gyron ${type}]`, err, '\n', component)
+  error(`Gyron ${type}`, err, '\n', component)
 }

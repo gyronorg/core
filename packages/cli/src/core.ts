@@ -1,4 +1,5 @@
 import { Options } from './interface'
+import { info, warn } from '@gyron/logger'
 import download from 'download-git-repo'
 import ora from 'ora'
 import chalk from 'chalk'
@@ -13,8 +14,7 @@ export function exec(name: string, options: Partial<Options>) {
         return null
       }
       spinner.succeed('download successful')
-      console.log()
-      console.log(`
+      info(`
 ${chalk.bold('Project creation is complete.')}
 
 Next, go to the ${chalk.underline.bold.blue(name)} directory and execute
@@ -27,6 +27,6 @@ To run the project, run
 `)
     })
   } else {
-    console.warn('Customization options do not exist at this time')
+    warn('cli', 'Customization options do not exist at this time')
   }
 }

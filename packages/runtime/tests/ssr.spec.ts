@@ -47,8 +47,8 @@ describe('SSR', () => {
   })
 
   test('mismatch text', () => {
-    const fn = jest.fn((message) => {
-      expect(message).toContain('[hydrate] server render mismatch')
+    const fn = jest.fn((_, message) => {
+      expect(message).toContain('server render mismatch')
     })
     console.warn = fn
     const { container } = ssr(
@@ -60,8 +60,8 @@ describe('SSR', () => {
   })
 
   test('mismatch text content', () => {
-    const fn = jest.fn((message) => {
-      expect(message).toContain('[hydrate] text data mismatch')
+    const fn = jest.fn((_, message) => {
+      expect(message).toContain('text data mismatch')
     })
     console.warn = fn
     const { container } = ssr(
@@ -78,8 +78,8 @@ describe('SSR', () => {
   })
 
   test('mismatch comment', () => {
-    const fn = jest.fn((message) => {
-      expect(message).toContain('[hydrate] server render mismatch')
+    const fn = jest.fn((_, message) => {
+      expect(message).toContain('server render mismatch')
     })
     console.warn = fn
     const { container } = ssr('foo', createVNodeComment())
@@ -148,8 +148,8 @@ describe('SSR', () => {
   })
 
   test('mismatch fragment start flag', () => {
-    const fn = jest.fn((message) => {
-      expect(message).toContain('[hydrate] server render mismatch')
+    const fn = jest.fn((_, message) => {
+      expect(message).toContain('server render mismatch')
     })
     console.warn = fn
     const { container } = ssr(

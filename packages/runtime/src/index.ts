@@ -60,7 +60,7 @@ export {
   isVNodeFragment,
   isVNodeComponent,
 } from './shared'
-export { warn, error } from './assert'
+export { assertWarn, assertError } from './assert'
 export { getPlugins } from './plugin'
 export { rerender } from './hmr'
 export {

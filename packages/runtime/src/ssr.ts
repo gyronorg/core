@@ -1,3 +1,4 @@
+import { warn } from '@gyron/logger'
 import { extend } from '@gyron/shared'
 import { hydrate } from './hydrate'
 import { createInstance, Instance } from './instance'
@@ -53,7 +54,8 @@ export function createSSRContext(context: SSRContext) {
     render: (vnode: VNode, containerOrSelector: string | HTMLElement) => {
       const container = getUserContainer(containerOrSelector)
       if (!container) {
-        console.warn(
+        warn(
+          'runtime',
           'Node not found in the document. The parameter is',
           containerOrSelector
         )

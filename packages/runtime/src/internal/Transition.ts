@@ -2,7 +2,7 @@ import { RenderElement, VNode } from '../vnode'
 import { FC } from '../component'
 import { isFunction, isNumber, shouldValue } from '@gyron/shared'
 import { Noop } from '@gyron/shared'
-import { InnerCode, warn } from '../assert'
+import { InnerCode, assertWarn } from '../assert'
 import { isVNode, isVNodeComment } from '../shared'
 
 interface TransitionPropsNormalize {
@@ -187,7 +187,7 @@ function setInnerVNode(
       })
     }
   } else if (__DEV__) {
-    warn(
+    assertWarn(
       `An exception has occurred, please submit error code ${InnerCode.Transition} to issue`,
       vnode.component,
       'Transition'

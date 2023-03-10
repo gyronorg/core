@@ -20,6 +20,7 @@
     "test": "cross-env PACKAGES=dom-client jest --config=../../jest.config.js"
   },
   "devDependencies": {
+    "@gyron/logger": "^0.0.31",
     "@gyron/shared": "^0.0.31"
   }
 }
