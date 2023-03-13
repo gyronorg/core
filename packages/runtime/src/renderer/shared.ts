@@ -1,6 +1,6 @@
-import { isArray, isElement, Noop } from '@gyron/shared'
+import { isArray, isElement, isEqual, Noop, shouldValue } from '@gyron/shared'
 import { isVNode } from '../shared'
-import { Component, isCacheComponent } from '../component'
+import { Component, isCacheComponent, Memo } from '../component'
 import { invokeLifecycle } from '../lifecycle'
 import { Children, normalizeVNode, RenderElement, VNode } from '../vnode'
 import { nextSibling, remove } from '@gyron/dom-client'
@@ -18,6 +18,10 @@ function removeInvoke(_el: RenderElement, vnode: VNode, done: Noop) {
     remove(el)
     done()
   }
+}
+
+export function isSameWithMemo(m1: Memo, m2: Memo) {
+  return shouldValue(m1) && shouldValue(m2) && isEqual(m1, m2)
 }
 
 export function unmountChildren(c1: VNode[], start = 0) {

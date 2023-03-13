@@ -24,6 +24,7 @@ import { JobPriority, pushQueueJob, SchedulerJob } from '../scheduler'
 import { assertWarn } from '../assert'
 import { hydrate } from '../hydrate'
 import { invokeLifecycle } from '../lifecycle'
+import { isSameWithMemo } from './shared'
 
 function shouldUpdate(result: any) {
   return !(isBoolean(result) && !result)
@@ -181,6 +182,10 @@ export function patchComponent(
   anchor: RenderElement,
   parentComponent: Component
 ) {
+  if (isSameWithMemo(n1.props.memo, n2.props.memo)) {
+    n2.component = n1.component
+    return
+  }
   const component = (n2.component = n1.component)
   if (component) {
     normalizeComponent(n2, component, parentComponent)

@@ -1,4 +1,4 @@
-import { createInstance, FC, h, nextRender } from '../src'
+import { createInstance, FC, h, nextRender, onAfterUpdate } from '../src'
 
 function createUpdateApp(A: any) {
   const APP = h(() => {
@@ -45,5 +45,35 @@ describe('performance', () => {
     APP.component.update()
     await nextRender()
     expect(fn).toHaveBeenCalledTimes(3)
+  })
+
+  test('memo attribute with element', async () => {
+    const update = jest.fn()
+    const Child = () => {
+      onAfterUpdate(update)
+      return h('div', 'child')
+    }
+    const APP = h(() => {
+      return h('div', { memo: [1, 2] }, h(Child))
+    })
+    createInstance(APP).render(container)
+    APP.component.update()
+    await nextRender()
+    expect(update).toHaveBeenCalledTimes(0)
+  })
+
+  test('memo attribute with component', async () => {
+    const update = jest.fn()
+    const Foo = () => {
+      onAfterUpdate(update)
+      return () => h('div', 'foo')
+    }
+    const APP = h(() => {
+      return h(Foo, { memo: [1, 2] })
+    })
+    createInstance(APP).render(container)
+    APP.component.update()
+    await nextRender()
+    expect(update).toHaveBeenCalledTimes(0)
   })
 })

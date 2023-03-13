@@ -215,7 +215,7 @@ export function isEqual<T = any>(target: T, source: T, k?: string) {
     return false
   }
   for (const key in target) {
-    if (key !== k) {
+    if (!Object.is(key, k)) {
       const p1 = target[key]
       const p2 = source[key]
       if (isArray(p1) && isArray(p2)) {
@@ -227,12 +227,12 @@ export function isEqual<T = any>(target: T, source: T, k?: string) {
             if (isEqual(p1[i], p2[i], k)) {
               return false
             }
-          } else if (p1[i] !== p2[i]) {
+          } else if (!Object.is(p1[i], p2[i])) {
             return false
           }
         }
         return true
-      } else if (target[key] !== source[key]) {
+      } else if (!Object.is(target[key], source[key])) {
         return false
       }
     }

@@ -36,13 +36,15 @@ export type UtilComponentProps<T extends VNodeType, D = never> = T extends
   ? Props & Omit<ComponentDefaultProps, 'isSSR'>
   : D
 
+export type Memo = any[]
+
 export type ComponentDefaultProps = Partial<{
   readonly isSSR: boolean
   readonly children: VNodeChildren
   readonly key: string | number | symbol
   readonly ref: UserRef
   // Used in loop nodes to determine if updates to props occur and thus decide whether to skip updates to child nodes.
-  readonly memo: any[]
+  readonly memo: Memo
   // The user can optionally mark a node as static and all subsequent updates will skip the marked node.
   readonly static: boolean
   // Used for server-side rendering and client-side rendering to render text as real nodes.

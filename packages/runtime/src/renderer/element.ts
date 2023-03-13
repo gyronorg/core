@@ -10,7 +10,6 @@ import {
   keys,
   extend,
   isEqual,
-  isArray,
   isFunction,
   isObject,
 } from '@gyron/shared'
@@ -27,6 +26,7 @@ import {
 import { patchComponent } from './component'
 import {
   getNextSibling,
+  isSameWithMemo,
   mountChildren,
   unmount,
   unmountChildren,
@@ -201,16 +201,9 @@ export function patchChildren(
     return
   }
 
-  const c1memo = n1.props.memo
-  const c2memo = n2.props.memo
-  if (isArray(c1memo) && isArray(c2memo)) {
-    const index = c1memo.findIndex((item, index) => {
-      return c2memo[index] !== item
-    })
-    if (index < 0) {
-      n2.children = n1.children
-      return
-    }
+  if (isSameWithMemo(n1.props.memo, n2.props.memo)) {
+    n2.children = n1.children
+    return
   }
 
   const c1 = n1.children as VNode[]

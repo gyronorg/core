@@ -154,6 +154,8 @@ describe('Common function', () => {
     expect(isEqual({ a: 1, b: 1 }, { a: 2, b: 2 }, 'a')).toBe(false)
     expect(isEqual({ a: 1, b: 1 }, { a: 2, b: 1 }, 'a')).toBe(true)
     expect(isEqual({ a: 1, b: [1, '2'] }, { a: 1, b: [1, '2'] })).toBe(true)
+    expect(isEqual(null, null)).toBe(true)
+    expect(isEqual(undefined, undefined)).toBe(true)
   })
 
   test('omit', () => {
