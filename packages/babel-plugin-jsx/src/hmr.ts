@@ -3,6 +3,8 @@ import { State } from './transformJsx'
 import { generateHash, insert, isBodyContainJSX } from './utils'
 import * as t from '@babel/types'
 
+export const _defaultIdentifier = '_default'
+
 // pass enter JSXElement multiple timing
 export const hashIds = []
 
@@ -53,7 +55,8 @@ function transformDefaultCompHmr(
   } else {
     init = path.node as t.CallExpression
   }
-  const _defaultId = path.parentPath.scope.generateUidIdentifier('_default')
+  const _defaultId =
+    path.parentPath.scope.generateUidIdentifier(_defaultIdentifier)
   const _default = t.variableDeclaration('const', [
     t.variableDeclarator(_defaultId, init),
   ])

@@ -1,11 +1,10 @@
 import type { Component } from './component'
-import { extend, isString } from '@gyron/shared'
+import { extend } from '@gyron/shared'
 import { warn } from '@gyron/logger'
 import { VNode } from './vnode'
 import { ComponentSetupFunction, normalizeComponent } from './component'
 
-const record: Map<string, Component> = /* #__PURE__ */ new Map()
-const dep: Map<string, Set<string>> = /* #__PURE__ */ new Map()
+const record: Map<string, Set<Component>> = /* #__PURE__ */ new Map()
 
 export function refreshComponentType(
   vnode: VNode<ComponentSetupFunction>,
@@ -14,8 +13,17 @@ export function refreshComponentType(
   const hmrId = (vnode.type as any).__hmr_id
   const hmrComponent = record.get(hmrId)
   if (hmrComponent) {
-    vnode.type = hmrComponent.vnode.type
+    for (const comp of hmrComponent.values()) {
+      comp.type = component.vnode.type
+    }
     normalizeComponent(vnode, component)
+  }
+}
+
+export function refreshRecord(id: string, component: Component) {
+  const instances = record.get(id)
+  if (instances) {
+    instances.delete(component)
   }
 }
 
@@ -24,32 +32,11 @@ export function collectHmrComponent(
   parent: string,
   component: Component
 ) {
-  const instance = record.get(id)
-  if (!instance) {
-    record.set(id, component)
+  const instances = record.get(id)
+  if (!instances) {
+    record.set(id, new Set([component]))
   } else {
-    instance.type = component.type
-    instance.setup = component.setup
-  }
-  if (isString(parent)) {
-    const dependence = dep.get(id)
-    if (dependence) {
-      dependence.add(parent)
-    } else {
-      dep.set(id, new Set([parent]))
-    }
-  }
-}
-
-function rerenderParent(id: string) {
-  const dependence = dep.get(id)
-  if (dependence) {
-    for (const parent of dependence.values()) {
-      const instance = record.get(parent)
-      if (instance && instance.type) {
-        rerender(parent, instance.type as ComponentSetupFunction)
-      }
-    }
+    instances.add(component)
   }
 }
 
@@ -58,18 +45,18 @@ function rerenderParent(id: string) {
  * @deprecated Only allowed for internal use, such as vite or other packaging tools
  */
 export function rerender(id: string, type: ComponentSetupFunction) {
-  const instance = record.get(id)
-  if (instance) {
-    instance.setup = null
-    normalizeComponent(extend(instance.vnode, { type }), instance)
+  const instances = record.get(id)
+  if (instances) {
+    for (const comp of instances.values()) {
+      if (comp.destroyed) {
+        instances.delete(comp)
+        return void 0
+      }
+      comp.render = null
+      normalizeComponent(extend(comp.vnode, { type }), comp)
 
-    // update the information in the local snapshot
-    record.set(id, instance)
-
-    if (!instance.destroyed) {
-      instance.update()
+      comp.update()
     }
-    rerenderParent(id)
   } else {
     if (__WARN__) {
       warn(

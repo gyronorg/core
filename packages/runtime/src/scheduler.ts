@@ -65,8 +65,8 @@ export function pushQueueJob(job: SchedulerJob) {
       // priorities the same component update to completion.
       // when multiple updates of the same component are found in a synchronous task,
       // insert its next task at the end of an update task of the same type.
-      // jobId = 3; queue = [1, 3, 5]
-      // queue = [1, 3, 5]
+      // jobId = 3; O = old job id; N = new job id queue = [1, O3, 5]
+      // queue = [1, N3, 5]
       queue.splice(index, 1, job)
     } else {
       queue.push(job)

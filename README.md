@@ -76,7 +76,7 @@ const App = () => {
 | [dom-server](./packages/dom-server/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/dom-server?style=flat-square)       | 对接服务端 `node` 工具，用于服务端渲染                              |
 | [redux](./packages/redux/)                       | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/redux?style=flat-square)            | 全局状态管理器                                                      |
 | [jsx-runtime](./packages/jsx-runtime/)           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/jsx-runtime?style=flat-square)      | 支持 `jsx` 语法的运行时，比如 `babel` 的 `transform-react-jsx` 插件 |
-| [reactivity](./packages/reactivity/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/reactivity?style=flat-square)       | 响应式核心                                                          |
+| [reactivity](./packages/reactivity/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/reactivity?style=flat-square)       | 响应式核心（灵感来自于 Vue）                                        |
 | [router](./packages/router/)                     | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/router?style=flat-square)           | 路由管理器                                                          |
 | [runtime](./packages/runtime/)                   | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/runtime?style=flat-square)          | 渲染器以及程序入口                                                  |
 | [shared](./packages/shared/)                     | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/shared?style=flat-square)           | 公共工具函数                                                        |
@@ -84,7 +84,7 @@ const App = () => {
 
 ### 快速使用
 
-``` sh
+```sh
 # 全局安装 CLI
 npm install @gyron/cli -g
 # 创建项目

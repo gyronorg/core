@@ -5,6 +5,7 @@ import { invokeLifecycle } from '../lifecycle'
 import { Children, normalizeVNode, RenderElement, VNode } from '../vnode'
 import { nextSibling, remove } from '@gyron/dom-client'
 import { patch } from '.'
+import { refreshRecord } from '../hmr'
 
 function removeInvoke(_el: RenderElement, vnode: VNode, done: Noop) {
   const { transition } = vnode
@@ -65,6 +66,9 @@ export function unmount(vnode: VNode) {
   const { el, component, children, transition } = vnode
 
   if (component) {
+    if (__DEV__) {
+      refreshRecord((component.type as any).__hmr_id, component)
+    }
     if (!isCacheComponent(component.type)) {
       component.effect.stop()
     }

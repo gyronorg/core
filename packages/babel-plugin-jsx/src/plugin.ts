@@ -42,7 +42,7 @@ const defaultOptions: Partial<Options> = {
 export function babelESBuildJsx(options: Partial<Options> = {}): Plugin {
   options = Object.assign({}, defaultOptions, options)
   return {
-    name: 'esbuild:gyron-jsx',
+    name: 'esbuild:gyron',
     setup(build) {
       build.onLoad({ filter: /\.(t|j)sx$/ }, async (args) => {
         const source = await fs.promises.readFile(args.path, 'utf8')
@@ -68,7 +68,7 @@ export function babelESBuildJsx(options: Partial<Options> = {}): Plugin {
 export function babelViteJsx(options: Partial<Options> = {}): VitePlugin {
   options = Object.assign({}, defaultOptions, options)
   return {
-    name: 'vite:gyron-jsx',
+    name: 'vite:gyron',
     config(config) {
       return {
         define: {
@@ -113,14 +113,15 @@ export function babelViteJsx(options: Partial<Options> = {}): VitePlugin {
 
           if (componentHmr.length) {
             result.code = `\nimport { rerender } from 'gyron'\n` + result.code
-            result.code += `\nimport.meta.hot.accept(({ ${componentHmr
-              .map((comp) => comp.name)
-              .join(', ')} }) => {
+            result.code += `\nimport.meta.hot.accept((module) => {
   try {
-    ${componentHmr
-      .map((comp) => `rerender(${comp.name}.__hmr_id, ${comp.name})`)
-      .join(';\n    ')};
-  } catch(e){
+    for (const key in module) {
+      const instance = module[key]
+      if (instance && instance.__hmr_id) {
+        rerender(instance.__hmr_id, instance)
+      }
+    }
+  } catch(e) {
     import.meta.hot.invalidate();
   }
 })`
