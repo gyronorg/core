@@ -80,6 +80,18 @@ describe('Lifecycle', () => {
     expect(e.mock.calls.length).toBe(1)
   })
 
+  test('mounted component property', async () => {
+    const fn = jest.fn((component) => {
+      expect(component.$el).toBeTruthy()
+    })
+    const App = () => {
+      onAfterMount(fn)
+      return () => h('div', 'gyron')
+    }
+    createInstance(h(App)).render(container)
+    expect(fn).toHaveBeenCalled()
+  })
+
   test('beforeUpdate', async () => {
     const Child = FC<{ a: number }>(() => {
       onBeforeUpdate(() => {
