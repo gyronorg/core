@@ -1,7 +1,6 @@
 import { renderToString } from '@gyron/dom-server'
 import { noop, sleep } from '@gyron/shared'
 import {
-  createSSRInstance,
   createVNode,
   h,
   nextRender,
@@ -12,12 +11,13 @@ import {
   createRef,
   onBeforeMount,
   createSSRContext,
+  onAfterMount,
 } from '../src'
 
 function ssr(html: string, vnode: VNode) {
   const container = document.createElement('div')
   container.innerHTML = html
-  createSSRInstance(vnode).render(container)
+  createSSRContext({ message: {} }).render(vnode, container)
   return {
     container,
   }
@@ -236,14 +236,12 @@ describe('SSR', () => {
   })
 
   test('async component lifecycle', async () => {
-    const container = document.createElement('div')
     const fn = jest.fn()
     const App = FCA(async () => {
       onBeforeMount(fn)
       return createVNode('span', null, 0)
     })
-    container.innerHTML = '<span>0</span>'
-    createSSRInstance(h(App)).render(container)
+    ssr('<span>0</span>', h(App))
     await sleep(0)
     expect(fn).toHaveBeenCalled()
   })
@@ -268,5 +266,17 @@ describe('SSR', () => {
 
     const html = await renderToString(root)
     expect(html).toBe('<span>Hello Gyron</span>')
+  })
+
+  test('ssr with component mounted property $el', async () => {
+    const fn = jest.fn(({ $el }) => {
+      expect($el).toBeTruthy()
+    })
+    const App = () => {
+      onAfterMount(fn)
+      return h('span', 'gyron')
+    }
+    ssr('<span>gyron</span>', h(App))
+    expect(fn).toHaveBeenCalled()
   })
 })

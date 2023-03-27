@@ -88,6 +88,7 @@ function updateComponentEffect(
         component.subTree = nextTree as VNode
         hydrate(component.vnode.el, component.subTree, component, ssrMessage)
 
+        component.$el = component.vnode.el
         component.mounted = true
         // onAfterMount
         invokeLifecycle(component, 'afterMounts')
