@@ -1,9 +1,13 @@
 import babelJsx from './core'
 
 export {
-  babelESBuildJsx,
-  babelViteJsx,
-  babelWebpack,
+  // this method will no longer be supported in the future (createGyronESBuildPlugin)
+  createGyronESBuildPlugin as babelESBuildJsx,
+  // this method will no longer be supported in the future (createGyronVitePlugin)
+  createGyronVitePlugin as babelViteJsx,
+  createGyronESBuildPlugin,
+  createGyronVitePlugin,
+  createGyronWebpackLoader,
   transformWithBabel,
 } from './plugin'
 export { transform, ts2js } from './transform'

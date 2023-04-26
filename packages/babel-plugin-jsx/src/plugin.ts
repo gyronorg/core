@@ -39,7 +39,9 @@ const defaultOptions: Partial<Options> = {
   setup: true,
 }
 
-export function babelESBuildJsx(options: Partial<Options> = {}): Plugin {
+export function createGyronESBuildPlugin(
+  options: Partial<Options> = {}
+): Plugin {
   options = Object.assign({}, defaultOptions, options)
   return {
     name: 'esbuild:gyron',
@@ -65,7 +67,9 @@ export function babelESBuildJsx(options: Partial<Options> = {}): Plugin {
   }
 }
 
-export function babelViteJsx(options: Partial<Options> = {}): VitePlugin {
+export function createGyronVitePlugin(
+  options: Partial<Options> = {}
+): VitePlugin {
   options = Object.assign({}, defaultOptions, options)
   return {
     name: 'vite:gyron',
@@ -137,12 +141,11 @@ export function babelViteJsx(options: Partial<Options> = {}): VitePlugin {
   }
 }
 
-export const babelWebpack: LoaderDefinitionFunction<Options> = async function (
-  source: string
-) {
-  const options = this.getOptions()
+export const createGyronWebpackLoader: LoaderDefinitionFunction<Options> =
+  async function (source: string) {
+    const options = this.getOptions()
 
-  const result = await transformWithBabel(source, this.resourcePath, options)
+    const result = await transformWithBabel(source, this.resourcePath, options)
 
-  return result.code
-}
+    return result.code
+  }
