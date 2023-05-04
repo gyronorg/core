@@ -30,6 +30,22 @@ describe('Link', () => {
     expect(container.innerHTML).toBe('<a href="foo"></a>')
   })
 
+  test('base url with link component', async () => {
+    const router = createMemoryRouter({ base: 'foo' })
+    app = createInstance(
+      h(() => h(Router, { router: router }, [h(Link, { to: 'bar' })]))
+    ).render(container)
+    expect(container.innerHTML).toBe('<a href="/foo/bar"></a>')
+  })
+
+  test('start str[/] url with link component', async () => {
+    const router = createMemoryRouter({ base: 'foo' })
+    app = createInstance(
+      h(() => h(Router, { router: router }, [h(Link, { to: '/baz' })]))
+    ).render(container)
+    expect(container.innerHTML).toBe('<a href="/foo/baz"></a>')
+  })
+
   test('active class and style', async () => {
     app = createInstance(
       h(() =>

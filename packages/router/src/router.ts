@@ -62,6 +62,7 @@ export class RouterBase extends HistoryEvent {
     public isSSR = false,
     public render: RouterRender
   ) {
+    base = base.startsWith('/') ? base : '/' + base
     super(history, base, isSSR)
 
     this.history.listen(this.listener.bind(this))

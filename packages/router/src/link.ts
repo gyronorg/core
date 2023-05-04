@@ -1,7 +1,8 @@
 import { createVNode, VNodeDefaultProps, FC } from '@gyron/runtime'
-import { extend } from '@gyron/shared'
+import { extend, join } from '@gyron/shared'
 import { To } from 'history'
 import { useHref, useRouter } from './hooks'
+import { RouterBase } from './router'
 
 interface LinkProps extends Partial<VNodeDefaultProps> {
   to: To
@@ -11,6 +12,13 @@ interface LinkProps extends Partial<VNodeDefaultProps> {
   activeClassName?: string
   // hit style
   activeStyle?: Record<string, string | number> | string
+}
+
+function generateHref(to: To, router: RouterBase) {
+  const href = useHref(to)
+  return href.startsWith('/') || router.base !== '/'
+    ? join(router.base, href)
+    : href
 }
 
 export const Link = FC<LinkProps>(function Link() {
@@ -34,11 +42,10 @@ export const Link = FC<LinkProps>(function Link() {
     className,
     ...args
   }) {
-    const href = useHref(to)
     const props = {
       onClick: (e: Event) => handleClick(e, { to, replace }),
       class: className || '',
-      href: href,
+      href: generateHref(to, router),
       ...args,
     }
     if (props.href === router.path) {
