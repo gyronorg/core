@@ -1,9 +1,10 @@
-import type { VNode, VNodeProps } from 'packages/gyron/src'
+import type { VNode, VNodeProps, EventOptions } from 'packages/gyron/src'
 import {
   diffWord,
   isBoolean,
   isEventProps,
   isObject,
+  isObjectPrototype,
   isString,
   keys,
   normalizeEventName,
@@ -13,11 +14,11 @@ import { warn } from '@gyron/logger'
 import { isControlledElementProp, controlledElementValue } from './controlled'
 import { NS } from './opt'
 
-export type Listener = () => any
+export type Listener = (e?: any) => any | EventOptions<any>
 export type Style = string | Record<string, string>
 
 interface DebugOption {
-  update: (type: string) => void
+  update: (type: string, payload?: any) => void
 }
 
 function setAttribute(el: Element, key: string, value: any, vnode: VNode) {
@@ -65,6 +66,17 @@ function unmountProps(
   }
 }
 
+function isEventOption(e: any): e is EventOptions<any> {
+  return isObjectPrototype(e)
+}
+
+function normalizedEvent(e: Listener): EventOptions<any> {
+  if (isEventOption(e)) {
+    return e
+  }
+  return { handleEvent: e, options: null }
+}
+
 function patchEvent(
   el: Element,
   key: string,
@@ -72,14 +84,23 @@ function patchEvent(
   newEvent: Listener,
   debugOption?: DebugOption
 ) {
-  if (newEvent) {
-    if (newEvent !== oldEvent) {
-      el.removeEventListener(key, oldEvent)
-      el.addEventListener(key, newEvent)
+  const oldHandler = normalizedEvent(oldEvent)
+  const newHandler = normalizedEvent(newEvent)
+  if (newHandler.handleEvent) {
+    if (newHandler.handleEvent !== oldHandler.handleEvent) {
+      if (el.nodeName === 'INPUT' && key === 'change') {
+        key = 'input'
+      }
+      if (oldHandler.handleEvent) {
+        el.removeEventListener(key, oldHandler.handleEvent, oldHandler.options)
+      }
+      el.addEventListener(key, newHandler.handleEvent, newHandler.options)
       if (__DEV__ && debugOption) {
-        debugOption.update('event')
+        debugOption.update('event', key)
       }
     }
+  } else {
+    el.removeEventListener(key, oldHandler.handleEvent, oldHandler.options)
   }
 }
 

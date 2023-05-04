@@ -2,13 +2,18 @@ import { createInstance, Element, nextRender, useValue } from '@gyron/runtime'
 import { noop } from '@gyron/shared'
 
 describe('demo', () => {
+  const container = document.createElement('div')
+
+  beforeEach(() => {
+    container.innerHTML = ''
+  })
+
   test('example basic', () => {
     const app = <span>test</span>
     expect(typeof app.flag).toBe('symbol')
   })
 
   test('example jsx and reactivity content', async () => {
-    const container = document.createElement('div')
     const content = useValue(0)
     const App = () => <span>{content.value}</span>
     createInstance(<App />).render(container)
@@ -20,7 +25,6 @@ describe('demo', () => {
   })
 
   test('example jsx event', async () => {
-    const container = document.createElement('div')
     const content = useValue(0)
     const App = () => (
       <span
@@ -68,7 +72,6 @@ describe('demo', () => {
         ))}
       </ul>
     )
-    const container = document.createElement('div')
     createInstance(<App />).render(container)
     let children = container.querySelectorAll('li')
     expect(children.length).toBe(0)
@@ -94,7 +97,6 @@ describe('demo', () => {
         ))}
       </ul>
     )
-    const container = document.createElement('div')
     createInstance(<App />).render(container)
     let children = container.querySelectorAll('li')
     expect(children.length).toBe(3)
@@ -123,7 +125,6 @@ describe('demo', () => {
         </ul>
       )
     }
-    const container = document.createElement('div')
     createInstance(<App />).render(container)
     const box = container.querySelector('ul')
     box.click()
@@ -141,15 +142,26 @@ describe('demo', () => {
         <span>1</span>
       </>
     )
-    const container = document.createElement('div')
     createInstance(<App />).render(container)
     expect(container.innerHTML).toBe('<span>0</span><span>1</span>')
   })
 
-  test('Example JSXSpreadAttribute', () => {
+  test('example JSXSpreadAttribute', () => {
     const App = () => <span {...{ a: 1, 'a-b': 1 }} />
-    const container = document.createElement('div')
     createInstance(<App />).render(container)
     expect(container.innerHTML).toBe('<span a="1" a-b="1"></span>')
+  })
+
+  test('event options', () => {
+    const e = jest.fn()
+    const App = () => (
+      <div onClick={{ handleEvent: e, options: { once: true } }}></div>
+    )
+    createInstance(<App />).render(container)
+    const div = container.querySelector('div')
+    div.click()
+    expect(e).toBeCalledTimes(1)
+    div.click()
+    expect(e).toBeCalledTimes(1)
   })
 })

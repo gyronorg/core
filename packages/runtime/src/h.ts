@@ -9,6 +9,11 @@ import {
 } from './vnode'
 import { UtilComponentProps } from './component'
 
+export type EventOptions<E> = {
+  handleEvent: (payload: E) => void
+  options?: AddEventListenerOptions
+}
+
 export type HProps = VNodeProps | string
 
 /**

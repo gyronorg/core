@@ -5,7 +5,13 @@ import {
   h,
   nextRender,
 } from '@gyron/runtime'
-import { patchProp } from '../src/props'
+import { mountProps, patchProp } from '../src/props'
+
+function triggerInput(element: any) {
+  const event = document.createEvent('Event')
+  event.initEvent('input', true, true)
+  element.dispatchEvent(event)
+}
 
 describe('diff', () => {
   const container = document.createElement('div')
@@ -16,26 +22,50 @@ describe('diff', () => {
 
   test('patch prop (event/style/class)', () => {
     let t: string
-    const c = document.createElement('div')
     const vnode = createVNode('div')
     const fn = jest.fn((type) => (t = type))
-    patchProp(c, 'style', vnode, { width: 1 }, { width: 1 }, { update: fn })
+    patchProp(
+      container,
+      'style',
+      vnode,
+      { width: 1 },
+      { width: 1 },
+      { update: fn }
+    )
     expect(fn).not.toHaveBeenCalled()
-    patchProp(c, 'style', vnode, { width: 1 }, { width: 2 }, { update: fn })
+    patchProp(
+      container,
+      'style',
+      vnode,
+      { width: 1 },
+      { width: 2 },
+      { update: fn }
+    )
     expect(fn).toHaveBeenCalled()
-    patchProp(c, 'class', vnode, 'foo', 'bar', { update: fn })
+    patchProp(container, 'class', vnode, 'foo', 'bar', { update: fn })
     expect(fn).toHaveBeenCalledTimes(2)
     expect(t).toBe('class')
-    patchProp(c, 'class', vnode, 'foo', 'foo', { update: fn })
+    patchProp(container, 'class', vnode, 'foo', 'foo', { update: fn })
     expect(fn).toHaveBeenCalledTimes(2)
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const oldEvent = () => {}
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const newEvent = () => {}
-    patchProp(c, 'onChange', vnode, oldEvent, newEvent, { update: fn })
+    patchProp(container, 'onChange', vnode, oldEvent, newEvent, { update: fn })
     expect(fn).toHaveBeenCalledTimes(3)
-    patchProp(c, 'onChange', vnode, newEvent, newEvent, { update: fn })
+    patchProp(container, 'onChange', vnode, newEvent, newEvent, { update: fn })
     expect(fn).toHaveBeenCalledTimes(3)
+  })
+
+  test('input change event', async () => {
+    const fn = jest.fn()
+    const container = document.createElement('input')
+    const vnode = createVNode('input', {
+      onChange: fn,
+    })
+    mountProps(container, vnode)
+    triggerInput(container)
+    expect(fn).toHaveBeenCalled()
   })
 
   test('text', async () => {

@@ -37,7 +37,7 @@
 // for reference and documentation on how exactly to do it.
 
 import * as CSS from 'csstype'
-import { VNode, UserRef, VNodeChildren } from 'gyron'
+import { VNode, UserRef, VNodeChildren, EventOptions } from '@gyron/runtime'
 
 export type Booleanish = boolean | 'true' | 'false'
 
@@ -56,7 +56,9 @@ export interface CSSProperties
 }
 
 export type EventHandlers<E> = {
-  [K in keyof E]?: E[K] extends Function ? E[K] : (payload: E[K]) => void
+  [K in keyof E]?: E[K] extends Function
+    ? E[K]
+    : EventOptions<E[K]> | ((payload: E[K]) => void)
 }
 
 export interface Events {

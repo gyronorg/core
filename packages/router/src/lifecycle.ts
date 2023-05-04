@@ -9,6 +9,7 @@ import {
   RouterHookAfterEach,
   RouterHookBeforeUpdate,
   RouterHookAfterUpdate,
+  RouterHooks,
 } from './event'
 import { TypeRouter } from './hooks'
 import { RouterBase } from './router'
@@ -18,32 +19,29 @@ function getRouter(): RouterBase {
   return context.get(TypeRouter)
 }
 
-export function onBeforeRouteEach(listener: RouterHookBeforeEach) {
+function addHook(
+  hookName: keyof RouterHooks,
+  listener: RouterHookBeforeEach | RouterHookAfterEach
+) {
   const router = getRouter()
   if (!router) {
     onAfterMount(() => {
-      getRouter().addHook('beforeEach', listener)
+      getRouter().addHook(hookName, listener)
     })
   } else {
-    router.addHook('beforeEach', listener)
+    router.addHook(hookName, listener)
   }
   onDestroyed(() => {
-    router.removeHook('beforeEach', [listener])
+    router.removeHook(hookName, [listener])
   })
 }
 
+export function onBeforeRouteEach(listener: RouterHookBeforeEach) {
+  addHook('beforeEach', listener)
+}
+
 export function onAfterRouteEach(listener: RouterHookAfterEach) {
-  const router = getRouter()
-  if (!router) {
-    onAfterMount(() => {
-      getRouter().addHook('afterEach', listener)
-    })
-  } else {
-    router.addHook('afterEach', listener)
-  }
-  onDestroyed(() => {
-    router.removeHook('afterEach', [listener])
-  })
+  addHook('afterEach', listener)
 }
 
 export function onBeforeRouteUpdate(listener: RouterHookBeforeUpdate) {

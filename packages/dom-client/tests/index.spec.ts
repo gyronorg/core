@@ -124,4 +124,21 @@ describe('mount Props', () => {
     patchProps(container, n1, n2)
     expect(container.style.color).toBe('red')
   })
+
+  test('event options', () => {
+    const e = jest.fn()
+    const n1 = createVNode('div', {
+      onClick: {
+        handleEvent: e,
+        options: {
+          once: true,
+        },
+      },
+    })
+    mountProps(container, n1)
+    container.click()
+    expect(e).toBeCalledTimes(1)
+    container.click()
+    expect(e).toBeCalledTimes(1)
+  })
 })

@@ -50,10 +50,7 @@ export const Link = FC<LinkProps>(function Link() {
     }
     if (props.href === router.path) {
       extend(props, {
-        class: `${activeClassName || ''} ${className || ''}`.replace(
-          /(^\s|\s$)/,
-          ''
-        ),
+        class: `${activeClassName || ''} ${className || ''}`.trim(),
         style: activeStyle || {},
       })
     }

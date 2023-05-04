@@ -17,6 +17,7 @@ import {
 } from './component'
 import { UserRef } from './ref'
 import { TransitionHooks } from './internal'
+import { EventOptions } from './h'
 
 export const Gyron = Symbol('gyron')
 export const Text = Symbol('gyron.text')
@@ -44,9 +45,9 @@ type RPrefixEvent<
 type Prefix = 'on'
 
 export type VNodeEvent = {
-  [Key in APrefixEvent<keyof HTMLElementEventMap, Prefix>]?: (
-    e: HTMLElementEventMap[RPrefixEvent<Key, Prefix>]
-  ) => any
+  [Key in APrefixEvent<keyof HTMLElementEventMap, Prefix>]?:
+    | EventOptions<HTMLElementEventMap[RPrefixEvent<Key, Prefix>]>
+    | ((e: HTMLElementEventMap[RPrefixEvent<Key, Prefix>]) => any)
 }
 
 export enum NodeType {
