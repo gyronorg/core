@@ -1,4 +1,4 @@
-import { FC, useReactive, createInstance, nextRender } from 'gyron'
+import { FC, useReactive, createInstance, nextRender } from '@gyron/runtime'
 import { trim } from './util'
 
 function ComponentA() {
