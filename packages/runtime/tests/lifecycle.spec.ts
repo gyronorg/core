@@ -10,7 +10,10 @@ import {
   onDestroyed,
   onAfterUpdate,
   onBeforeMount,
+  Component,
+  createRef,
 } from '../src'
+import { onBeforeDestroy } from '../src/lifecycle'
 
 describe('Lifecycle', () => {
   const container = document.createElement('div')
@@ -202,5 +205,23 @@ describe('Lifecycle', () => {
     expect(container.innerHTML).toBe('<div>1</div>')
     await nextRender()
     expect(container.innerHTML).toBe('<div>2</div>')
+  })
+
+  test('on before destroy component', async () => {
+    let component: Component, el: Element
+    const f = jest.fn((c: Component, e: Element) => {
+      component = c
+      el = e
+    })
+    const App = () => {
+      const container = createRef()
+      onBeforeDestroy((c) => f(c, container.current))
+      return h('div', { ref: container })
+    }
+    const app = createInstance(h(App)).render(container)
+    app.destroy()
+    expect(f).toHaveBeenCalled()
+    expect(component.type).toBe(App)
+    expect(el.nodeName).toBe('DIV')
   })
 })

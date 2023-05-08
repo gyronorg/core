@@ -15,6 +15,7 @@ type LifecycleUpdateCallback<T = any> = (
 export type Lifecycle = Partial<{
   beforeMounts: Set<LifecycleCallback>
   afterMounts: Set<LifecycleCallback>
+  beforeDestroy: Set<LifecycleCallback>
   destroyed: Set<LifecycleCallback>
   beforeUpdates: Set<LifecycleUpdateCallback>
   afterUpdates: Set<LifecycleUpdateCallback>
@@ -95,6 +96,28 @@ export function onAfterMount(callback: LifecycleCallback) {
 }
 
 /**
+ * Lifecycle hook to register a callback function to be called before the component has been destroyed.
+ * ```js
+ * import { h, onBeforeDestroy, createRef } from 'gyron'
+ *
+ * const App = h(() => {
+ *   const container = createRef()
+ *   onBeforeDestroy((component) => {
+ *     console.log(container.current)
+ *   })
+ *   return h('div', { ref: container }, 'hello world')
+ * })
+ * ```
+ * @api component
+ * @param callback Callback function.
+ */
+export function onBeforeDestroy(callback: LifecycleCallback) {
+  const component = getCurrentComponent()
+  initialLifecycle(component, 'beforeDestroy')
+  component.lifecycle.beforeDestroy.add(callback)
+}
+
+/**
  * Lifecycle hook to register a callback function to be called after the component has been destroyed.
  * ```js
  * import { h, onDestroyed } from 'gyron'
@@ -167,6 +190,7 @@ export function invokeLifecycle(component: Component, type: keyof Lifecycle) {
   switch (type) {
     case 'beforeMounts':
     case 'afterMounts':
+    case 'beforeDestroy':
     case 'destroyed':
     case 'beforeUpdates':
     case 'afterUpdates':

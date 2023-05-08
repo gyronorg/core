@@ -69,6 +69,7 @@ export function unmount(vnode: VNode) {
     if (__DEV__) {
       refreshRecord((component.type as any).__hmr_id, component)
     }
+    invokeLifecycle(component, 'beforeDestroy')
     if (!isCacheComponent(component.type)) {
       component.effect.stop()
     }
