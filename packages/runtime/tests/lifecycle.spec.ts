@@ -96,8 +96,11 @@ describe('Lifecycle', () => {
   })
 
   test('beforeUpdate', async () => {
+    let a1: number, b1: number
     const Child = FC<{ a: number }>(() => {
-      onBeforeUpdate(() => {
+      onBeforeUpdate<{ a: number }>((a, b) => {
+        a1 = a.a
+        b1 = b.a
         return false
       })
       return ({ children }) => createVNode('span', null, children)
@@ -114,7 +117,7 @@ describe('Lifecycle', () => {
               },
               id: 'app',
             },
-            h(Child, { a: 1 }, v.value)
+            h(Child, { a: v.value }, v.value)
           )
       })
     ).render(container)
@@ -123,6 +126,8 @@ describe('Lifecycle', () => {
     app.click()
     await nextRender()
     expect(app.innerHTML).toBe('<span>0</span>')
+    expect(a1).toBe(0)
+    expect(b1).toBe(1)
   })
 
   test('component unmounted', async () => {

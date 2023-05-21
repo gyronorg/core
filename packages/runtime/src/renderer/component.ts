@@ -1,4 +1,4 @@
-import { isBoolean, isEqual, isPromise } from '@gyron/shared'
+import { extend, isBoolean, isEqual, isPromise } from '@gyron/shared'
 import { VNode, RenderElement } from '../vnode'
 import {
   isCacheComponent,
@@ -69,6 +69,7 @@ function updateComponentEffect(
         refreshComponentType(component.vnode, component)
       }
 
+      component.prevProps = extend({}, component.props)
       const prevTree = component.subTree
       const nextTree = renderComponent(component)
       if (isPromise(nextTree)) {
