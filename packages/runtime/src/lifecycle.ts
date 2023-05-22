@@ -1,5 +1,6 @@
 import type { Component } from './component'
 import {
+  KeysToValues,
   at,
   initialLifecycle,
   isArray,
@@ -13,10 +14,10 @@ import {
 } from './component'
 
 type LifecycleCallback = (component: Component) => any
-type LifecycleUpdateCallback<T = any> = (
-  prevProps: T,
-  props?: T
-) => void | boolean
+type LifecycleUpdateCallback<T = any> = {
+  (prevProps: T, props?: T): void | boolean
+  _once?: boolean
+}
 
 export type Lifecycle = Partial<{
   beforeMounts: Set<LifecycleCallback>
@@ -38,6 +39,10 @@ function wrapLifecycle(component: Component, type: keyof Lifecycle) {
     const params = []
     if (type === 'beforeUpdates' || type === 'afterUpdates') {
       params.push(component.prevProps, component.props)
+      const f = listener as LifecycleUpdateCallback
+      if (f._once) {
+        component.lifecycle[type].delete(f)
+      }
     } else {
       params.push(component)
     }
@@ -78,28 +83,31 @@ function wrapLifecycle(component: Component, type: keyof Lifecycle) {
  * @param keys props key or keys.
  * @param callback Callback function.
  */
-export function onWatchProps<
-  O extends Record<string, any>,
-  K extends keyof O = keyof O,
-  T extends K | K[] = K | K[]
->(keys: T, callback: (values: any) => void) {
-  onBeforeUpdate((prevProps, props) => {
-    const r1: any[] = []
-    const r2: any[] = []
-    if (isArray(keys)) {
-      r1.push(...keys.map((key) => at(prevProps, key)))
-      r2.push(...keys.map((key) => at(props, key)))
-      if (!isEqual(r1, r2)) {
-        callback(r2 as any)
+export function onWatchProps<O extends Record<string, any>>() {
+  return function watch<const T extends keyof O | readonly (keyof O)[]>(
+    keys: T,
+    callback: (values: T extends keyof O ? O[T] : KeysToValues<O, T>) => void,
+    once?: boolean
+  ) {
+    onBeforeUpdate((prevProps, props) => {
+      const r1: any[] = []
+      const r2: any[] = []
+      if (isArray(keys)) {
+        r1.push(...keys.map((key) => at(prevProps, key)))
+        r2.push(...keys.map((key) => at(props, key)))
+        if (!isEqual(r1, r2)) {
+          callback(r2 as any)
+        }
+      } else {
+        r1.push(at(prevProps, keys as string))
+        r2.push(at(props, keys as string))
+        if (!isEqual(r1, r2)) {
+          callback(r2[0])
+        }
       }
-    } else {
-      r1.push(at(prevProps, keys))
-      r2.push(at(props, keys))
-      if (!isEqual(r1, r2)) {
-        callback(r2[0])
-      }
-    }
-  })
+    }, once)
+    return watch
+  }
 }
 
 /**
@@ -208,10 +216,12 @@ export function onDestroyed(callback: LifecycleCallback) {
  * @param callback Callback function.
  */
 export function onBeforeUpdate<T extends object>(
-  callback: LifecycleUpdateCallback<T>
+  callback: LifecycleUpdateCallback<T>,
+  once?: boolean
 ) {
   const component = getCurrentComponent()
   initialLifecycle(component, 'beforeUpdates')
+  once && (callback._once = once)
   component.lifecycle.beforeUpdates.add(callback)
 }
 
@@ -230,9 +240,13 @@ export function onBeforeUpdate<T extends object>(
  * @api component
  * @param callback Callback function.
  */
-export function onAfterUpdate(callback: LifecycleUpdateCallback) {
+export function onAfterUpdate(
+  callback: LifecycleUpdateCallback,
+  once?: boolean
+) {
   const component = getCurrentComponent()
   initialLifecycle(component, 'afterUpdates')
+  once && (callback._once = once)
   component.lifecycle.afterUpdates.add(callback)
 }
 

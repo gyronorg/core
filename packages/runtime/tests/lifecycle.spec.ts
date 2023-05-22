@@ -238,7 +238,8 @@ describe('Lifecycle', () => {
     const unstable = createValue(0)
     const stable = createValue(0)
     const App = ({ a, b }) => {
-      useWatchProps<{ a: number }>('a', fn)
+      const watch = useWatchProps<{ a: number }>()
+      watch('a', fn)
       return h('div', 'hello world' + a + b)
     }
     createGyron(

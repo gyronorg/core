@@ -428,16 +428,14 @@ export function initialLifecycle(component: Component, key: keyof Lifecycle) {
   }
 }
 
-export type KeysToValues<O extends Record<string, any>, K> = K extends [
-  infer G,
-  ...infer L
-]
+export type KeysToValues<
+  O extends Record<string, any>,
+  K
+> = K extends readonly [infer G, ...infer L]
   ? G extends keyof O
-    ? L extends (keyof O)[]
-      ? [O[G], ...KeysToValues<O, L>]
-      : O[G]
-    : any
-  : any
+    ? [O[G], ...KeysToValues<O, L>]
+    : []
+  : K
 
 export function stringToPath(str: string) {
   const rePropName =
