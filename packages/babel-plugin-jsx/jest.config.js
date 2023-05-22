@@ -8,7 +8,6 @@ module.exports = {
   setupFiles: ['./tests/jest.setup.ts'],
   moduleNameMapper: {
     '^lodash-es$': 'lodash',
-    '^esbuild-wasm$': 'esbuild',
   },
   transform: {
     '^.+\\.tsx?$': [
