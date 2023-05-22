@@ -12,6 +12,9 @@ import {
   onBeforeMount,
   Component,
   createRef,
+  useWatchProps,
+  createGyron,
+  createValue,
 } from '../src'
 import { onBeforeDestroy } from '../src/lifecycle'
 
@@ -228,5 +231,26 @@ describe('Lifecycle', () => {
     expect(f).toHaveBeenCalled()
     expect(component.type).toBe(App)
     expect(el.nodeName).toBe('DIV')
+  })
+
+  test('watch props', async () => {
+    const fn = jest.fn()
+    const unstable = createValue(0)
+    const stable = createValue(0)
+    const App = ({ a, b }) => {
+      useWatchProps<{ a: number }>('a', fn)
+      return h('div', 'hello world' + a + b)
+    }
+    createGyron(
+      h(() => {
+        return h(App, { a: unstable.value, b: stable.value })
+      })
+    ).render(container)
+    unstable.value = 1
+    await nextRender()
+    expect(fn).toBeCalledTimes(1)
+    stable.value = 1
+    await nextRender()
+    expect(fn).toBeCalledTimes(1)
   })
 })

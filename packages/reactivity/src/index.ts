@@ -1,6 +1,12 @@
 export { useReactive, toRaw, isResponsive } from './reactive'
+export { useReactive as createReactive } from './reactive'
 export { useComputed, useMemo } from './computed'
+export {
+  useComputed as createComputed,
+  useMemo as createMemo,
+} from './computed'
 export { useValue } from './primitive'
+export { useValue as createValue } from './primitive'
 export {
   effectTracks,
   useEffect,

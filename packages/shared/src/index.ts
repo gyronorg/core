@@ -215,7 +215,7 @@ export function isEqual<T = any>(target: T, source: T, k?: string) {
     return false
   }
   for (const key in target) {
-    if (!Object.is(key, k)) {
+    if (hasChanged(key, k)) {
       const p1 = target[key]
       const p2 = source[key]
       if (isArray(p1) && isArray(p2)) {
@@ -227,12 +227,12 @@ export function isEqual<T = any>(target: T, source: T, k?: string) {
             if (isEqual(p1[i], p2[i], k)) {
               return false
             }
-          } else if (!Object.is(p1[i], p2[i])) {
+          } else if (hasChanged(p1[i], p2[i])) {
             return false
           }
         }
         return true
-      } else if (!Object.is(target[key], source[key])) {
+      } else if (hasChanged(target[key], source[key])) {
         return false
       }
     }
@@ -426,4 +426,40 @@ export function initialLifecycle(component: Component, key: keyof Lifecycle) {
   if (!component.lifecycle[key]) {
     component.lifecycle[key] = new Set()
   }
+}
+
+export type KeysToValues<O extends Record<string, any>, K> = K extends [
+  infer G,
+  ...infer L
+]
+  ? G extends keyof O
+    ? L extends (keyof O)[]
+      ? [O[G], ...KeysToValues<O, L>]
+      : O[G]
+    : any
+  : any
+
+export function stringToPath(str: string) {
+  const rePropName =
+    /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g
+  const reEscapeChar = /\\(\\)?/g
+  const result: string[] = []
+  if (str.charCodeAt(0) === 46 /* . */) {
+    result.push('')
+  }
+  str.replace(rePropName, (match, number, quote, subString) => {
+    result.push(quote ? subString.replace(reEscapeChar, '$1') : number || match)
+    return void 0
+  })
+  return result
+}
+
+export function at(object: object, path: string | number | symbol) {
+  const keys = stringToPath(String(path))
+  let index = 0
+  const len = keys.length
+  while (object !== null && index < len) {
+    object = object[keys[index++]]
+  }
+  return index && index === len ? object : void 0
 }

@@ -12,6 +12,12 @@ export {
   isResponsive,
   toRaw,
 } from '@gyron/reactivity'
+export {
+  createComputed,
+  createMemo,
+  createValue,
+  createReactive,
+} from '@gyron/reactivity'
 export { Transition, ErrorBoundary } from './internal'
 export {
   useWatch,
@@ -48,9 +54,19 @@ export { nextRender } from './scheduler'
 export {
   onBeforeMount,
   onAfterMount,
+  onBeforeDestroy,
   onDestroyed,
   onBeforeUpdate,
   onAfterUpdate,
+} from './lifecycle'
+export {
+  onBeforeMount as useBeforeMount,
+  onAfterMount as useMounted,
+  onBeforeDestroy as useBeforeDestroy,
+  onDestroyed as useDestroyed,
+  onBeforeUpdate as useBeforeUpdate,
+  onAfterUpdate as useUpdated,
+  onWatchProps as useWatchProps,
 } from './lifecycle'
 export {
   isVNode,

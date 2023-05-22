@@ -37,6 +37,7 @@ import {
   isEventProps,
   normalizeEventName,
   removeWithString,
+  at,
 } from '../src'
 
 describe('Common function', () => {
@@ -271,5 +272,13 @@ describe('Common function', () => {
 
   test('removeWithString', () => {
     expect(removeWithString('foo bar', ['bar'])).toBe('foo')
+  })
+
+  test('at', () => {
+    const obj = { a: 1, b: { c: [0, 1] } }
+    expect(at(obj, 'b.c[0]')).toBe(0)
+    expect(at(obj, 'b.c[1]')).toBe(1)
+    expect(at(obj, 'a')).toBe(1)
+    expect(at(obj, 'c')).toBe(undefined)
   })
 })

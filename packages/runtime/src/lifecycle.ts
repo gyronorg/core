@@ -1,5 +1,11 @@
 import type { Component } from './component'
-import { initialLifecycle, isBoolean } from '@gyron/shared'
+import {
+  at,
+  initialLifecycle,
+  isArray,
+  isBoolean,
+  isEqual,
+} from '@gyron/shared'
 import {
   getCurrentComponent,
   callWithErrorHandling,
@@ -50,6 +56,50 @@ function wrapLifecycle(component: Component, type: keyof Lifecycle) {
   }
 
   return wrapResult
+}
+
+/**
+ * Listens for changes to component parameters and executes callback functions when changes occur.
+ * ```js
+ * import { h, useWatchProps } from 'gyron'
+ *
+ * const App = h(({ foo, bar }) => {
+ *   useWatchProps('foo', (foo) => {
+ *     foo
+ *   })
+ *   useWatchProps(['foo', 'bar'], ([foo, bar]) => {
+ *     foo
+ *     bar
+ *   })
+ *   return h('div', 'hello world')
+ * })
+ * ```
+ * @api component
+ * @param keys props key or keys.
+ * @param callback Callback function.
+ */
+export function onWatchProps<
+  O extends Record<string, any>,
+  K extends keyof O = keyof O,
+  T extends K | K[] = K | K[]
+>(keys: T, callback: (values: any) => void) {
+  onBeforeUpdate((prevProps, props) => {
+    const r1: any[] = []
+    const r2: any[] = []
+    if (isArray(keys)) {
+      r1.push(...keys.map((key) => at(prevProps, key)))
+      r2.push(...keys.map((key) => at(props, key)))
+      if (!isEqual(r1, r2)) {
+        callback(r2 as any)
+      }
+    } else {
+      r1.push(at(prevProps, keys))
+      r2.push(at(props, keys))
+      if (!isEqual(r1, r2)) {
+        callback(r2[0])
+      }
+    }
+  })
 }
 
 /**
