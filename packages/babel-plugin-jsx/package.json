@@ -2,7 +2,7 @@
   "name": "@gyron/babel-plugin-jsx",
   "main": "dist/cjs/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -33,9 +33,9 @@
     "@babel/core": "^7.18.5",
     "@babel/plugin-syntax-jsx": "^7.16.7",
     "@babel/plugin-transform-typescript": "^7.17.12",
-    "@gyron/logger": "^0.0.32",
-    "@gyron/runtime": "^0.0.32",
-    "@gyron/shared": "^0.0.32",
-    "gyron": "^0.0.32"
+    "@gyron/logger": "^0.0.33",
+    "@gyron/runtime": "^0.0.33",
+    "@gyron/shared": "^0.0.33",
+    "gyron": "^0.0.33"
   }
 }
