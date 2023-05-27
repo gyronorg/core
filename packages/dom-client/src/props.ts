@@ -113,6 +113,9 @@ function patchClass(
   if (oldValue === value) {
     return
   }
+  if (oldValue === null) {
+    el.className = ''
+  }
 
   const { D, A } = diffWord(
     isString(oldValue) ? oldValue.split(' ') : [],
@@ -139,6 +142,9 @@ function patchStyle(
   vnode: VNode,
   debugOption?: DebugOption
 ) {
+  if (oldValue === null) {
+    removeAttribute(el, 'style')
+  }
   if (isString(value)) {
     if (value !== oldValue) {
       setAttribute(el, 'style', value, vnode)

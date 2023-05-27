@@ -238,13 +238,13 @@ function hydrateChildren(
 ) {
   const children = parentVNode.children as VNode[]
   for (let i = 0; i < children.length; i++) {
-    const nodeChild = normalizeVNodeWithLink(children[i], parentVNode)
+    const vnode = normalizeVNodeWithLink(children[i], parentVNode)
     if (node) {
-      node = hydrate(node, nodeChild, parentComponent, ssrMessage)
-    } else if (nodeChild.type === Text) {
+      node = hydrate(node, vnode, parentComponent, ssrMessage)
+    } else if (vnode.type === Text) {
       continue
     } else {
-      patch(null, nodeChild, container)
+      patch(null, vnode, container)
     }
   }
   return node
