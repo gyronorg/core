@@ -114,7 +114,7 @@ function patchClass(
     return
   }
   if (oldValue === null) {
-    el.className = ''
+    removeAttribute(el, 'class')
   }
 
   const { D, A } = diffWord(
