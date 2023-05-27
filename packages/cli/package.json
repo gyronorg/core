@@ -5,7 +5,7 @@
   "bin": {
     "gyron": "dist/index.js"
   },
-  "version": "0.0.34",
+  "version": "0.0.35",
   "license": "MIT",
   "engines": {
     "node": ">= 16"
@@ -22,7 +22,7 @@
     "build:cjs": "esbuild src/index.ts --bundle --sourcemap --outdir=dist --format=cjs --platform=node --external:download-git-repo --banner:js=\"#!/usr/bin/env node\""
   },
   "devDependencies": {
-    "@gyron/logger": "^0.0.34",
+    "@gyron/logger": "^0.0.35",
     "commander": "^9.2.0",
     "ora": "^6.1.0"
   },

@@ -3,7 +3,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -20,7 +20,7 @@
     "test": "cross-env PACKAGES=sync jest --config=../../jest.config.js"
   },
   "devDependencies": {
-    "@gyron/shared": "^0.0.34",
+    "@gyron/shared": "^0.0.35",
     "@types/deep-diff": "^1.0.1",
     "deep-diff": "^1.0.2"
   }
