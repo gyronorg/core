@@ -9,8 +9,8 @@
     "prepare": "husky install",
     "prepublishOnly": "node script/readme.mjs -c && yarn build && yarn test",
     "postpublish": "node script/readme.mjs -r",
-    "version": "lerna version",
-    "publish": "lerna publish from-package"
+    "version1": "lerna version",
+    "publish1": "lerna publish from-package"
   },
   "engines": {
     "node": ">= 16"
@@ -74,6 +74,5 @@
     "ts-jest": "^29.1.0",
     "tslib": "^2.3.1",
     "typescript": "^5.0.4"
-  },
-  "version": "0.0.9"
+  }
 }
