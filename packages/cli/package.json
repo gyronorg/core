@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@gyron/logger": "^0.0.35",
-    "commander": "^9.2.0",
+    "commander": "^11.0.0",
     "ora": "^6.1.0"
   },
   "dependencies": {
