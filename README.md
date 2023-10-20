@@ -22,6 +22,42 @@
 
 - 文档
   - [English](./README_EN.md)
+  - [官方网站](https://gyron.cc)
+
+## 快速使用
+
+我们提供了各个不同构建平台的插件用来解析和优化 `Gyron` 的代码，想要快速使用可以使用[@gyron/cli](#脚手架)脚手架。下面是一个用 `Gyron` 编写的 TODO 应用。
+
+```tsx
+import { useValue, render, FC } from 'gyron'
+
+export const APP = FC(() => {
+  const list = useValue<number[]>([])
+  function add() {
+    list.value.push(Date.now())
+  }
+  function remove(item: number) {
+    const index = list.value.findIndex((value) => value === item)
+    list.value.splice(index, 1)
+  }
+  return (
+    <>
+      <ul>
+        {list.value.map((item) => (
+          <li>
+            {item} <button onClick={() => remove(item)}>-</button>
+          </li>
+        ))}
+      </ul>
+      <button onClick={add} class="add">
+        +
+      </button>
+    </>
+  )
+})
+
+render(<APP />, document.getElementById('root'))
+```
 
 ## 功能
 
@@ -82,7 +118,7 @@ const App = () => {
 | [shared](./packages/shared/)                     | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/shared?style=flat-square)           | 公共工具函数                                                        |
 | [sync](./packages/sync/)                         | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/sync?style=flat-square)             | 同步第三方数据工具函数，让第三方数据具有反应性                      |
 
-### 快速使用
+### 脚手架
 
 ```sh
 # 全局安装 CLI

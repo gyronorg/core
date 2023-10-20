@@ -22,6 +22,42 @@ It also has a very good performance performance, details of which can be found i
 
 - Readme
   - [中文](./README.md)
+  - [Official Website](https://gyron.cc/en-US)
+
+## Quick Start
+
+We provide plugins for various build platforms to parse and optimize `Gyron` code. For a quick start, you can use the [@gyron/cli](#cli) scaffolding. Below is a TODO application written in `Gyron`.
+
+```tsx
+import { useValue, render, FC } from 'gyron'
+
+export const APP = FC(() => {
+  const list = useValue<number[]>([])
+  function add() {
+    list.value.push(Date.now())
+  }
+  function remove(item: number) {
+    const index = list.value.findIndex((value) => value === item)
+    list.value.splice(index, 1)
+  }
+  return (
+    <>
+      <ul>
+        {list.value.map((item) => (
+          <li>
+            {item} <button onClick={() => remove(item)}>-</button>
+          </li>
+        ))}
+      </ul>
+      <button onClick={add} class="add">
+        +
+      </button>
+    </>
+  )
+})
+
+render(<APP />, document.getElementById('root'))
+```
 
 ## Feature
 
@@ -68,8 +104,8 @@ The "core" refers to the peripheral ecology that may be used in front-end projec
 Among them `router` and `redux` are also runtime code to solve complex projects when the project's routing and state manager.
 `dom-client` and `dom-server` correspond to the client-side rendering interface and the server-side rendering interface, respectively.
 
-| Name                                              | Version                                                                                 | Description                                                                                                          |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Name                                             | Version                                                                                 | Description                                                                                                          |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | [babel-plugin-jsx](./packages/babel-plugin-jsx/) | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/babel-plugin-jsx?style=flat-square) | Convert `jsx` syntax into a runnable expression that generates hot update helper code in the development environment |
 | [cli](./packages/cli/)                           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/cli?style=flat-square)              | Scaffolding for customizable projects                                                                                |
 | [dom-client](./packages/dom-client/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/dom-client?style=flat-square)       | Docking browser `document` tools, customizable to access applications that support the `ecma` standard               |
@@ -82,9 +118,9 @@ Among them `router` and `redux` are also runtime code to solve complex projects 
 | [shared](./packages/shared/)                     | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/shared?style=flat-square)           | public utility functions                                                                                             |
 | [sync](./packages/sync/)                         | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/sync?style=flat-square)             | Sync third-party data tool functions to make third-party data responsive                                             | Translated with www.DeepL.com/Translator (free version) |
 
-### Getting Started 
+### CLI
 
-``` sh
+```sh
 # global install CLI
 npm install @gyron/cli -g
 # Create project
