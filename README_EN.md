@@ -104,8 +104,8 @@ The "core" refers to the peripheral ecology that may be used in front-end projec
 Among them `router` and `redux` are also runtime code to solve complex projects when the project's routing and state manager.
 `dom-client` and `dom-server` correspond to the client-side rendering interface and the server-side rendering interface, respectively.
 
-| Name                                             | Version                                                                                 | Description                                                                                                          |
-| ------------------------------------------------ | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| Name                                             | Version                                                                                 | Description                |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------- | --------------------------- |
 | [babel-plugin-jsx](./packages/babel-plugin-jsx/) | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/babel-plugin-jsx?style=flat-square) | Convert `jsx` syntax into a runnable expression that generates hot update helper code in the development environment |
 | [cli](./packages/cli/)                           | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/cli?style=flat-square)              | Scaffolding for customizable projects                                                                                |
 | [dom-client](./packages/dom-client/)             | ![npm (scoped)](https://img.shields.io/npm/v/@gyron/dom-client?style=flat-square)       | Docking browser `document` tools, customizable to access applications that support the `ecma` standard               |
