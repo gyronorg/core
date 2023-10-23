@@ -29,7 +29,7 @@ It also has a very good performance performance, details of which can be found i
 We provide plugins for various build platforms to parse and optimize `Gyron` code. For a quick start, you can use the [@gyron/cli](#cli) scaffolding. Below is a TODO application written in `Gyron`.
 
 ```tsx
-import { useValue, render, FC } from 'gyron'
+import { useValue, createGyron, FC } from 'gyron'
 
 export const APP = FC(() => {
   const list = useValue<number[]>([])
@@ -56,7 +56,7 @@ export const APP = FC(() => {
   )
 })
 
-render(<APP />, document.getElementById('root'))
+createGyron(<APP />).render('#app')
 ```
 
 ## Feature
