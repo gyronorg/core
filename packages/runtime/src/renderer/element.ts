@@ -13,7 +13,7 @@ import {
   isFunction,
   isObject,
 } from '@gyron/shared'
-import { isVNodeComponent } from '..'
+import { isVNodeComponent, normalizeVNode } from '..'
 import { Component, removeBuiltInProps } from '../component'
 import { setRef } from '../ref'
 import { patch } from '.'
@@ -115,6 +115,9 @@ function patchKeyed(
     const c2n = c2[i]
     const c1n = o1[c2n.key]
     if (c1n) {
+      if (isVNodeComponent(c1n)) {
+        c1n.children = normalizeVNode(c1n.component.subTree.children)
+      }
       // 1, find the same key value of the node, and then inserted into the corresponding location. (Do not delete add, move directly)
       const el = mergeVNodeWith(c2n, c1n).el
       if (c1n.index !== i) {
@@ -210,12 +213,11 @@ export function patchChildren(
   const c2: VNode[] = (n2.children = normalizeChildrenVNode(n2))
 
   if (c1?.length || c2?.length) {
+    const el = (n2.el = n1.el)
     if (isKeyPatch(c1, c2)) {
-      const el = (n2.el = n1.el)
       patchKeyed(c1, c2, el || container, anchor, parentComponent, isSvg)
     } else {
       // if the fragment node does not have a dom instance, use the container
-      const el = (n2.el = n1.el)
       if (c1) {
         patchNonKeyed(c1, c2, el || container, anchor, parentComponent, isSvg)
       } else {

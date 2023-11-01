@@ -103,6 +103,8 @@ export interface VNode<
   // children node
   children?: VNodeChildren
   transition?: TransitionHooks
+  // internal with patch(key)
+  inserted?: boolean
   // development hydrate component uri
   __uri?: string
 }
@@ -252,7 +254,7 @@ export function normalizeVNode(value: VNodeChildren): VNode {
     return createVNodeComment()
   }
   if (Array.isArray(value)) {
-    return createVNode(value.slice() as VNode[])
+    return createVNode(value.slice())
   }
   return createVNode('' + value)
 }

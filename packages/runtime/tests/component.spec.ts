@@ -645,4 +645,17 @@ describe('Component', () => {
     await nextRender()
     expect(container.innerHTML).toBe('<div id="keep">2</div>')
   })
+
+  test('key with component update', async () => {
+    const Bar = FC(({ children }) => {
+      return children
+    })
+    const Foo = h(() => {
+      return h('span', {}, h(Bar, { key: 1 }, 'gyron'))
+    })
+    createInstance(Foo).render(container)
+    Foo.component.update()
+    await nextRender()
+    expect(container.innerHTML).toBe('<span>gyron</span>')
+  })
 })
