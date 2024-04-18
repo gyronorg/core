@@ -13,9 +13,10 @@
     "README.md"
   ],
   "scripts": {
-    "build": "yarn build:dts && yarn build:esm && yarn build:cjs",
-    "build:esm": "esbuild src/index.ts --bundle --sourcemap --minify --outfile=dist/esm/index.js --format=esm --platform=node --external:@gyron/* --define:__DEV__=false --define:__WARN__=true",
-    "build:cjs": "esbuild src/index.ts --bundle --sourcemap --minify --outfile=dist/cjs/index.js --format=cjs --platform=node --external:@gyron/* --define:__DEV__=false --define:__WARN__=true",
+    "build": "yarn build:dts && yarn build:esm && yarn build:cjs && yarn build:browser",
+    "build:esm": "esbuild src/index.ts --bundle --sourcemap --outfile=dist/esm/index.js --format=esm --platform=node --external:@gyron/* --define:__DEV__=false --define:__WARN__=true",
+    "build:cjs": "esbuild src/index.ts --bundle --sourcemap --outfile=dist/cjs/index.js --format=cjs --platform=node --external:@gyron/* --define:__DEV__=false --define:__WARN__=true",
+    "build:browser": "esbuild src/index.ts --bundle --sourcemap --outfile=dist/browser/index.js --format=esm --platform=browser --external:@gyron/* --define:__DEV__=false --define:__WARN__=true --minify",
     "build:dts": "rollup -c ../../rollup.config.js",
     "test": "cross-env PACKAGES=jsx-runtime jest --config=../../jest.config.js"
   },
