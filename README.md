@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://gyron.cc/assets/image/logo-sm.png" alt="Gyron Logo">
+  <img src="https://gyron.970819.xyz/assets/image/logo-sm.png" alt="Gyron Logo">
 </p>
 
 <p align="center">
@@ -20,11 +20,11 @@
 
 它还拥有很好的性能表现，详情可以参见 [js-framework-benchmark](https://krausest.github.io/js-framework-benchmark/current.html#eyJmcmFtZXdvcmtzIjpbImtleWVkL2FuZ3VsYXIiLCJrZXllZC9neXJvbiIsImtleWVkL3JlYWN0Iiwibm9uLWtleWVkL2d5cm9uIiwibm9uLWtleWVkL3JlYWN0Il0sImJlbmNobWFya3MiOlsiMDFfcnVuMWsiLCIwMl9yZXBsYWNlMWsiLCIwM191cGRhdGUxMHRoMWtfeDE2IiwiMDRfc2VsZWN0MWsiLCIwNV9zd2FwMWsiLCIwNl9yZW1vdmUtb25lLTFrIiwiMDdfY3JlYXRlMTBrIiwiMDhfY3JlYXRlMWstYWZ0ZXIxa194MiIsIjA5X2NsZWFyMWtfeDgiLCIyMV9yZWFkeS1tZW1vcnkiLCIyMl9ydW4tbWVtb3J5IiwiMjNfdXBkYXRlNS1tZW1vcnkiLCIyNV9ydW4tY2xlYXItbWVtb3J5IiwiMjZfcnVuLTEway1tZW1vcnkiLCIzMV9zdGFydHVwLWNpIiwiMzRfc3RhcnR1cC10b3RhbGJ5dGVzIl0sImRpc3BsYXlNb2RlIjoxLCJjYXRlZ29yaWVzIjpbMSwyLDMsNF19) 提供的结果。
 
-在线体验 [https://gyron.cc/explorer](https://gyron.cc/explorer)
+在线体验 [https://gyron.970819.xyz/explorer](https://gyron.970819.xyz/explorer)
 
 - 文档
   - [English](./README_EN.md)
-  - [官方网站](https://gyron.cc)
+  - [官方网站](https://gyron.970819.xyz)
 
 ## 快速使用
 
@@ -63,7 +63,7 @@ createGyron(<APP />).render('#app')
 
 ## 功能
 
-Gyron 已经完成了所有预期之内的功能，可以参考 [http://gyron.cc/](http://gyron.cc/) 查看所有功能说明。
+Gyron 已经完成了所有预期之内的功能，可以参考 [http://gyron.970819.xyz/](http://gyron.970819.xyz/) 查看所有功能说明。
 
 如果你想了解这些功能和社区其它框架有什么不同可以打开 Issues 一起沟通学习，或者 clone 代码后查看对应的模块。
 
@@ -97,7 +97,7 @@ const App = () => {
 - rollup
 - parcel
 
-目前模板就是基于 vite 制作而成，在适配其它平台时可以阅读[jsx](https://gyron.cc/core/jsx/getting-started)这篇文档，里面有更新详细的教程。
+目前模板就是基于 vite 制作而成，在适配其它平台时可以阅读[jsx](https://gyron.970819.xyz/core/jsx/getting-started)这篇文档，里面有更新详细的教程。
 
 ## 核心
 
@@ -147,7 +147,7 @@ npm run start
 
 ### SSR
 
-完善文档请阅读 [SSR](https://gyron.cc/docs/ssr)
+完善文档请阅读 [SSR](https://gyron.970819.xyz/docs/ssr)
 
 ### 更新记录
 
@@ -157,7 +157,7 @@ npm run start
 
 请 clone 项目后运行`yarn`，然后再执行`yarn test`
 
-想了解更多，请参阅 [https://gyron.cc/](https://gyron.cc/)。
+想了解更多，请参阅 [https://gyron.970819.xyz/](https://gyron.970819.xyz/)。
 
 ### 赞赏
 

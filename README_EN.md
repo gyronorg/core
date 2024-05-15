@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://gyron.cc/assets/image/logo-sm.png" alt="Gyron Logo">
+  <img src="https://gyron.970819.xyz/assets/image/logo-sm.png" alt="Gyron Logo">
 </p>
 
 <p align="center">
@@ -22,7 +22,7 @@ It also has a very good performance performance, details of which can be found i
 
 - Readme
   - [中文](./README.md)
-  - [Official Website](https://gyron.cc/en-US)
+  - [Official Website](https://gyron.970819.xyz/en-US)
 
 ## Quick Start
 
@@ -61,7 +61,7 @@ createGyron(<APP />).render('#app')
 
 ## Feature
 
-Gyron has done all the expected features, you can refer to [http://gyron.cc/](http://gyron.cc/) to see all the feature descriptions.
+Gyron has done all the expected features, you can refer to [http://gyron.970819.xyz/](http://gyron.970819.xyz/) to see all the feature descriptions.
 
 If you want to see how these features differ from other frameworks in the community you can open Issues to communicate and learn together, or clone the code and see the corresponding module.
 
@@ -95,7 +95,7 @@ const App = () => {
 - rollup
 - parcel
 
-The current template is based on vite, you can read [jsx](https://gyron.cc/core/jsx/getting-started) this document when adapting to other platforms, which has updated detailed tutorials.
+The current template is based on vite, you can read [jsx](https://gyron.970819.xyz/core/jsx/getting-started) this document when adapting to other platforms, which has updated detailed tutorials.
 
 ## Core
 
@@ -145,7 +145,7 @@ Any case anyone in the company without the author's authorization is not allowed
 
 ### SSR
 
-Improve the documentation please read [SSR](https://gyron.cc/docs/ssr)
+Improve the documentation please read [SSR](https://gyron.970819.xyz/docs/ssr)
 
 ### Update the record
 
@@ -155,7 +155,7 @@ For details, see [CHANGELOG.md](. /CHANGELOG.md)
 
 Please clone the project and run `yarn`, and then `yarn test`.
 
-To learn more, see [https://gyron.cc/](https://gyron.cc/).
+To learn more, see [https://gyron.970819.xyz/](https://gyron.970819.xyz/).
 
 ### Appreciation
 
