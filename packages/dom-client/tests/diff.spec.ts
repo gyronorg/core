@@ -5,7 +5,7 @@ import {
   h,
   nextRender,
 } from '@gyron/runtime'
-import { mountProps, patchProp } from '../src/props'
+import { mountProps, patchProp, patchProps } from '../src/props'
 
 function triggerInput(element: any) {
   const event = document.createEvent('Event')
@@ -188,7 +188,6 @@ describe('diff', () => {
   })
 
   test('class name', async () => {
-    const container = document.createElement('div')
     const App = () => {
       const className = useValue('c1')
       return () =>
@@ -205,5 +204,15 @@ describe('diff', () => {
     app.click()
     await nextRender()
     expect(app.className).toBe('c2')
+  })
+
+  test('remove old className', async () => {
+    const root = document.createElement('div')
+    root.classList.add('c1')
+    const n1 = createVNode('div', { className: 'c1' })
+    const n2 = createVNode('div')
+    n1.el = root
+    patchProps(root, n1, n2)
+    expect(root.className).toBe('')
   })
 })

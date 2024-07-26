@@ -3,6 +3,7 @@ import {
   diffWord,
   isBoolean,
   isEventProps,
+  isNil,
   isObject,
   isObjectPrototype,
   isString,
@@ -61,7 +62,7 @@ function unmountProps(
     if (isEventProps(key)) {
       el.removeEventListener(normalizeEventName(key), props[key])
     } else {
-      removeAttribute(el, key)
+      removeAttribute(el, key === 'className' ? 'class' : key)
     }
   }
 }
@@ -113,7 +114,7 @@ function patchClass(
   if (oldValue === value) {
     return
   }
-  if (oldValue === null) {
+  if (isNil(oldValue)) {
     removeAttribute(el, 'class')
   }
 
@@ -142,7 +143,7 @@ function patchStyle(
   vnode: VNode,
   debugOption?: DebugOption
 ) {
-  if (oldValue === null) {
+  if (isNil(oldValue)) {
     removeAttribute(el, 'style')
   }
   if (isString(value)) {

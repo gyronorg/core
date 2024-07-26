@@ -38,6 +38,7 @@ import {
   normalizeEventName,
   removeWithString,
   at,
+  isNil,
 } from '../src'
 
 describe('Common function', () => {
@@ -188,6 +189,9 @@ describe('Common function', () => {
     const { D, A } = diffWord(str1.split(' '), str2.split(' '))
     expect(D).toEqual(['hello'])
     expect(A).toEqual(['find'])
+    const { D: d, A: a } = diffWord(str1.split(' '), [])
+    expect(d).toEqual(['hello', 'test'])
+    expect(a).toEqual([])
   })
 
   test('deep map', () => {
@@ -280,5 +284,10 @@ describe('Common function', () => {
     expect(at(obj, 'b.c[1]')).toBe(1)
     expect(at(obj, 'a')).toBe(1)
     expect(at(obj, 'c')).toBe(undefined)
+  })
+
+  test('isNil', () => {
+    expect(isNil(null)).toBe(true)
+    expect(isNil(undefined)).toBe(true)
   })
 })

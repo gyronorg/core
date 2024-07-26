@@ -15,6 +15,10 @@ export function isNull(o: any): o is null {
   return typeof o === 'object' && !o
 }
 
+export function isNil(o: any): o is null | undefined {
+  return isUndefined(o) || isNull(o)
+}
+
 export function isArray(o: any): o is any[] {
   return Array.isArray(o)
 }
