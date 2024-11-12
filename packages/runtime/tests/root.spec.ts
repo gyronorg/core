@@ -8,3 +8,8 @@ test('VNode root', () => {
   createInstance(App).render(container)
   expect(container.innerHTML).toBe('<span>0</span>')
 })
+
+test('Symbol', () => {
+  const Text1 = Symbol.for('gyron.text')
+  expect(h('text').type).toBe(Text1)
+})
