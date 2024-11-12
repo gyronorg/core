@@ -19,11 +19,11 @@ import { UserRef } from './ref'
 import { TransitionHooks } from './internal'
 import { EventOptions } from './h'
 
-export const Gyron = Symbol('gyron')
-export const Text = Symbol('gyron.text')
-export const Element = Symbol('gyron.element')
-export const Comment = Symbol('gyron.comment')
-export const Fragment = Symbol('gyron.fragment')
+export const Gyron = Symbol.for('gyron')
+export const Text = Symbol.for('gyron.text')
+export const Element = Symbol.for('gyron.element')
+export const Comment = Symbol.for('gyron.comment')
+export const Fragment = Symbol.for('gyron.fragment')
 
 type ToUpper<T extends string> = T extends `${infer F}${infer Rest}`
   ? `${Uppercase<F>}${Rest}`
