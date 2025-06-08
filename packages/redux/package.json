@@ -3,7 +3,7 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -21,9 +21,9 @@
     "test": "cross-env PACKAGES=redux jest --config=../../jest.config.js"
   },
   "dependencies": {
-    "@gyron/runtime": "^0.0.37",
-    "@gyron/shared": "^0.0.37",
-    "@gyron/sync": "^0.0.37",
+    "@gyron/runtime": "^0.0.38",
+    "@gyron/shared": "^0.0.38",
+    "@gyron/sync": "^0.0.38",
     "@reduxjs/toolkit": "^1.8.1"
   },
   "devDependencies": {
