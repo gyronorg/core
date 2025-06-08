@@ -297,4 +297,32 @@ describe('matches', () => {
     const matchRouteBranch = generateRouteBranch(nestedRoutes, '/foo', '/')
     expect(matchRouteBranch[0].path).toBe('foo')
   })
+
+  test('chinese route matching', () => {
+    const routes = [
+      h(Route, { path: '首页', element: createVNode('首页') }),
+      h(Route, { path: '控制台' }, [
+        h(Route, { index: true, element: createVNode('控制台首页') }),
+        h(Route, { path: '设置', element: createVNode('设置页面') }),
+        h(Redirect, { path: '欢迎', redirect: '/首页' }),
+      ]),
+      h(Redirect, { path: '/旧路径', redirect: '/控制台' }),
+    ]
+    const nestedRoutes = generateNestedRoutes(routes)
+
+    // 测试基本中文路径匹配
+    let matchRouteBranch = generateRouteBranch(nestedRoutes, '/首页', '/')
+    expect(matchRouteBranch[0].path).toBe('首页')
+    expect(matchRouteBranch[0].extra.element).toEqual(createVNode('首页'))
+
+    // 测试中文路径重定向
+    matchRouteBranch = generateRouteBranch(nestedRoutes, '/控制台/欢迎', '/')
+    expect(matchRouteBranch[0].extra.element).toEqual(createVNode('首页'))
+
+    // 测试中文路径嵌套路由
+    matchRouteBranch = generateRouteBranch(nestedRoutes, '/控制台/设置', '/')
+    expect(matchRouteBranch[0].extra.matched[0].extra.element).toEqual(
+      createVNode('设置页面')
+    )
+  })
 })

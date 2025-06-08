@@ -137,7 +137,7 @@ export function generateNestedRoutes(
 }
 
 export function matchPath(route: RouteRecord, path: string, base: string) {
-  const relativePath = path
+  const relativePath = decodeURIComponent(path)
     .replace(new RegExp(`^${base}`), '/')
     .replace('//', '/')
   const regexp = pathToRegexp(route.extra.regexpPath, [], {
@@ -149,7 +149,8 @@ export function matchPath(route: RouteRecord, path: string, base: string) {
 
 export function matchRouteParams(route: RouteRecord, path: string) {
   try {
-    const matchResult = match(route.extra.regexpPath)(path)
+    const decodedPath = decodeURIComponent(path)
+    const matchResult = match(route.extra.regexpPath)(decodedPath)
     if (matchResult) {
       return matchResult.params
     }
